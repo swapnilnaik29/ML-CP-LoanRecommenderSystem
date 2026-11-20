@@ -1,0 +1,51 @@
+{
+  "loan_type": "home",
+  "selected_model": "Random Forest (tuned)",
+  "metrics": {
+    "selected_model": "Random Forest (tuned)",
+    "test_accuracy": 0.85,
+    "test_precision": 0.9076923076923077,
+    "test_recall": 0.8676470588235294,
+    "test_f1": 0.8872180451127819,
+    "test_roc_auc": 0.9267003676470589,
+    "test_pr_auc": 0.9617878282257892,
+    "test_brier_score": 0.10169017866627339
+  },
+  "cv_comparison": [
+    {
+      "model": "Hist Gradient Boosting",
+      "cv_roc_auc_mean": 0.9184547075138182,
+      "cv_roc_auc_std": 0.011768851947903976,
+      "cv_pr_auc_mean": 0.9559779375799895,
+      "cv_f1_mean": 0.8956892376247215
+    },
+    {
+      "model": "Logistic Regression",
+      "cv_roc_auc_mean": 0.915036996721815,
+      "cv_roc_auc_std": 0.02267934969911127,
+      "cv_pr_auc_mean": 0.9563413470512332,
+      "cv_f1_mean": 0.8758530314892861
+    },
+    {
+      "model": "Random Forest",
+      "cv_roc_auc_mean": 0.9091643556087177,
+      "cv_roc_auc_std": 0.009389217928446375,
+      "cv_pr_auc_mean": 0.9508929874954042,
+      "cv_f1_mean": 0.89030404734693
+    },
+    {
+      "model": "Extra Trees",
+      "cv_roc_auc_mean": 0.8954982354677014,
+      "cv_roc_auc_std": 0.01181924916214584,
+      "cv_pr_auc_mean": 0.9401560807246373,
+      "cv_f1_mean": 0.8700091251922163
+    },
+    {
+      "model": "Dummy baseline",
+      "cv_roc_auc_mean": 0.5,
+      "cv_roc_auc_std": 0.0,
+      "cv_pr_auc_mean": 0.6800005632057672,
+      "cv_f1_mean": 0.809523179298575
+    }
+  ]
+}

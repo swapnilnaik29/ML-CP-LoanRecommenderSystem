@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LoanIQ — Smart Loan Intelligence & Repayment Platform</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Top Navbar -->
+  <header class="navbar">
+    <div class="container nav-container">
+      <a class="brand" href="#dashboard">
+        <div class="brand-icon">🏛</div>
+        <div class="brand-text">Loan<span>IQ</span></div>
+        <span class="brand-badge">Fintech</span>
+      </a>
+
+      <nav class="nav-links" id="nav-links">
+        <a class="nav-link" href="#dashboard">Dashboard</a>
+        <a class="nav-link" href="#discover">Discover Loans</a>
+        <a class="nav-link" href="#optimizer">Loan Optimiser</a>
+        <a class="nav-link" href="#compare">Compare</a>
+        <a class="nav-link" href="#calculator">EMI Calculator</a>
+      </nav>
+
+      <div class="nav-auth" id="nav-auth">
+        <!-- Injected dynamically via app.js -->
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================== -->
+  <!-- 1. LANDING / HERO VIEW (#landing-view)     -->
+  <!-- ========================================== -->
+  <section id="landing-view" class="view-section">
+    <!-- Hero Banner -->
+    <div class="hero">
+      <div class="container hero-grid">
+        <div>
+          <div class="hero-pill">
+            <span>✨</span> Next-Generation Loan Intelligence & Repayment Optimisation
+          </div>
+          <h1 class="hero-title">
+            Discover the Right Loan.<br>
+            <span>Optimise Every Rupee.</span>
+          </h1>
+          <p class="hero-desc">
+            LoanIQ uses four category-calibrated machine learning models to rank loan products by lender approval probability, and simulates smart tenure reductions to save thousands in interest.
+          </p>
+          <div class="hero-actions">
+            <button class="btn btn-accent btn-lg" onclick="loginDemoUser('USR0007')">
+              1-Click Demo Login →
+            </button>
+            <button class="btn btn-outline btn-lg" onclick="window.location.hash='#register'" style="color: white; border-color: rgba(255,255,255,0.3); background: transparent;">
+              Register Applicant
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <div class="hero-card">
+            <div class="hero-card-header">
+              <div>
+                <strong style="color: var(--primary); font-size: 15px;">LoanIQ Engine</strong>
+                <div style="font-size: 11px; color: var(--slate-500);">4 Calibrated ML Models Active</div>
+              </div>
+              <span class="badge-active">Online</span>
+            </div>
+
+            <div class="model-row">
+              <div>
+                <div class="model-name">Car Loan Models</div>
+                <div class="model-sub">Random Forest Tuned</div>
+              </div>
+              <div class="model-auc">AUC: 0.923</div>
+            </div>
+
+            <div class="model-row">
+              <div>
+                <div class="model-name">Home Loan Models</div>
+                <div class="model-sub">Calibrated Classifier CV</div>
+              </div>
+              <div class="model-auc">ROC: 0.918</div>
+            </div>
+
+            <div class="model-row">
+              <div>
+                <div class="model-name">Education Loan</div>
+                <div class="model-sub">Hist Gradient Boosting</div>
+              </div>
+              <div class="model-auc">AUC: 0.975</div>
+            </div>
+
+            <div class="model-row">
+              <div>
+                <div class="model-name">Personal Loan</div>
+                <div class="model-sub">Calibrated Random Forest</div>
+              </div>
+              <div class="model-auc">AUC: 0.841</div>
+            </div>
+
+            <div style="font-size: 11px; color: var(--slate-400); text-align: center; margin-top: 14px;">
+              16 Real Configured Products • 100 SQLite Demo Applicants
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Demo User Switcher Card -->
+    <div class="container" style="margin-top: -30px; position: relative; z-index: 10;">
+      <div class="card" style="box-shadow: var(--shadow-lg);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <div>
+            <strong style="font-size: 14px; color: var(--primary);">Quick Demo Login Switcher</strong>
+            <p style="font-size: 12px; color: var(--slate-500);">Select any pre-seeded synthetic applicant record from SQLite to explore instant recommendations:</p>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="loginDemoUser('USR0007')">Demo User (Sai Saxena)</button>
+        </div>
+        <div class="preset-chips" id="demo-users-list">
+          <!-- Injected via app.js -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Features Overview -->
+    <div class="container feature-section">
+      <div class="section-header">
+        <h2 class="section-title">Complete End-to-End Loan Intelligence</h2>
+        <p class="section-subtitle">Built on verified reducing-balance financial mathematics and scikit-learn calibrated pipelines.</p>
+      </div>
+
+      <div class="feature-grid">
+        <div class="feature-card" onclick="loginDemoUser('USR0007')">
+          <div class="feature-icon">🧭</div>
+          <h3 class="feature-name">Loan Discovery</h3>
+          <p class="feature-desc">Dedicated category forms evaluate 5 deterministic hard eligibility gates and predict lender approval probability using category-specific ML models.</p>
+        </div>
+
+        <div class="feature-card" onclick="loginDemoUser('USR0007')">
+          <div class="feature-icon">⚡</div>
+          <h3 class="feature-name">Loan Optimiser</h3>
+          <p class="feature-desc">Simulate proposed extra EMI on existing active loans. See live remaining tenure reductions and exact interest savings in rupees.</p>
+        </div>
+
+        <div class="feature-card" onclick="loginDemoUser('USR0007')">
+          <div class="feature-icon">📊</div>
+          <h3 class="feature-name">Offer Comparison</h3>
+          <p class="feature-desc">Compare eligible bank loans side-by-side on interest rate, monthly EMI, total repayment, tenure, and predicted approval probability.</p>
+        </div>
+
+        <div class="feature-card" onclick="window.location.hash='#calculator'">
+          <div class="feature-icon">🧮</div>
+          <h3 class="feature-name">EMI Calculator</h3>
+          <p class="feature-desc">Standard reducing-balance amortisation calculator for rapid loan estimation and financial planning.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- 2. DASHBOARD VIEW (#dashboard-view)       -->
+  <!-- ========================================== -->
+  <section id="dashboard-view" class="view-section" style="display: none; padding: 36px 0;">
+    <div class="container">
+      
+      <!-- Applicant Welcome Banner -->
+      <div class="card" style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+        <div style="display: flex; gap: 16px; align-items: center;">
+          <div style="width: 56px; height: 56px; background: var(--primary); color: var(--accent); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 900;">
+            👤
+          </div>
+          <div>
+            <div style="display: flex; gap: 10px; align-items: center;">
+              <h2 id="dash-applicant-name" style="font-size: 22px; font-weight: 800; color: var(--primary);">Applicant Name</h2>
+              <span id="dash-cibil-badge" class="badge-active">Score</span>
+            </div>
+            <div style="font-size: 12px; color: var(--slate-500); margin-top: 4px;">
+              ID: <span id="dash-applicant-id" style="font-family: monospace; font-weight: bold; color: var(--slate-700);">USR0000</span> • 
+              PAN: <span id="dash-applicant-pan" style="font-family: monospace; font-weight: bold; color: var(--slate-700);">ABCDE1234F</span> • 
+              Employment: <span id="dash-applicant-emp" style="text-transform: capitalize; font-weight: bold; color: var(--slate-700);">Salaried</span> • 
+              CIBIL: <span id="dash-applicant-cibil" style="font-weight: bold; color: var(--primary);">750</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 10px;">
+          <button class="btn btn-outline btn-sm" onclick="window.location.hash='#profile'">View Profile</button>
+          <button class="btn btn-primary btn-sm" onclick="window.location.hash='#discover'">Discover Loans →</button>
+        </div>
+      </div>
+
+      <!-- Debt & Income KPI Cards -->
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-bottom: 28px;">
+        <div class="stat-kpi">
+          <div class="kpi-title">Active Loans (Linked SQLite)</div>
+          <div class="kpi-value" id="dash-active-count">0</div>
+          <div style="font-size: 11px; color: var(--slate-400); margin-top: 4px;">Loan accounts on file</div>
+        </div>
+
+        <div class="stat-kpi">
+          <div class="kpi-title">Total Monthly Debt EMI</div>
+          <div class="kpi-value" id="dash-total-emi" style="color: var(--dark);">₹0</div>
+          <div style="font-size: 11px; color: var(--slate-400); margin-top: 4px;">Ongoing monthly obligations</div>
+        </div>
+
+        <div class="stat-kpi">
+          <div class="kpi-title">Applicant Monthly Income</div>
+          <div class="kpi-value" id="dash-income" style="color: var(--success);">₹0</div>
+          <div id="dash-debt-ratio" style="font-size: 11px; font-weight: 700; color: #059669; margin-top: 4px;">FOIR: 0%</div>
+        </div>
+      </div>
+
+      <!-- Quick Platform Actions -->
+      <h3 style="font-size: 16px; font-weight: 800; color: var(--primary); margin-bottom: 14px;">Platform Services</h3>
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 30px;">
+        <div class="feature-card" onclick="window.location.hash='#discover'">
+          <div class="feature-icon">🧭</div>
+          <div style="font-weight: 800; font-size: 14px; color: var(--primary); margin-bottom: 4px;">Discover Loans</div>
+          <p style="font-size: 11px; color: var(--slate-500);">Predict lender approval probability with ML.</p>
+        </div>
+
+        <div class="feature-card" onclick="window.location.hash='#optimizer'">
+          <div class="feature-icon">⚡</div>
+          <div style="font-weight: 800; font-size: 14px; color: var(--primary); margin-bottom: 4px;">Loan Optimiser</div>
+          <p style="font-size: 11px; color: var(--slate-500);">Simulate accelerated tenure payoff.</p>
+        </div>
+
+        <div class="feature-card" onclick="window.location.hash='#compare'">
+          <div class="feature-icon">📊</div>
+          <div style="font-weight: 800; font-size: 14px; color: var(--primary); margin-bottom: 4px;">Offer Comparison</div>
+          <p style="font-size: 11px; color: var(--slate-500);">Side-by-side lender terms matrix.</p>
+        </div>
+
+        <div class="feature-card" onclick="window.location.hash='#calculator'">
+          <div class="feature-icon">🧮</div>
+          <div style="font-weight: 800; font-size: 14px; color: var(--primary); margin-bottom: 4px;">EMI Calculator</div>
+          <p style="font-size: 11px; color: var(--slate-500);">Reducing-balance loan amortisation.</p>
+        </div>
+      </div>
+
+      <!-- Active Loans List -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+        <h3 style="font-size: 16px; font-weight: 800; color: var(--primary);">Active Loan Accounts</h3>
+        <button class="btn btn-outline btn-sm" onclick="window.location.hash='#optimizer'">Repayment Simulator</button>
+      </div>
+      <div id="dash-loans-container">
+        <!-- Rendered dynamically via app.js -->
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- 3. DISCOVER LOANS VIEW (#discover-view)   -->
+  <!-- ========================================== -->
+  <section id="discover-view" class="view-section" style="display: none; padding: 36px 0;">
+    <div class="container">
+      
+      <!-- Header -->
+      <div style="display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 1px solid var(--slate-200); padding-bottom: 14px; margin-bottom: 24px;">
+        <div>
+          <div style="font-size: 12px; color: var(--slate-400); font-weight: 700; text-transform: uppercase;">LoanIQ Discovery</div>
+          <h1 style="font-size: 26px; font-weight: 900; color: var(--primary); margin-top: 2px;">Discover & Compare Loans</h1>
+        </div>
+        <div class="badge-active" style="padding: 6px 12px; font-size: 12px;">
+          ★ AI Calibrated Approval Engine
+        </div>
+      </div>
+
+      <!-- Category Tabs -->
+      <div class="category-tabs">
+        <div class="category-tab active" data-category="home" onclick="setCategory('home')">
+          <div class="tab-icon">🏠</div>
+          <div>
+            <div class="tab-title">Home Loan</div>
+            <div class="tab-sub">Rates from 8.4%</div>
+          </div>
+        </div>
+
+        <div class="category-tab" data-category="car" onclick="setCategory('car')">
+          <div class="tab-icon">🚗</div>
+          <div>
+            <div class="tab-title">Car Loan</div>
+            <div class="tab-sub">Rates from 8.8%</div>
+          </div>
+        </div>
+
+        <div class="category-tab" data-category="education" onclick="setCategory('education')">
+          <div class="tab-icon">🎓</div>
+          <div>
+            <div class="tab-title">Education Loan</div>
+            <div class="tab-sub">Rates from 9.2%</div>
+          </div>
+        </div>
+
+        <div class="category-tab" data-category="personal" onclick="setCategory('personal')">
+          <div class="tab-icon">👤</div>
+          <div>
+            <div class="tab-title">Personal Loan</div>
+            <div class="tab-sub">Rates from 11.5%</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2-Column Discovery Form Layout -->
+      <div class="discovery-layout">
+        
+        <!-- Left: Form -->
+        <div>
+          <form id="discovery-form">
+            
+            <!-- Card 1: Principal & Tenure -->
+            <div class="card" style="margin-bottom: 20px;">
+              <h3 style="font-size: 14px; font-weight: 800; color: var(--primary); text-transform: uppercase; margin-bottom: 4px;">
+                1. Loan Amount & Tenure
+              </h3>
+              <p style="font-size: 12px; color: var(--slate-500); margin-bottom: 16px;">
+                Required parameters used for hard eligibility gating and reducing-balance calculations.
+              </p>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Requested Amount (₹) *</label>
+                  <div class="input-with-symbol">
+                    <span class="input-symbol">₹</span>
+                    <input type="number" id="disc-amount" class="form-control" value="2500000" min="0" step="any" required>
+                  </div>
+                  <div class="preset-chips" id="amt-chips"></div>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Desired Tenure (Months) *</label>
+                  <input type="number" id="disc-tenure" class="form-control" value="180" min="1" max="360" step="1" required>
+                  <div class="preset-chips" id="tenure-chips"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 2: Category Specific Fields -->
+            <div class="card" style="margin-bottom: 20px;">
+              <h3 style="font-size: 14px; font-weight: 800; color: var(--primary); text-transform: uppercase; margin-bottom: 4px;">
+                2. Category Specific Attributes
+              </h3>
+              <p style="font-size: 12px; color: var(--slate-500); margin-bottom: 16px;">
+                Features required by the category machine learning model.
+              </p>
+
+              <!-- HOME LOAN FIELDS -->
+              <div id="cat-home-fields" class="cat-fields">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Estimated Property Value (₹) *</label>
+                    <input type="number" id="home-val" class="form-control" value="3500000" min="0" step="any">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Property Type *</label>
+                    <select id="home-type" class="form-control">
+                      <option value="apartment">Apartment / Flat</option>
+                      <option value="independent_house">Independent House / Villa</option>
+                      <option value="plot">Residential Plot</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Property Location *</label>
+                    <select id="home-loc" class="form-control">
+                      <option value="urban">Urban / Metro</option>
+                      <option value="semi_urban">Semi-Urban</option>
+                      <option value="rural">Rural</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Construction Status *</label>
+                    <select id="home-status" class="form-control">
+                      <option value="ready_to_move">Ready to Move</option>
+                      <option value="under_construction">Under Construction</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Property Age (Years)</label>
+                    <input type="number" id="home-age" class="form-control" value="2" min="0" max="60">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Co-Applicant Present?</label>
+                    <select id="home-coapp" class="form-control">
+                      <option value="1">Yes (Includes joint income)</option>
+                      <option value="0">No (Single applicant)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Co-Applicant Monthly Income (₹)</label>
+                  <input type="number" id="home-coincome" class="form-control" value="35000" min="0" step="any">
+                </div>
+              </div>
+
+              <!-- CAR LOAN FIELDS -->
+              <div id="cat-car-fields" class="cat-fields" style="display: none;">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Vehicle On-Road Price (₹) *</label>
+                    <input type="number" id="car-price" class="form-control" value="650000" min="0" step="any">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Vehicle Body Type *</label>
+                    <select id="car-type" class="form-control">
+                      <option value="sedan">Sedan</option>
+                      <option value="SUV">SUV</option>
+                      <option value="hatchback">Hatchback</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Vehicle Condition *</label>
+                    <select id="car-condition" class="form-control">
+                      <option value="new">Brand New</option>
+                      <option value="used">Pre-Owned / Used</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Vehicle Age (Years)</label>
+                    <input type="number" id="car-age" class="form-control" value="0" min="0" max="25">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Fuel Type *</label>
+                  <select id="car-fuel" class="form-control">
+                    <option value="petrol">Petrol</option>
+                    <option value="diesel">Diesel</option>
+                    <option value="CNG">CNG</option>
+                    <option value="electric">Electric (EV)</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- EDUCATION LOAN FIELDS -->
+              <div id="cat-education-fields" class="cat-fields" style="display: none;">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Course Level *</label>
+                    <select id="edu-level" class="form-control">
+                      <option value="postgraduate">Postgraduate (Masters)</option>
+                      <option value="undergraduate">Undergraduate (Bachelors)</option>
+                      <option value="doctorate">Doctorate (PhD)</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Academic Field *</label>
+                    <select id="edu-field" class="form-control">
+                      <option value="engineering">Engineering / Tech</option>
+                      <option value="medicine">Medicine / Healthcare</option>
+                      <option value="management">Management / MBA</option>
+                      <option value="science">Sciences</option>
+                      <option value="arts">Arts & Humanities</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Study Location *</label>
+                    <select id="edu-loc" class="form-control">
+                      <option value="India">Domestic (India)</option>
+                      <option value="abroad">International (Abroad)</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Institution Tier *</label>
+                    <select id="edu-tier" class="form-control">
+                      <option value="tier_1">Tier 1 (IIT / IIM / Ivy League)</option>
+                      <option value="tier_2">Tier 2 (Govt Recognized)</option>
+                      <option value="tier_3">Tier 3 (Other Accredited)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Total Course Tuition & Living (₹) *</label>
+                    <input type="number" id="edu-cost" class="form-control" value="800000" min="0" step="any">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Scholarship Amount (₹)</label>
+                    <input type="number" id="edu-schol" class="form-control" value="50000" min="0" step="any">
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Co-Applicant Present?</label>
+                    <select id="edu-coapp" class="form-control">
+                      <option value="1">Yes (Parent / Guardian)</option>
+                      <option value="0">No</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Co-Applicant Income (₹)</label>
+                    <input type="number" id="edu-coincome" class="form-control" value="30000" min="0" step="any">
+                  </div>
+                </div>
+              </div>
+
+              <!-- PERSONAL LOAN FIELDS -->
+              <div id="cat-personal-fields" class="cat-fields" style="display: none;">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Loan Objective / Purpose *</label>
+                    <select id="pers-purpose" class="form-control">
+                      <option value="home_renovation">Home Renovation</option>
+                      <option value="debt_consolidation">Debt Consolidation</option>
+                      <option value="medical">Medical Treatment</option>
+                      <option value="wedding">Wedding / Family Function</option>
+                      <option value="travel">Travel & Holiday</option>
+                      <option value="other">Other Personal Needs</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Marital Status *</label>
+                    <select id="pers-marital" class="form-control">
+                      <option value="married">Married</option>
+                      <option value="single">Single / Unmarried</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Card 3: Prefilled Applicant Credentials -->
+            <div class="card" style="margin-bottom: 24px; background: var(--slate-50);">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <strong style="font-size: 13px; color: var(--primary);">Prefilled Credentials (From SQLite)</strong>
+                <span style="font-size: 11px; color: var(--slate-400);">Automated ML Features</span>
+              </div>
+              <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; font-size: 12px;">
+                <div style="background: white; padding: 10px; border-radius: 6px; border: 1px solid var(--slate-200);">
+                  <div style="font-size: 10px; color: var(--slate-400); text-transform: uppercase;">Credit Score</div>
+                  <div id="pref-cibil" style="font-weight: 800; font-size: 15px; color: var(--primary);">750</div>
+                </div>
+                <div style="background: white; padding: 10px; border-radius: 6px; border: 1px solid var(--slate-200);">
+                  <div style="font-size: 10px; color: var(--slate-400); text-transform: uppercase;">Monthly Income</div>
+                  <div id="pref-income" style="font-weight: 800; font-size: 15px; color: var(--success);">₹65,000</div>
+                </div>
+                <div style="background: white; padding: 10px; border-radius: 6px; border: 1px solid var(--slate-200);">
+                  <div style="font-size: 10px; color: var(--slate-400); text-transform: uppercase;">Employment</div>
+                  <div id="pref-emp" style="font-weight: 800; font-size: 15px; text-transform: capitalize;">Salaried</div>
+                </div>
+                <div style="background: white; padding: 10px; border-radius: 6px; border: 1px solid var(--slate-200);">
+                  <div style="font-size: 10px; color: var(--slate-400); text-transform: uppercase;">Active Debt EMI</div>
+                  <div id="pref-emi" style="font-weight: 800; font-size: 15px;">₹6,300</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div style="display: flex; justify-content: flex-end; gap: 12px;">
+              <button type="button" class="btn btn-outline" onclick="window.location.hash='#dashboard'">Cancel</button>
+              <button type="submit" id="disc-submit-btn" class="btn btn-primary btn-lg">
+                Evaluate Eligibility & Rank Offers →
+              </button>
+            </div>
+
+          </form>
+        </div>
+
+        <!-- Right: Sticky Live Financial Summary -->
+        <div>
+          <div class="sticky-summary">
+            <h3 style="font-size: 13px; font-weight: 800; color: var(--primary); text-transform: uppercase; margin-bottom: 12px; border-bottom: 1px solid var(--slate-100); padding-bottom: 8px;">
+              Live Financing Summary
+            </h3>
+
+            <div class="summary-metric">
+              <span class="summary-metric-label">Requested Principal:</span>
+              <span class="summary-metric-val" id="sum-principal">₹25,00,000</span>
+            </div>
+
+            <div class="summary-metric">
+              <span class="summary-metric-label">Tenure Horizon:</span>
+              <span class="summary-metric-val" id="sum-tenure">180 Months (15 Yrs)</span>
+            </div>
+
+            <div class="summary-metric">
+              <span class="summary-metric-label">Indicative Rate:</span>
+              <span class="summary-metric-val" id="sum-rate">8.5% p.a.</span>
+            </div>
+
+            <div class="emi-callout">
+              <div class="emi-callout-title">Estimated Monthly EMI</div>
+              <div class="emi-callout-amount" id="sum-emi">₹25,730</div>
+              <div style="font-size: 10px; color: var(--slate-400);">Final EMI determined by lender offer</div>
+            </div>
+
+            <!-- Deterministic 5 Gates Checklist -->
+            <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--slate-100);">
+              <div style="font-size: 11px; font-weight: 700; color: var(--slate-700); text-transform: uppercase; margin-bottom: 8px;">
+                5 Deterministic Hard Gates:
+              </div>
+              <div style="font-size: 11px; color: #065f46; line-height: 1.8;">
+                <div>✓ Credit Score Gate (Min 650)</div>
+                <div>✓ Age Criteria Gate (18-65 Yrs)</div>
+                <div>✓ FOIR / Debt-to-Income Gate</div>
+                <div>✓ Minimum Income Threshold Gate</div>
+                <div>✓ Category Loan Bounds Gate</div>
+              </div>
+            </div>
+
+            <div style="margin-top: 14px; padding: 10px; background: var(--slate-50); border-radius: 6px; font-size: 10px; color: var(--slate-500); line-height: 1.4;">
+              <strong>Model Pipeline:</strong> Calibrated model probability ranking is only applied to products passing all 5 deterministic hard gates.
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- 4. RECOMMENDATIONS VIEW (#recommendations) -->
+  <!-- ========================================== -->
+  <section id="recommendations-view" class="view-section" style="display: none; padding: 36px 0 80px 0;">
+    <div class="container">
+      
+      <!-- Summary Banner -->
+      <div class="card" style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+        <div>
+          <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 4px;">
+            <span id="rec-loan-type" class="badge-active">HOME LOAN</span>
+            <span style="font-size: 11px; color: var(--slate-400);">Calibrated ML Discovery</span>
+          </div>
+          <h2 style="font-size: 22px; font-weight: 900; color: var(--primary);">Calibrated Loan Recommendations</h2>
+          <p style="font-size: 13px; color: var(--slate-500); margin-top: 2px;">
+            Requested <strong id="rec-requested-amt">₹25,00,000</strong> over <strong id="rec-desired-tenure">180 Months</strong>.
+          </p>
+        </div>
+
+        <div style="display: flex; gap: 12px;">
+          <div style="text-align: center; padding: 8px 16px; background: var(--slate-50); border-radius: 8px; border: 1px solid var(--slate-200);">
+            <div id="rec-eligible-count" style="font-size: 20px; font-weight: 900; color: var(--success);">0</div>
+            <div style="font-size: 10px; text-transform: uppercase; font-weight: 700; color: var(--slate-400);">Eligible Lenders</div>
+          </div>
+          <div style="text-align: center; padding: 8px 16px; background: var(--slate-50); border-radius: 8px; border: 1px solid var(--slate-200);">
+            <div id="rec-ineligible-count" style="font-size: 20px; font-weight: 900; color: var(--slate-400);">0</div>
+            <div style="font-size: 10px; text-transform: uppercase; font-weight: 700; color: var(--slate-400);">Ineligible</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab Switcher -->
+      <div style="display: flex; gap: 8px; margin-bottom: 18px; border-bottom: 1px solid var(--slate-200); padding-bottom: 8px;">
+        <button class="btn btn-primary btn-sm" onclick="showRecTab('eligible')">Eligible Recommendations</button>
+        <button class="btn btn-outline btn-sm" onclick="showRecTab('ineligible')">Ineligible Products (Gating Reasons)</button>
+      </div>
+
+      <!-- Tab 1: Eligible Recommendations -->
+      <div id="rec-tab-eligible">
+        <div id="rec-eligible-list">
+          <!-- Injected via app.js -->
+        </div>
+      </div>
+
+      <!-- Tab 2: Ineligible Products -->
+      <div id="rec-tab-ineligible" style="display: none;">
+        <div id="rec-ineligible-list">
+          <!-- Injected via app.js -->
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Floating Compare Dock -->
+  <div class="compare-dock" id="compare-dock">
+    <div class="container dock-container">
+      <div>
+        <strong id="dock-count" style="font-size: 14px;">0 Products Selected</strong>
+        <div id="dock-names" style="font-size: 11px; opacity: 0.8; margin-top: 2px;"></div>
+      </div>
+      <div style="display: flex; gap: 10px; align-items: center;">
+        <button class="btn btn-outline btn-sm" onclick="state.selectedForCompare=[]; updateCompareDock(); renderRecommendationsView(state.discoveryData);" style="color: white; border-color: rgba(255,255,255,0.4); background: transparent;">Clear</button>
+        <button class="btn btn-accent btn-sm" onclick="window.location.hash='#compare'">Compare Side-by-Side →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- 5. COMPARE VIEW (#compare-view)            -->
+  <!-- ========================================== -->
+  <section id="compare-view" class="view-section" style="display: none; padding: 36px 0;">
+    <div class="container">
+      <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px;">
+        <div>
+          <div style="font-size: 12px; color: var(--slate-400); font-weight: 700; text-transform: uppercase;">Evaluation Matrix</div>
+          <h1 style="font-size: 26px; font-weight: 900; color: var(--primary);">Compare Loan Products</h1>
+        </div>
+        <button class="btn btn-outline btn-sm" onclick="window.location.hash='#recommendations'">← Back to Recommendations</button>
+      </div>
+
+      <div id="compare-table-container">
+        <!-- Injected via app.js -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- 6. LOAN OPTIMISER VIEW (#optimizer-view)   -->
+  <!-- ========================================== -->
+  <section id="optimizer-view" class="view-section" style="display: none; padding: 36px 0;">
+    <div class="container">
+      
+      <div style="display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 1px solid var(--slate-200); padding-bottom: 14px; margin-bottom: 24px;">
+        <div>
+          <div style="font-size: 12px; color: var(--slate-400); font-weight: 700; text-transform: uppercase;">Smart Repayment Simulator</div>
+          <h1 style="font-size: 26px; font-weight: 900; color: var(--primary); margin-top: 2px;">Loan Repayment Optimiser</h1>
+        </div>
+        <div class="badge-active" style="padding: 6px 12px; font-size: 12px;">
+          Reducing-Balance Mathematics
+        </div>
+      </div>
+
+      <!-- Account Selector -->
+      <div class="card" style="margin-bottom: 24px; padding: 16px;">
+        <label class="form-label">Select Active Loan Account:</label>
+        <select id="opt-loan-select" class="form-control" onchange="onOptimiserLoanChanged()">
+          <!-- Injected via app.js -->
+        </select>
+      </div>
+
+      <!-- Baseline 4 KPIs -->
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px;">
+        <div class="stat-kpi">
+          <div class="kpi-title">Remaining Principal</div>
+          <div class="kpi-value" id="opt-bal-amount">₹0</div>
+        </div>
+        <div class="stat-kpi">
+          <div class="kpi-title">Current Monthly EMI</div>
+          <div class="kpi-value" id="opt-cur-emi" style="color: var(--dark);">₹0</div>
+        </div>
+        <div class="stat-kpi">
+          <div class="kpi-title">Remaining Tenure</div>
+          <div class="kpi-value" id="opt-rem-tenure">0 Mo</div>
+        </div>
+        <div class="stat-kpi">
+          <div class="kpi-title">Interest Rate</div>
+          <div class="kpi-value" id="opt-int-rate">0%</div>
+        </div>
+      </div>
+
+      <!-- 2-Column Simulator -->
+      <div class="optimiser-grid" style="grid-template-columns: 420px 1fr; gap: 24px;">
+        
+        <!-- Left Column: Interactive Slider & EMI Impact -->
+        <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <h3 style="font-size: 14px; font-weight: 800; color: var(--primary); text-transform: uppercase;">
+                Adjust Monthly EMI
+              </h3>
+              <span id="opt-mode-badge" class="badge-active" style="font-size: 11px; padding: 3px 8px;">
+                Database Baseline
+              </span>
+            </div>
+            <p style="font-size: 12px; color: var(--slate-500); margin-bottom: 18px;">
+              Drag the scroll bar between the loan's minimum interest boundary and maximum limit to see extra EMI vs monthly savings.
+            </p>
+
+            <!-- Dynamic Callout Banner for Extra EMI / EMI Saved -->
+            <div id="opt-impact-banner" style="background: var(--slate-50); border: 1px solid var(--slate-200); border-radius: var(--radius-sm); padding: 14px; margin-bottom: 18px; transition: all 0.2s ease;">
+              <div id="opt-impact-label" style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--slate-500);">
+                Database Baseline EMI
+              </div>
+              <div id="opt-impact-amount" style="font-size: 24px; font-weight: 900; color: var(--dark); margin-top: 2px;">
+                ₹0 / mo
+              </div>
+              <div id="opt-impact-sub" style="font-size: 11px; color: var(--slate-400); margin-top: 2px;">
+                Move slider to calculate extra prepayment or monthly savings.
+              </div>
+            </div>
+
+            <!-- Slider Control -->
+            <div class="slider-container">
+              <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
+                <span style="font-size: 13px; font-weight: 700; color: var(--slate-700);">Proposed Monthly EMI:</span>
+                <span id="opt-proposed-emi-display" style="font-size: 22px; font-weight: 900; color: var(--primary);">₹0</span>
+              </div>
+              <input type="range" id="opt-emi-slider" class="range-slider" min="1000" max="50000" step="100" value="5000" oninput="onOptimiserSliderInput()">
+              <div style="display: flex; justify-content: space-between; font-size: 11px; font-weight: 600; color: var(--slate-500); margin-top: 8px;">
+                <span id="opt-slider-min-lbl">Min EMI: ₹0</span>
+                <span id="opt-slider-base-lbl" style="color: var(--primary); font-weight: 700;">DB Baseline: ₹0</span>
+                <span id="opt-slider-max-lbl">Max EMI: ₹0</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Comparison Footprint -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: var(--slate-50); padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--slate-200); margin-top: 18px;">
+            <div>
+              <div style="font-size: 10px; text-transform: uppercase; font-weight: 700; color: var(--slate-400);">Current DB EMI</div>
+              <div id="opt-summary-base-emi" style="font-size: 14px; font-weight: 800; color: var(--dark); margin-top: 2px;">₹0</div>
+            </div>
+            <div>
+              <div style="font-size: 10px; text-transform: uppercase; font-weight: 700; color: var(--slate-400);">Proposed EMI</div>
+              <div id="opt-summary-new-emi" style="font-size: 14px; font-weight: 800; color: var(--primary); margin-top: 2px;">₹0</div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right Column: Projected Savings / Impact -->
+        <div class="card">
+          <h3 style="font-size: 14px; font-weight: 800; color: var(--primary); text-transform: uppercase; margin-bottom: 6px;">
+            Projected Financial Benefit & Impact
+          </h3>
+          <p style="font-size: 12px; color: var(--slate-500); margin-bottom: 16px;">
+            Calculated via standard reducing-balance amortization against your current database loan schedule.
+          </p>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px;">
+            <!-- Tenure Card -->
+            <div id="opt-kpi-tenure-card" style="background: #ecfdf5; border: 1px solid #a7f3d0; padding: 16px; border-radius: var(--radius-sm); transition: all 0.2s ease;">
+              <div id="opt-kpi-tenure-title" style="font-size: 11px; text-transform: uppercase; font-weight: 700; color: #065f46;">Tenure Reduction</div>
+              <div id="opt-months-saved" style="font-size: 24px; font-weight: 900; color: #065f46; margin-top: 4px;">0 Months</div>
+              <div id="opt-kpi-tenure-sub" style="font-size: 11px; color: #047857; margin-top: 2px;">Faster debt-free date</div>
+            </div>
+
+            <!-- Interest Card -->
+            <div id="opt-kpi-interest-card" style="background: #eff6ff; border: 1px solid #bfdbfe; padding: 16px; border-radius: var(--radius-sm); transition: all 0.2s ease;">
+              <div id="opt-kpi-interest-title" style="font-size: 11px; text-transform: uppercase; font-weight: 700; color: var(--primary);">Total Interest Saved</div>
+              <div id="opt-int-saved" style="font-size: 24px; font-weight: 900; color: var(--primary); margin-top: 4px;">₹0</div>
+              <div id="opt-kpi-interest-sub" style="font-size: 11px; color: #1d4ed8; margin-top: 2px;">Net interest eliminated</div>
+            </div>
+          </div>
+
+          <!-- Schedule Comparison Details -->
+          <div style="background: var(--slate-50); border: 1px solid var(--slate-200); border-radius: var(--radius-sm); padding: 14px; margin-bottom: 14px;">
+            <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--slate-500); margin-bottom: 8px;">Detailed Comparison:</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 12px; color: var(--slate-600);">
+              <div>• Remaining Tenure: <strong id="opt-new-tenure">0 Mo</strong></div>
+              <div>• Estimated Payoff: <strong id="opt-new-payoff">--</strong></div>
+              <div>• Total Interest Payable: <strong id="opt-new-interest">₹0</strong></div>
+              <div>• Total Repayment: <strong id="opt-new-total">₹0</strong></div>
+            </div>
+          </div>
+
+          <div id="opt-insight-note" style="font-size: 12px; color: var(--slate-500); line-height: 1.5; padding: 8px 12px; background: #fff; border-left: 3px solid var(--primary); border-radius: 2px;">
+            Adjust the slider above to see real-time impact.
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Amortisation Schedule Table -->
+      <div class="card" style="margin-top: 24px;">
+        <h3 style="font-size: 14px; font-weight: 800; color: var(--primary); text-transform: uppercase; margin-bottom: 6px;">
+          Reducing-Balance Amortisation Schedule (First 24 Months)
+        </h3>
+        <p style="font-size: 12px; color: var(--slate-500);">
+          Verifiable monthly principal and interest split recalculated under the proposed extra EMI.
+        </p>
+
+        <div class="amort-table-wrapper">
+          <table class="amort-table">
+            <thead>
+              <tr>
+                <th>Month</th>
+                <th>Beginning Balance</th>
+                <th>Total Payment</th>
+                <th>Principal Paid</th>
+                <th>Interest Paid</th>
+                <th>Ending Balance</th>
+              </tr>
+            </thead>
+            <tbody id="opt-amort-body">
+              <!-- Injected via app.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- 7. EMI CALCULATOR VIEW (#calculator-view)  -->
+  <!-- ========================================== -->
+  <section id="calculator-view" class="view-section" style="display: none; padding: 36px 0;">
+    <div class="container" style="max-width: 900px;">
+      
+      <div style="text-align: center; margin-bottom: 28px;">
+        <h1 style="font-size: 28px; font-weight: 900; color: var(--primary);">Reducing-Balance EMI Calculator</h1>
+        <p style="font-size: 14px; color: var(--slate-500); margin-top: 4px;">
+          Calculate exact monthly instalments, total interest, and total repayment amounts.
+        </p>
+      </div>
+
+      <div class="card" style="margin-bottom: 24px;">
+        <div class="form-group">
+          <div style="display: flex; justify-content: space-between; align-items: baseline;">
+            <label class="form-label">Loan Principal (₹):</label>
+            <strong id="calc-p-val" style="font-size: 16px; color: var(--primary);">₹10,00,000</strong>
+          </div>
+          <input type="range" id="calc-p" class="range-slider" min="100000" max="10000000" step="50000" value="1000000">
+        </div>
+
+        <div class="form-group" style="margin-top: 20px;">
+          <div style="display: flex; justify-content: space-between; align-items: baseline;">
+            <label class="form-label">Annual Interest Rate (%):</label>
+            <strong id="calc-r-val" style="font-size: 16px; color: var(--primary);">9.5%</strong>
+          </div>
+          <input type="range" id="calc-r" class="range-slider" min="5" max="25" step="0.1" value="9.5">
+        </div>
+
+        <div class="form-group" style="margin-top: 20px;">
+          <div style="display: flex; justify-content: space-between; align-items: baseline;">
+            <label class="form-label">Tenure (Months):</label>
+            <strong id="calc-n-val" style="font-size: 16px; color: var(--primary);">60 Mo (5 Yrs)</strong>
+          </div>
+          <input type="range" id="calc-n" class="range-slider" min="6" max="360" step="6" value="60">
+        </div>
+      </div>
+
+      <!-- Result Card -->
+      <div class="card" style="background: linear-gradient(135deg, var(--primary), #001f4d); color: white; text-align: center; padding: 30px;">
+        <div style="font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: #7dd3fc; font-weight: 700;">Calculated Monthly EMI</div>
+        <div id="calc-emi-result" style="font-size: 40px; font-weight: 900; color: var(--white); margin: 6px 0;">₹21,002</div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.15); padding-top: 20px;">
+          <div>
+            <div style="font-size: 11px; color: #bae6fd; text-transform: uppercase;">Total Interest Payable</div>
+            <div id="calc-int-result" style="font-size: 18px; font-weight: 800; color: var(--white);">₹2,60,113</div>
+          </div>
+          <div>
+            <div style="font-size: 11px; color: #bae6fd; text-transform: uppercase;">Total Repayment Amount</div>
+            <div id="calc-total-result" style="font-size: 18px; font-weight: 800; color: #a7f3d0;">₹12,60,113</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- 8. PROFILE VIEW (#profile-view)            -->
+  <!-- ========================================== -->
+  <section id="profile-view" class="view-section" style="display: none; padding: 36px 0;">
+    <div class="container" style="max-width: 800px;">
+      
+      <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px;">
+        <div>
+          <div style="font-size: 12px; color: var(--slate-400); font-weight: 700; text-transform: uppercase;">Applicant Credentials</div>
+          <h1 style="font-size: 26px; font-weight: 900; color: var(--primary);">Master Profile & Credentials</h1>
+        </div>
+        <button class="btn btn-outline btn-sm" onclick="window.location.hash='#dashboard'">← Back to Dashboard</button>
+      </div>
+
+      <div class="card">
+        <form id="profile-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Full Name *</label>
+              <input type="text" id="prof-name" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">PAN Number (Permanent Identifier)</label>
+              <input type="text" id="prof-pan" class="form-control" disabled style="background: var(--slate-100); font-family: monospace;">
+            </div>
+          </div>
+
+          <div class="form-row-3">
+            <div class="form-group">
+              <label class="form-label">Age (Years) *</label>
+              <input type="number" id="prof-age" class="form-control" min="18" max="100" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Monthly Income (₹) *</label>
+              <input type="number" id="prof-income" class="form-control" min="0" step="any" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Credit Score (300-900) *</label>
+              <input type="number" id="prof-cibil" class="form-control" min="300" max="900" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Employment Type *</label>
+              <select id="prof-emp" class="form-control">
+                <option value="salaried">Salaried Professional</option>
+                <option value="self_employed">Self Employed</option>
+                <option value="business">Business Owner</option>
+                <option value="student">Student</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Experience (Years) *</label>
+              <input type="number" id="prof-exp" class="form-control" min="0" max="50" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Monthly Household Expenses (₹)</label>
+              <input type="number" id="prof-expenses" class="form-control" min="0" step="any">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Average Bank Balance (₹)</label>
+              <input type="number" id="prof-bank" class="form-control" min="0" step="any">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Existing Monthly Debt EMI (₹)</label>
+              <input type="number" id="prof-emi" class="form-control" disabled style="background: var(--slate-100);">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Active Loans Count</label>
+              <input type="number" id="prof-active" class="form-control" disabled style="background: var(--slate-100);">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Number of Dependents</label>
+            <input type="number" id="prof-dep" class="form-control" min="0" max="10">
+          </div>
+
+          <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 20px; border-top: 1px solid var(--slate-100); padding-top: 16px;">
+            <button type="button" class="btn btn-outline" onclick="window.location.hash='#dashboard'">Cancel</button>
+            <button type="submit" class="btn btn-primary">Save Profile Updates</button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- 9. LOGIN VIEW (#login-view)                -->
+  <!-- ========================================== -->
+  <section id="login-view" class="view-section" style="display: none; padding: 60px 0;">
+    <div class="container" style="max-width: 480px;">
+      <div class="card" style="box-shadow: var(--shadow-lg);">
+        <div style="text-align: center; margin-bottom: 24px;">
+          <div style="font-size: 32px; margin-bottom: 8px;">🏛</div>
+          <h2 style="font-size: 22px; font-weight: 800; color: var(--primary);">Sign In to LoanIQ</h2>
+          <p style="font-size: 12px; color: var(--slate-500); margin-top: 4px;">
+            Access personalized loan discovery & repayment simulations.
+          </p>
+        </div>
+
+        <!-- Primary Sign In: Dropdown Menu -->
+        <div style="margin-bottom: 20px;">
+          <label class="form-label" style="font-size: 13px; color: var(--primary); font-weight: 800;">
+            Select Applicant Account (Dropdown Menu):
+          </label>
+          <select id="login-user-dropdown" class="form-control" style="padding: 12px 14px; font-size: 14px; font-weight: 700; border: 2px solid var(--accent); background: white;">
+            <option value="">-- Choose an Applicant from Database --</option>
+          </select>
+          <p style="font-size: 11px; color: var(--slate-500); margin-top: 6px;">
+            Choose from the pre-loaded SQLite synthetic applicants to sign in immediately.
+          </p>
+
+          <button type="button" class="btn btn-primary btn-lg" style="width: 100%; padding: 13px; font-size: 15px; margin-top: 14px;" onclick="signInWithSelectedDropdownUser()">
+            Sign In as Selected Applicant →
+          </button>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 10px; margin: 18px 0;">
+          <div style="flex: 1; height: 1px; background: var(--slate-200);"></div>
+          <span style="font-size: 11px; font-weight: 700; color: var(--slate-400); text-transform: uppercase;">Or 1-Click Quick Demo</span>
+          <div style="flex: 1; height: 1px; background: var(--slate-200);"></div>
+        </div>
+
+        <div class="preset-chips" style="justify-content: center; margin-bottom: 20px;">
+          <button type="button" class="chip" onclick="loginDemoUser('USR0007')" style="font-weight: 700;">Sai Saxena (USR0007)</button>
+          <button type="button" class="chip" onclick="loginDemoUser('USR0001')" style="font-weight: 700;">Harsh Bansal (USR0001)</button>
+          <button type="button" class="chip" onclick="loginDemoUser('USR0003')" style="font-weight: 700;">Priya Patel (USR0003)</button>
+        </div>
+
+        <!-- Secondary Manual PAN Section (Collapsible) -->
+        <div style="border-top: 1px solid var(--slate-200); padding-top: 14px;">
+          <div style="text-align: center; margin-bottom: 10px;">
+            <button type="button" class="chip" onclick="toggleManualPan()" style="font-size: 11px;">
+              ⌨️ Enter Custom PAN Identifier Manually ▾
+            </button>
+          </div>
+
+          <form id="manual-pan-form" onsubmit="handlePanLogin(event)" style="display: none; margin-top: 10px;">
+            <div class="form-group">
+              <label class="form-label">PAN Identifier Number</label>
+              <input type="text" id="login-pan" class="form-control" placeholder="e.g. ABCDE1234F" maxlength="10" style="font-family: monospace; text-transform: uppercase;">
+            </div>
+            <button type="submit" class="btn btn-outline" style="width: 100%;">
+              Sign In with PAN
+            </button>
+          </form>
+        </div>
+
+        <div style="text-align: center; margin-top: 20px; font-size: 12px; color: var(--slate-500);">
+          New applicant? <a href="#register" style="color: var(--primary); font-weight: 700; text-decoration: none;">Register New Account</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- 10. REGISTER VIEW (#register-view)         -->
+  <!-- ========================================== -->
+  <section id="register-view" class="view-section" style="display: none; padding: 40px 0;">
+    <div class="container" style="max-width: 760px;">
+      <div class="card" style="box-shadow: var(--shadow-lg);">
+        <div style="margin-bottom: 20px; border-bottom: 1px solid var(--slate-100); padding-bottom: 14px;">
+          <h2 style="font-size: 22px; font-weight: 800; color: var(--primary);">New Applicant Registration</h2>
+          <p style="font-size: 12px; color: var(--slate-500); margin-top: 4px;">
+            Enter applicant credentials to generate real-time machine learning loan approval fits.
+          </p>
+        </div>
+
+        <form id="register-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Full Name *</label>
+              <input type="text" id="reg-name" class="form-control" placeholder="e.g. Rahul Sharma" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">PAN Identifier (Unique 10-char) *</label>
+              <input type="text" id="reg-pan" class="form-control" placeholder="e.g. ABCDE1234F" maxlength="10" required style="font-family: monospace; text-transform: uppercase;">
+            </div>
+          </div>
+
+          <div class="form-row-3">
+            <div class="form-group">
+              <label class="form-label">Age (Years) *</label>
+              <input type="number" id="reg-age" class="form-control" value="30" min="18" max="100" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Monthly Income (₹) *</label>
+              <input type="number" id="reg-income" class="form-control" value="65000" min="0" step="any" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Credit Score (300-900) *</label>
+              <input type="number" id="reg-cibil" class="form-control" value="750" min="300" max="900" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Employment Type *</label>
+              <select id="reg-emp" class="form-control">
+                <option value="salaried">Salaried Professional</option>
+                <option value="self_employed">Self Employed</option>
+                <option value="business">Business Owner</option>
+                <option value="student">Student</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Experience (Years) *</label>
+              <input type="number" id="reg-exp" class="form-control" value="5" min="0" max="50" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Existing Monthly EMI (₹)</label>
+              <input type="number" id="reg-emi" class="form-control" value="0" min="0" step="any">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Active Loans Count</label>
+              <input type="number" id="reg-loans" class="form-control" value="0" min="0">
+            </div>
+          </div>
+
+          <div class="form-row-3">
+            <div class="form-group">
+              <label class="form-label">Household Expenses (₹)</label>
+              <input type="number" id="reg-expenses" class="form-control" value="20000" min="0" step="any">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Average Bank Balance (₹)</label>
+              <input type="number" id="reg-bank" class="form-control" value="50000" min="0" step="any">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Dependents</label>
+              <input type="number" id="reg-dep" class="form-control" value="1" min="0" max="10">
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 20px;">
+            <button type="button" class="btn btn-outline" onclick="window.location.hash='#login'">Cancel</button>
+            <button type="submit" class="btn btn-primary btn-lg">Create Applicant Profile →</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p>© 2026 LoanIQ Platform • Intelligent Loan Discovery & Repayment Simulator • College Project Implementation</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+
+  <script>
+    // Tab switching for recommendations
+    function showRecTab(tab) {
+      document.getElementById('rec-tab-eligible').style.display = tab === 'eligible' ? 'block' : 'none';
+      document.getElementById('rec-tab-ineligible').style.display = tab === 'ineligible' ? 'block' : 'none';
+    }
+
+    // Direct PAN Login Handler
+    async function handlePanLogin(e) {
+      e.preventDefault();
+      const pan = document.getElementById('login-pan').value.trim().toUpperCase();
+      try {
+        const res = await api.login(pan);
+        if (res.success && res.applicant) {
+          state.applicant = res.applicant;
+          api.setApplicant(res.applicant);
+          updateNavbar();
+          window.location.hash = '#dashboard';
+        } else {
+          alert("Login failed: " + (res.error || "PAN identifier not found."));
+        }
+      } catch (err) {
+        alert("Connection error contacting LoanIQ auth endpoint.");
+      }
+    }
+  </script>
+
+</body>
+</html>

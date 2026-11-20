@@ -1,0 +1,89 @@
+{
+  "car": {
+    "num_features": [
+      "age", "monthly_income", "employment_experience_years", "credit_score",
+      "min_credit_score_required", "credit_score_eligible", "min_age_required",
+      "max_age_allowed", "age_eligible", "loan_amount", "min_loan_amount_allowed",
+      "max_loan_amount_allowed", "loan_amount_eligible", "interest_rate_annual",
+      "tenure_months", "existing_emi", "existing_active_loans",
+      "monthly_household_expenses", "average_bank_balance", "dependents",
+      "monthly_emi", "vehicle_price", "vehicle_age_years"
+    ],
+    "cat_features": [
+      "product_id", "product_name", "employment_type", "vehicle_type",
+      "vehicle_condition", "fuel_type"
+    ],
+    "valid_categories": {
+      "employment_type": ["salaried", "self_employed", "business"],
+      "vehicle_type": ["SUV", "hatchback", "sedan"],
+      "vehicle_condition": ["new", "used"],
+      "fuel_type": ["CNG", "diesel", "electric", "petrol"]
+    }
+  },
+  "home": {
+    "num_features": [
+      "age", "monthly_income", "employment_experience_years", "credit_score",
+      "min_credit_score_required", "credit_score_eligible", "min_age_required",
+      "max_age_allowed", "age_eligible", "loan_amount", "min_loan_amount_allowed",
+      "max_loan_amount_allowed", "loan_amount_eligible", "interest_rate_annual",
+      "tenure_months", "existing_emi", "existing_active_loans",
+      "monthly_household_expenses", "average_bank_balance", "dependents",
+      "monthly_emi", "property_value", "property_age_years", "co_applicant",
+      "co_applicant_monthly_income"
+    ],
+    "cat_features": [
+      "product_id", "product_name", "employment_type", "property_type",
+      "property_location", "property_status"
+    ],
+    "valid_categories": {
+      "employment_type": ["salaried", "self_employed", "business"],
+      "property_type": ["apartment", "independent_house", "plot"],
+      "property_location": ["rural", "semi_urban", "urban"],
+      "property_status": ["ready_to_move", "under_construction"]
+    }
+  },
+  "education": {
+    "num_features": [
+      "age", "monthly_income", "employment_experience_years", "credit_score",
+      "min_credit_score_required", "credit_score_eligible", "min_age_required",
+      "max_age_allowed", "age_eligible", "loan_amount", "min_loan_amount_allowed",
+      "max_loan_amount_allowed", "loan_amount_eligible", "interest_rate_annual",
+      "tenure_months", "existing_emi", "existing_active_loans",
+      "monthly_household_expenses", "average_bank_balance", "dependents",
+      "monthly_emi", "course_duration_years", "total_course_cost",
+      "scholarship_amount", "co_applicant", "co_applicant_monthly_income"
+    ],
+    "cat_features": [
+      "product_id", "product_name", "employment_type", "course_level",
+      "course_field", "institution_type", "institution_tier", "study_location"
+    ],
+    "valid_categories": {
+      "employment_type": ["salaried", "self_employed", "business", "student"],
+      "course_level": ["undergraduate", "postgraduate", "doctorate"],
+      "course_field": ["arts", "engineering", "law", "management", "medicine", "other", "science"],
+      "institution_type": ["government", "private"],
+      "institution_tier": ["tier_1", "tier_2", "tier_3"],
+      "study_location": ["India", "abroad"]
+    }
+  },
+  "personal": {
+    "num_features": [
+      "age", "monthly_income", "employment_experience_years", "credit_score",
+      "min_credit_score_required", "credit_score_eligible", "min_age_required",
+      "max_age_allowed", "age_eligible", "loan_amount", "min_loan_amount_allowed",
+      "max_loan_amount_allowed", "loan_amount_eligible", "interest_rate_annual",
+      "tenure_months", "existing_emi", "existing_active_loans",
+      "monthly_household_expenses", "average_bank_balance", "dependents",
+      "monthly_emi"
+    ],
+    "cat_features": [
+      "product_id", "product_name", "employment_type", "loan_purpose",
+      "marital_status"
+    ],
+    "valid_categories": {
+      "employment_type": ["salaried", "self_employed", "business"],
+      "loan_purpose": ["debt_consolidation", "home_renovation", "medical", "other", "travel", "wedding"],
+      "marital_status": ["married", "single"]
+    }
+  }
+}

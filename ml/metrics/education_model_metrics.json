@@ -1,0 +1,51 @@
+{
+  "loan_type": "education",
+  "selected_model": "Hist Gradient Boosting",
+  "metrics": {
+    "selected_model": "Hist Gradient Boosting",
+    "test_accuracy": 0.93,
+    "test_precision": 0.9365079365079365,
+    "test_recall": 0.9516129032258065,
+    "test_f1": 0.944,
+    "test_roc_auc": 0.9749575551782682,
+    "test_pr_auc": 0.9815129316106245,
+    "test_brier_score": 0.05299549575885529
+  },
+  "cv_comparison": [
+    {
+      "model": "Hist Gradient Boosting",
+      "cv_roc_auc_mean": 0.9663530539210311,
+      "cv_roc_auc_std": 0.006825244157271452,
+      "cv_pr_auc_mean": 0.9774752878779914,
+      "cv_f1_mean": 0.9258511414476392
+    },
+    {
+      "model": "Random Forest",
+      "cv_roc_auc_mean": 0.9565112854304566,
+      "cv_roc_auc_std": 0.0062728679975218036,
+      "cv_pr_auc_mean": 0.970826651981881,
+      "cv_f1_mean": 0.9113235649509949
+    },
+    {
+      "model": "Logistic Regression",
+      "cv_roc_auc_mean": 0.9470156559714559,
+      "cv_roc_auc_std": 0.010678797286980728,
+      "cv_pr_auc_mean": 0.9651244634433006,
+      "cv_f1_mean": 0.8973845272827696
+    },
+    {
+      "model": "Extra Trees",
+      "cv_roc_auc_mean": 0.9333033634098112,
+      "cv_roc_auc_std": 0.004684473121687762,
+      "cv_pr_auc_mean": 0.9588215289118157,
+      "cv_f1_mean": 0.891521208139337
+    },
+    {
+      "model": "Dummy baseline",
+      "cv_roc_auc_mean": 0.5,
+      "cv_roc_auc_std": 0.0,
+      "cv_pr_auc_mean": 0.6200003754705115,
+      "cv_f1_mean": 0.7654312635832866
+    }
+  ]
+}
