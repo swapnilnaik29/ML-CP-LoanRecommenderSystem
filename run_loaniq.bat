@@ -19,23 +19,10 @@ if %errorlevel% neq 0 (
     exit /b 1
 )
 
-:: Step 2: Initialize SQLite databases if missing
-echo [2/4] Verifying SQLite databases (V1 and V2)...
-if not exist "instance\loaniq_v1.db" (
-    echo Database v1 not found. Initializing and seeding V1 database...
-    python scripts\init_db.py
-    python scripts\seed_products.py
-    python scripts\import_csv_data.py
-    if exist "instance\loaniq.db" (
-        copy "instance\loaniq.db" "instance\loaniq_v1.db" >nul
-    )
-    echo Database instance\loaniq_v1.db created successfully.
-) else (
-    echo Database instance\loaniq_v1.db found. Ready.
-)
-
+:: Step 2: Initialize SQLite database if missing
+echo [2/4] Verifying SQLite database (V2)...
 if not exist "instance\loaniq_v2.db" (
-    echo Database v2 not found. Initializing and seeding V2 database...
+    echo Database not found. Initializing and seeding V2 benchmark database...
     python scripts\seed_v2.py
     echo Database instance\loaniq_v2.db created successfully.
 ) else (

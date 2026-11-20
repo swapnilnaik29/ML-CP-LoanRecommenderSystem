@@ -250,13 +250,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.warn("Could not pre-fetch demo users:", err);
   }
 
-  // 4. If applicant not set, optionally auto-resolve default demo user
-  if (!state.applicant && state.demoUsers.length) {
-    const defaultId = state.version === 'v2' ? 'APP0001' : 'USR0007';
-    const found = state.demoUsers.find(u => u.applicant_id === defaultId) || state.demoUsers[0];
-    if (found) {
-      state.applicant = found;
-      api.setApplicant(found);
+  // 4. Auto-resolve default demo user (APP0001) if not set or legacy
+  if ((!state.applicant || state.applicant.applicant_id?.startsWith('USR')) && state.demoUsers.length) {
+    const defaultUser = state.demoUsers.find(u => u.applicant_id === 'APP0001') || state.demoUsers[0];
+    if (defaultUser) {
+      state.applicant = defaultUser;
+      api.setApplicant(defaultUser);
     }
   }
 
@@ -547,14 +546,9 @@ function toggleManualPan() {
 }
 
 async function loginDemoUser(applicantId) {
-  const v = api.getVersion();
-  // Graceful adaptation if a user ID from the other version was passed
-  if (!applicantId) {
-    applicantId = v === 'v2' ? 'APP0001' : 'USR0007';
-  } else if (applicantId.startsWith('USR') && v === 'v2') {
+  // Pure Version 2 default
+  if (!applicantId || applicantId.startsWith('USR')) {
     applicantId = 'APP0001';
-  } else if (applicantId.startsWith('APP') && v === 'v1') {
-    applicantId = 'USR0007';
   }
 
   try {
@@ -823,43 +817,37 @@ async function submitDiscoveryForm(e) {
   const amount = Number(document.getElementById('disc-amount').value);
   const tenure = Number(document.getElementById('disc-tenure').value);
 
-  // Category specific details
+  // Category specific details (Strict V2 Feature Schemas)
   let categoryDetails = {};
   if (state.activeCategory === 'car') {
+    const vehPrice = Number(document.getElementById('car-price')?.value || amount * 1.25);
+    const dp = Number(document.getElementById('car-dp')?.value || Math.max(0, vehPrice - amount));
     categoryDetails = {
-      vehicle_price: Number(document.getElementById('car-price')?.value || amount),
-      vehicle_type: document.getElementById('car-type')?.value || 'sedan',
-      vehicle_condition: document.getElementById('car-condition')?.value || 'new',
-      vehicle_age_years: Number(document.getElementById('car-age')?.value || 0),
-      fuel_type: document.getElementById('car-fuel')?.value || 'petrol'
+      vehicle_price_inr: vehPrice,
+      down_payment_inr: dp,
+      vehicle_condition: document.getElementById('car-condition')?.value || 'New',
+      vehicle_type: document.getElementById('car-type')?.value || 'Sedan'
     };
   } else if (state.activeCategory === 'home') {
-    const coApp = Number(document.getElementById('home-coapp')?.value || 0);
+    const propVal = Number(document.getElementById('home-val')?.value || amount * 1.25);
+    const dp = Number(document.getElementById('home-dp')?.value || Math.max(0, propVal - amount));
     categoryDetails = {
-      property_value: Number(document.getElementById('home-val')?.value || amount * 1.2),
-      property_type: document.getElementById('home-type')?.value || 'apartment',
-      property_location: document.getElementById('home-loc')?.value || 'urban',
-      property_status: document.getElementById('home-status')?.value || 'ready_to_move',
-      property_age_years: Number(document.getElementById('home-age')?.value || 2),
-      co_applicant: coApp,
-      co_applicant_monthly_income: coApp === 1 ? Number(document.getElementById('home-coincome')?.value || 30000) : 0
+      property_value_inr: propVal,
+      down_payment_inr: dp,
+      property_type: document.getElementById('home-type')?.value || 'Apartment',
+      city_tier: document.getElementById('home-tier')?.value || 'Tier 1'
     };
   } else if (state.activeCategory === 'education') {
-    const coApp = Number(document.getElementById('edu-coapp')?.value || 0);
     categoryDetails = {
-      course_level: document.getElementById('edu-level')?.value || 'postgraduate',
-      course_field: document.getElementById('edu-field')?.value || 'engineering',
-      study_location: document.getElementById('edu-loc')?.value || 'India',
-      institution_tier: document.getElementById('edu-tier')?.value || 'tier_1',
-      total_course_cost: Number(document.getElementById('edu-cost')?.value || amount),
-      scholarship_amount: Number(document.getElementById('edu-schol')?.value || 0),
-      co_applicant: coApp,
-      co_applicant_monthly_income: coApp === 1 ? Number(document.getElementById('edu-coincome')?.value || 25000) : 0
+      course_cost_inr: Number(document.getElementById('edu-cost')?.value || amount),
+      course_level: document.getElementById('edu-level')?.value || 'Postgraduate',
+      study_destination: document.getElementById('edu-dest')?.value || 'India',
+      collateral_available: document.getElementById('edu-collateral')?.value || 'Yes'
     };
   } else if (state.activeCategory === 'personal') {
     categoryDetails = {
-      loan_purpose: document.getElementById('pers-purpose')?.value || 'home_renovation',
-      marital_status: document.getElementById('pers-marital')?.value || 'married'
+      loan_purpose: document.getElementById('pers-purpose')?.value || 'Home improvement',
+      co_applicant: document.getElementById('pers-coapp')?.value || 'No'
     };
   }
 

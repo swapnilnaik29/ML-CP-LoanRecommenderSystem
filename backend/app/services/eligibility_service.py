@@ -7,7 +7,7 @@ from typing import Dict, Any, List, Optional
 from backend.app.database import get_db_connection
 
 
-def get_all_products(loan_type: Optional[str] = None, version: str = "v1") -> List[Dict[str, Any]]:
+def get_all_products(loan_type: Optional[str] = None, version: str = "v2") -> List[Dict[str, Any]]:
     conn = get_db_connection(version)
     if loan_type:
         rows = conn.execute("""
@@ -24,7 +24,7 @@ def get_all_products(loan_type: Optional[str] = None, version: str = "v1") -> Li
     return [dict(r) for r in rows]
 
 
-def get_product_by_id(product_id: str, version: str = "v1") -> Optional[Dict[str, Any]]:
+def get_product_by_id(product_id: str, version: str = "v2") -> Optional[Dict[str, Any]]:
     conn = get_db_connection(version)
     row = conn.execute("SELECT * FROM loan_products WHERE product_id = ?", (product_id,)).fetchone()
     conn.close()

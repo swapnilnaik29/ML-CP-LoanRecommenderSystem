@@ -8,6 +8,7 @@ Idempotently initializes and seeds instance/loaniq_v2.db with:
 
 import sys
 import json
+import shutil
 import hashlib
 import pandas as pd
 from pathlib import Path
@@ -209,6 +210,12 @@ def seed_v2_database():
         print(f"Seeded {loan_count} V2 existing loans.")
 
     conn.close()
+    legacy_path = BASE_DIR / "instance" / "loaniq.db"
+    try:
+        shutil.copyfile(BASE_DIR / "instance" / "loaniq_v2.db", legacy_path)
+        print(f"Synchronized V2 database to legacy instance path: {legacy_path}")
+    except Exception as e:
+        print(f"Notice: legacy mirror copy skipped: {e}")
     print("V2 Database successfully initialized and seeded!")
 
 

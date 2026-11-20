@@ -83,7 +83,7 @@ def calculate_amortisation_schedule(principal: float, annual_rate_pct: float, mo
     }
 
 
-def simulate_loan_repayment(loan_account_id: str, proposed_emi: float, version: str = "v1") -> Dict[str, Any]:
+def simulate_loan_repayment(loan_account_id: str, proposed_emi: float, version: str = "v2") -> Dict[str, Any]:
     """
     Simulates repayment scenario on an existing loan for a proposed EMI.
     Compares against current baseline loan conditions without modifying the database.

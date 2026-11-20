@@ -17,14 +17,8 @@
       <a class="brand" href="#dashboard">
         <div class="brand-icon">🏛</div>
         <div class="brand-text">Loan<span>IQ</span></div>
-        <span class="brand-badge">Fintech</span>
+        <span class="brand-badge">2.0</span>
       </a>
-
-      <!-- Version Selector Pill -->
-      <div class="version-switcher" title="Toggle between Original Calibrated ML (V1) and Retrained Benchmarked Models (V2)">
-        <button id="nav-ver-v1" class="version-btn active" onclick="switchVersion('v1')">V1 – Original</button>
-        <button id="nav-ver-v2" class="version-btn" onclick="switchVersion('v2')">V2 – Retrained</button>
-      </div>
 
       <nav class="nav-links" id="nav-links">
         <a class="nav-link" href="#dashboard">Dashboard</a>
@@ -72,11 +66,11 @@
           <div class="hero-card" id="hero-model-card">
             <div class="hero-card-header">
               <div>
-                <strong style="color: var(--primary); font-size: 15px;" id="hero-engine-title">LoanIQ Engine</strong>
-                <div style="font-size: 11px; color: var(--slate-500);" id="hero-engine-sub">4 Calibrated ML Models Active</div>
+                <strong style="color: var(--primary); font-size: 15px;" id="hero-engine-title">LoanIQ Engine 2.0</strong>
+                <div style="font-size: 11px; color: var(--slate-500);" id="hero-engine-sub">4 Retrained Benchmark ML Models Active</div>
               </div>
               <div style="display: flex; gap: 6px; align-items: center;">
-                <span id="hero-engine-ver-badge" class="badge-active" style="font-size: 10px;">V1 Engine</span>
+                <span id="hero-engine-ver-badge" class="badge-active" style="font-size: 10px;">V2 Benchmarked</span>
                 <span class="badge-active">Online</span>
               </div>
             </div>
@@ -85,38 +79,38 @@
               <div class="model-row">
                 <div>
                   <div class="model-name">Car Loan Models</div>
-                  <div class="model-sub">Random Forest Tuned</div>
+                  <div class="model-sub">CatBoost Classifier CPU</div>
                 </div>
-                <div class="model-auc">AUC: 0.923</div>
+                <div class="model-auc">AUC: 0.916</div>
               </div>
 
               <div class="model-row">
                 <div>
                   <div class="model-name">Home Loan Models</div>
-                  <div class="model-sub">Calibrated Classifier CV</div>
+                  <div class="model-sub">CatBoost Classifier CPU</div>
                 </div>
-                <div class="model-auc">ROC: 0.918</div>
+                <div class="model-auc">ROC: 0.941</div>
               </div>
 
               <div class="model-row">
                 <div>
                   <div class="model-name">Education Loan</div>
-                  <div class="model-sub">Hist Gradient Boosting</div>
+                  <div class="model-sub">Logistic Regression Pipeline</div>
                 </div>
-                <div class="model-auc">AUC: 0.975</div>
+                <div class="model-auc">AUC: 0.963</div>
               </div>
 
               <div class="model-row">
                 <div>
                   <div class="model-name">Personal Loan</div>
-                  <div class="model-sub">Calibrated Random Forest</div>
+                  <div class="model-sub">Logistic Regression Pipeline</div>
                 </div>
-                <div class="model-auc">AUC: 0.841</div>
+                <div class="model-auc">AUC: 0.964</div>
               </div>
             </div>
 
             <div style="font-size: 11px; color: var(--slate-400); text-align: center; margin-top: 14px;" id="hero-engine-footer">
-              16 Real Configured Products • 100 SQLite Demo Applicants
+              16 Real Configured Products • 100 SQLite Demo Applicants (APP0001–100)
             </div>
           </div>
         </div>
@@ -180,20 +174,19 @@
   <section id="dashboard-view" class="view-section" style="display: none; padding: 36px 0;">
     <div class="container">
       
-      <!-- Active ML Engine & Database Version Banner -->
-      <div class="dash-version-card" id="dash-version-card">
-        <div>
-          <div class="dash-version-title">
-            <span id="dash-ver-pill" style="background: var(--accent); color: var(--primary); font-size: 11px; padding: 2px 8px; border-radius: 9999px; font-weight: 800;">V1 Active</span>
-            <span id="dash-ver-title-text">Original Calibrated ML Engine & SQLite v1</span>
+      <!-- Engine Status Banner -->
+      <div class="dash-version-card" id="dash-version-card" style="margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; flex-wrap: wrap; gap: 10px;">
+          <div>
+            <div class="dash-version-title">
+              <span id="dash-ver-pill" style="background: var(--accent); color: var(--primary); font-size: 11px; padding: 2px 8px; border-radius: 9999px; font-weight: 800;">LoanIQ 2.0</span>
+              <span id="dash-ver-title-text">Retrained Benchmark ML Engine Active</span>
+            </div>
+            <div class="dash-version-desc" id="dash-ver-desc-text">
+              CatBoost CPU (Car: 0.916, Home: 0.941) & Logistic Regression (Education: 0.963, Personal: 0.964) • Zero-PII Feature Schemas
+            </div>
           </div>
-          <div class="dash-version-desc" id="dash-ver-desc-text">
-            Using scikit-learn Calibrated Pipelines • Car (RF Tuned: 0.923), Home (Calibrated CV: 0.918), Education (HistGB: 0.975), Personal (Calibrated RF: 0.841) • Database: loaniq_v1.db
-          </div>
-        </div>
-        <div class="version-switcher" style="background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2);">
-          <button id="dash-ver-v1" class="version-btn active" onclick="switchVersion('v1')">V1 – Original</button>
-          <button id="dash-ver-v2" class="version-btn" onclick="switchVersion('v2')">V2 – Retrained</button>
+          <span class="badge-active" style="font-size: 10px;">Production Online</span>
         </div>
       </div>
 
@@ -393,53 +386,31 @@
                 <div class="form-row">
                   <div class="form-group">
                     <label class="form-label">Estimated Property Value (₹) *</label>
-                    <input type="number" id="home-val" class="form-control" value="3500000" min="0" step="any">
+                    <input type="number" id="home-val" class="form-control" value="3500000" min="0" step="any" required>
                   </div>
+                  <div class="form-group">
+                    <label class="form-label">Down Payment (₹) *</label>
+                    <input type="number" id="home-dp" class="form-control" value="700000" min="0" step="any" required>
+                  </div>
+                </div>
+
+                <div class="form-row">
                   <div class="form-group">
                     <label class="form-label">Property Type *</label>
                     <select id="home-type" class="form-control">
-                      <option value="apartment">Apartment / Flat</option>
-                      <option value="independent_house">Independent House / Villa</option>
-                      <option value="plot">Residential Plot</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div class="form-row">
-                  <div class="form-group">
-                    <label class="form-label">Property Location *</label>
-                    <select id="home-loc" class="form-control">
-                      <option value="urban">Urban / Metro</option>
-                      <option value="semi_urban">Semi-Urban</option>
-                      <option value="rural">Rural</option>
+                      <option value="Apartment">Apartment</option>
+                      <option value="Independent house">Independent House / Villa</option>
+                      <option value="Under construction">Under Construction</option>
                     </select>
                   </div>
                   <div class="form-group">
-                    <label class="form-label">Construction Status *</label>
-                    <select id="home-status" class="form-control">
-                      <option value="ready_to_move">Ready to Move</option>
-                      <option value="under_construction">Under Construction</option>
+                    <label class="form-label">City Tier *</label>
+                    <select id="home-tier" class="form-control">
+                      <option value="Tier 1">Tier 1 (Metro / Major Urban)</option>
+                      <option value="Tier 2">Tier 2 (Emerging City)</option>
+                      <option value="Tier 3">Tier 3 (Regional / Semi-Urban)</option>
                     </select>
                   </div>
-                </div>
-
-                <div class="form-row">
-                  <div class="form-group">
-                    <label class="form-label">Property Age (Years)</label>
-                    <input type="number" id="home-age" class="form-control" value="2" min="0" max="60">
-                  </div>
-                  <div class="form-group">
-                    <label class="form-label">Co-Applicant Present?</label>
-                    <select id="home-coapp" class="form-control">
-                      <option value="1">Yes (Includes joint income)</option>
-                      <option value="0">No (Single applicant)</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <label class="form-label">Co-Applicant Monthly Income (₹)</label>
-                  <input type="number" id="home-coincome" class="form-control" value="35000" min="0" step="any">
                 </div>
               </div>
 
@@ -448,15 +419,11 @@
                 <div class="form-row">
                   <div class="form-group">
                     <label class="form-label">Vehicle On-Road Price (₹) *</label>
-                    <input type="number" id="car-price" class="form-control" value="650000" min="0" step="any">
+                    <input type="number" id="car-price" class="form-control" value="750000" min="0" step="any" required>
                   </div>
                   <div class="form-group">
-                    <label class="form-label">Vehicle Body Type *</label>
-                    <select id="car-type" class="form-control">
-                      <option value="sedan">Sedan</option>
-                      <option value="SUV">SUV</option>
-                      <option value="hatchback">Hatchback</option>
-                    </select>
+                    <label class="form-label">Down Payment (₹) *</label>
+                    <input type="number" id="car-dp" class="form-control" value="150000" min="0" step="any" required>
                   </div>
                 </div>
 
@@ -464,24 +431,19 @@
                   <div class="form-group">
                     <label class="form-label">Vehicle Condition *</label>
                     <select id="car-condition" class="form-control">
-                      <option value="new">Brand New</option>
-                      <option value="used">Pre-Owned / Used</option>
+                      <option value="New">Brand New</option>
+                      <option value="Used">Pre-Owned / Used</option>
                     </select>
                   </div>
                   <div class="form-group">
-                    <label class="form-label">Vehicle Age (Years)</label>
-                    <input type="number" id="car-age" class="form-control" value="0" min="0" max="25">
+                    <label class="form-label">Vehicle Type *</label>
+                    <select id="car-type" class="form-control">
+                      <option value="Sedan">Sedan</option>
+                      <option value="Hatchback">Hatchback</option>
+                      <option value="SUV">SUV</option>
+                      <option value="Two-wheeler">Two-Wheeler</option>
+                    </select>
                   </div>
-                </div>
-
-                <div class="form-group">
-                  <label class="form-label">Fuel Type *</label>
-                  <select id="car-fuel" class="form-control">
-                    <option value="petrol">Petrol</option>
-                    <option value="diesel">Diesel</option>
-                    <option value="CNG">CNG</option>
-                    <option value="electric">Electric (EV)</option>
-                  </select>
                 </div>
               </div>
 
@@ -489,65 +451,33 @@
               <div id="cat-education-fields" class="cat-fields" style="display: none;">
                 <div class="form-row">
                   <div class="form-group">
+                    <label class="form-label">Total Course Tuition & Living (₹) *</label>
+                    <input type="number" id="edu-cost" class="form-control" value="1200000" min="0" step="any" required>
+                  </div>
+                  <div class="form-group">
                     <label class="form-label">Course Level *</label>
                     <select id="edu-level" class="form-control">
-                      <option value="postgraduate">Postgraduate (Masters)</option>
-                      <option value="undergraduate">Undergraduate (Bachelors)</option>
-                      <option value="doctorate">Doctorate (PhD)</option>
-                    </select>
-                  </div>
-                  <div class="form-group">
-                    <label class="form-label">Academic Field *</label>
-                    <select id="edu-field" class="form-control">
-                      <option value="engineering">Engineering / Tech</option>
-                      <option value="medicine">Medicine / Healthcare</option>
-                      <option value="management">Management / MBA</option>
-                      <option value="science">Sciences</option>
-                      <option value="arts">Arts & Humanities</option>
+                      <option value="Postgraduate">Postgraduate (Masters / MBA)</option>
+                      <option value="Undergraduate">Undergraduate (Bachelors / B.Tech)</option>
+                      <option value="Doctoral">Doctoral (PhD)</option>
                     </select>
                   </div>
                 </div>
 
                 <div class="form-row">
                   <div class="form-group">
-                    <label class="form-label">Study Location *</label>
-                    <select id="edu-loc" class="form-control">
+                    <label class="form-label">Study Destination *</label>
+                    <select id="edu-dest" class="form-control">
                       <option value="India">Domestic (India)</option>
-                      <option value="abroad">International (Abroad)</option>
+                      <option value="Abroad">International (Abroad)</option>
                     </select>
                   </div>
                   <div class="form-group">
-                    <label class="form-label">Institution Tier *</label>
-                    <select id="edu-tier" class="form-control">
-                      <option value="tier_1">Tier 1 (IIT / IIM / Ivy League)</option>
-                      <option value="tier_2">Tier 2 (Govt Recognized)</option>
-                      <option value="tier_3">Tier 3 (Other Accredited)</option>
+                    <label class="form-label">Collateral Available? *</label>
+                    <select id="edu-collateral" class="form-control">
+                      <option value="Yes">Yes (Property / Fixed Deposit / Asset)</option>
+                      <option value="No">No (Unsecured Loan)</option>
                     </select>
-                  </div>
-                </div>
-
-                <div class="form-row">
-                  <div class="form-group">
-                    <label class="form-label">Total Course Tuition & Living (₹) *</label>
-                    <input type="number" id="edu-cost" class="form-control" value="800000" min="0" step="any">
-                  </div>
-                  <div class="form-group">
-                    <label class="form-label">Scholarship Amount (₹)</label>
-                    <input type="number" id="edu-schol" class="form-control" value="50000" min="0" step="any">
-                  </div>
-                </div>
-
-                <div class="form-row">
-                  <div class="form-group">
-                    <label class="form-label">Co-Applicant Present?</label>
-                    <select id="edu-coapp" class="form-control">
-                      <option value="1">Yes (Parent / Guardian)</option>
-                      <option value="0">No</option>
-                    </select>
-                  </div>
-                  <div class="form-group">
-                    <label class="form-label">Co-Applicant Income (₹)</label>
-                    <input type="number" id="edu-coincome" class="form-control" value="30000" min="0" step="any">
                   </div>
                 </div>
               </div>
@@ -558,19 +488,19 @@
                   <div class="form-group">
                     <label class="form-label">Loan Objective / Purpose *</label>
                     <select id="pers-purpose" class="form-control">
-                      <option value="home_renovation">Home Renovation</option>
-                      <option value="debt_consolidation">Debt Consolidation</option>
-                      <option value="medical">Medical Treatment</option>
-                      <option value="wedding">Wedding / Family Function</option>
-                      <option value="travel">Travel & Holiday</option>
-                      <option value="other">Other Personal Needs</option>
+                      <option value="Home improvement">Home Improvement / Renovation</option>
+                      <option value="Debt consolidation">Debt Consolidation</option>
+                      <option value="Medical">Medical Expenses</option>
+                      <option value="Wedding">Wedding / Family Function</option>
+                      <option value="Travel">Travel & Vacation</option>
+                      <option value="Other">Other Personal Needs</option>
                     </select>
                   </div>
                   <div class="form-group">
-                    <label class="form-label">Marital Status *</label>
-                    <select id="pers-marital" class="form-control">
-                      <option value="married">Married</option>
-                      <option value="single">Single / Unmarried</option>
+                    <label class="form-label">Co-Applicant Present? *</label>
+                    <select id="pers-coapp" class="form-control">
+                      <option value="No">No (Individual Applicant)</option>
+                      <option value="Yes">Yes (Joint Co-Applicant)</option>
                     </select>
                   </div>
                 </div>

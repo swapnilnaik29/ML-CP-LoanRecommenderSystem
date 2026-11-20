@@ -20,7 +20,7 @@ def discover_recommendations(
     requested_amount: float,
     desired_tenure_months: int,
     category_details: Dict[str, Any],
-    version: str = "v1"
+    version: str = "v2"
 ) -> Dict[str, Any]:
     """
     Executes complete loan discovery workflow:
@@ -177,6 +177,8 @@ def discover_recommendations(
                         purpose = "Medical"
                     elif "Travel" in purpose:
                         purpose = "Travel"
+                    elif "Home" in purpose:
+                        purpose = "Home improvement"
                     else:
                         purpose = "Other"
                     co_app = str(category_details.get("co_applicant", "No")).capitalize()

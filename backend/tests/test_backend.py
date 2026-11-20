@@ -15,7 +15,7 @@ sys.path.insert(0, str(BASE_DIR))
 from backend.app import create_app
 from backend.app.database import get_db_connection
 from backend.app.services.applicant_service import register_applicant, authenticate_user, get_applicant_by_id
-from backend.app.services.existing_loan_service import get_loans_for_applicant, add_existing_loan
+from backend.app.services.existing_loan_service import get_loans_for_applicant, add_existing_loan, recalculate_applicant_aggregates
 from backend.app.services.eligibility_service import get_all_products, evaluate_product_eligibility
 from backend.app.services.optimizer_service import calculate_amortisation_schedule, simulate_loan_repayment
 from backend.app.services.recommendation_service import discover_recommendations
@@ -27,6 +27,17 @@ class LoanIQBackendTests(unittest.TestCase):
     def setUpClass(cls):
         cls.app = create_app()
         cls.client = cls.app.test_client()
+        conn = get_db_connection()
+        conn.execute("DELETE FROM applicants WHERE pan_number = 'TESTP9999Z'")
+        conn.commit()
+        conn.close()
+
+    @classmethod
+    def tearDownClass(cls):
+        conn = get_db_connection()
+        conn.execute("DELETE FROM applicants WHERE pan_number = 'TESTP9999Z'")
+        conn.commit()
+        conn.close()
 
     def test_01_health_endpoint(self):
         res = self.client.get("/api/health")
@@ -80,28 +91,41 @@ class LoanIQBackendTests(unittest.TestCase):
             register_applicant(reg_data)
 
     def test_04_authentication(self):
-        # Authenticate using synthetic demo user USR0001
-        user = authenticate_user("USR0001", "demo1234")
+        # Authenticate using applicant dynamically from default DB
+        conn = get_db_connection()
+        row = conn.execute("SELECT applicant_id, pan_number FROM applicants LIMIT 1").fetchone()
+        conn.close()
+        app_id = row["applicant_id"]
+        pan = row["pan_number"]
+
+        # Authenticate using applicant_id
+        user = authenticate_user(app_id, "demo1234")
         self.assertIsNotNone(user)
-        self.assertEqual(user["applicant_id"], "USR0001")
+        self.assertEqual(user["applicant_id"], app_id)
 
         # Authenticate using PAN
-        user_by_pan = authenticate_user("ZZZP0001A", "demo1234")
+        user_by_pan = authenticate_user(pan, "demo1234")
         self.assertIsNotNone(user_by_pan)
-        self.assertEqual(user_by_pan["applicant_id"], "USR0001")
+        self.assertEqual(user_by_pan["applicant_id"], app_id)
 
         # Invalid password
-        bad_user = authenticate_user("USR0001", "wrong_password_999")
+        bad_user = authenticate_user(app_id, "wrong_password_999")
         self.assertIsNone(bad_user)
 
     def test_05_add_existing_loan_and_reconcile_aggregate(self):
-        # Fetch initial state for USR0001
-        initial_app = get_applicant_by_id("USR0001")
+        conn = get_db_connection()
+        row = conn.execute("SELECT applicant_id FROM applicants LIMIT 1").fetchone()
+        conn.close()
+        app_id = row["applicant_id"]
+
+        # Ensure consistent baseline before adding loan
+        recalculate_applicant_aggregates(app_id)
+        initial_app = get_applicant_by_id(app_id)
         initial_loans_count = initial_app["existing_active_loans"]
         initial_total_emi = initial_app["existing_emi_inr"]
 
         # Add a new active loan
-        new_loan = add_existing_loan("USR0001", {
+        new_loan = add_existing_loan(app_id, {
             "loan_type": "Personal",
             "loan_amount_inr": 50000,
             "annual_interest_rate_pct": 12.0,
@@ -113,12 +137,19 @@ class LoanIQBackendTests(unittest.TestCase):
         })
 
         self.assertIsNotNone(new_loan)
-        self.assertEqual(new_loan["applicant_id"], "USR0001")
+        self.assertEqual(new_loan["applicant_id"], app_id)
 
         # Re-check applicant aggregate in SQLite
-        updated_app = get_applicant_by_id("USR0001")
+        updated_app = get_applicant_by_id(app_id)
         self.assertEqual(updated_app["existing_active_loans"], initial_loans_count + 1)
         self.assertAlmostEqual(updated_app["existing_emi_inr"], initial_total_emi + 4442.44, places=1)
+
+        # Clean up test loan
+        conn = get_db_connection()
+        conn.execute("DELETE FROM existing_loans WHERE loan_account_id = ?", (new_loan["loan_account_id"],))
+        conn.commit()
+        conn.close()
+        recalculate_applicant_aggregates(app_id)
 
     def test_06_hard_eligibility_rules(self):
         products = get_all_products(loan_type="car")
@@ -178,25 +209,24 @@ class LoanIQBackendTests(unittest.TestCase):
         self.assertGreaterEqual(sim["savings"]["tenure_months_saved"], 0)
 
     def test_09_all_four_ml_discovery_flows(self):
-        # Use USR0001 (credit score 633, age 40)
-        # Update credit score temporarily to 750 for broad eligibility testing
         conn = get_db_connection()
-        conn.execute("UPDATE applicants SET credit_score = 750 WHERE applicant_id = 'USR0001'")
+        row = conn.execute("SELECT applicant_id FROM applicants ORDER BY id ASC LIMIT 1").fetchone()
+        target_app_id = row["applicant_id"]
+        conn.execute("UPDATE applicants SET credit_score = 750, age = 35 WHERE applicant_id = ?", (target_app_id,))
         conn.commit()
         conn.close()
 
         # 1. Car Loan Discovery
         car_res = discover_recommendations(
-            applicant_id="USR0001",
+            applicant_id=target_app_id,
             loan_type="car",
             requested_amount=400000,
             desired_tenure_months=36,
             category_details={
-                "vehicle_price": 500000,
-                "vehicle_age_years": 1,
-                "vehicle_type": "sedan",
-                "vehicle_condition": "new",
-                "fuel_type": "petrol"
+                "vehicle_price_inr": 500000,
+                "down_payment_inr": 100000,
+                "vehicle_type": "Sedan",
+                "vehicle_condition": "New"
             }
         )
         self.assertGreater(car_res["total_eligible"], 0)
@@ -207,18 +237,15 @@ class LoanIQBackendTests(unittest.TestCase):
 
         # 2. Home Loan Discovery
         home_res = discover_recommendations(
-            applicant_id="USR0001",
+            applicant_id=target_app_id,
             loan_type="home",
             requested_amount=2500000,
             desired_tenure_months=120,
             category_details={
-                "property_value": 3500000,
-                "property_age_years": 2,
-                "co_applicant": 1,
-                "co_applicant_monthly_income": 40000,
-                "property_type": "apartment",
-                "property_location": "urban",
-                "property_status": "ready_to_move"
+                "property_value_inr": 3500000,
+                "down_payment_inr": 1000000,
+                "property_type": "Apartment",
+                "city_tier": "Tier 1"
             }
         )
         self.assertGreater(home_res["total_eligible"], 0)
@@ -227,21 +254,15 @@ class LoanIQBackendTests(unittest.TestCase):
 
         # 3. Education Loan Discovery
         edu_res = discover_recommendations(
-            applicant_id="USR0001",
+            applicant_id=target_app_id,
             loan_type="education",
             requested_amount=800000,
             desired_tenure_months=60,
             category_details={
-                "course_duration_years": 2,
-                "total_course_cost": 1000000,
-                "scholarship_amount": 100000,
-                "co_applicant": 1,
-                "co_applicant_monthly_income": 30000,
-                "course_level": "postgraduate",
-                "course_field": "engineering",
-                "institution_type": "private",
-                "institution_tier": "tier_1",
-                "study_location": "India"
+                "course_cost_inr": 1000000,
+                "course_level": "Postgraduate",
+                "study_destination": "India",
+                "collateral_available": "Yes"
             }
         )
         self.assertGreater(edu_res["total_eligible"], 0)
@@ -250,13 +271,13 @@ class LoanIQBackendTests(unittest.TestCase):
 
         # 4. Personal Loan Discovery
         per_res = discover_recommendations(
-            applicant_id="USR0001",
+            applicant_id=target_app_id,
             loan_type="personal",
             requested_amount=200000,
             desired_tenure_months=24,
             category_details={
-                "loan_purpose": "home_renovation",
-                "marital_status": "married"
+                "loan_purpose": "Home improvement",
+                "co_applicant": "No"
             }
         )
         self.assertGreater(per_res["total_eligible"], 0)

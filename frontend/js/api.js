@@ -3,23 +3,24 @@
  * Connects to the Flask backend with request-scoped versioning (V1 / V2).
  */
 
-const API_BASE = window.location.port === '5000' ? '/api' : 'http://127.0.0.1:5000/api';
+const API_BASE = (window.location.hostname === 'localhost' && window.location.port === '5173')
+  ? 'http://127.0.0.1:5000/api'
+  : '/api';
 
 const api = {
-  // Version Resolution
+  // Version Resolution (Pure Version 2)
   getVersion() {
-    return localStorage.getItem('loaniq_version') || 'v1';
+    return 'v2';
   },
 
   setVersion(version) {
-    const v = (version || 'v1').toLowerCase().trim();
-    localStorage.setItem('loaniq_version', v);
+    // Kept for interface compatibility
   },
 
   getHeaders(extraHeaders = {}) {
     return {
       'Content-Type': 'application/json',
-      'X-LoanIQ-Version': this.getVersion(),
+      'X-LoanIQ-Version': 'v2',
       ...extraHeaders
     };
   },
@@ -27,8 +28,7 @@ const api = {
   // Session & Local Storage
   getApplicant() {
     try {
-      const v = this.getVersion();
-      const data = localStorage.getItem(`loaniq_applicant_${v}`) || localStorage.getItem('loaniq_applicant');
+      const data = localStorage.getItem('loaniq_applicant_v2') || localStorage.getItem('loaniq_applicant');
       return data ? JSON.parse(data) : null;
     } catch (e) {
       return null;
@@ -36,14 +36,12 @@ const api = {
   },
 
   setApplicant(applicant) {
-    const v = this.getVersion();
-    localStorage.setItem(`loaniq_applicant_${v}`, JSON.stringify(applicant));
+    localStorage.setItem('loaniq_applicant_v2', JSON.stringify(applicant));
     localStorage.setItem('loaniq_applicant', JSON.stringify(applicant));
   },
 
   clearApplicant() {
-    const v = this.getVersion();
-    localStorage.removeItem(`loaniq_applicant_${v}`);
+    localStorage.removeItem('loaniq_applicant_v2');
     localStorage.removeItem('loaniq_applicant');
   },
 

@@ -16,46 +16,33 @@ LEGACY_DB_PATH = DB_DIR / "loaniq.db"
 
 def resolve_version_from_request(req=None) -> str:
     """
-    Request-scoped version resolution.
-    Inspects:
-    1. Header: X-LoanIQ-Version
-    2. Query param: ?version=v1|v2
-    3. JSON body: {"version": "v1"|"v2"}
-    Defaults to 'v1'. Does not use shared mutable globals.
+    Request-scoped version resolution for LoanIQ 2.0 (Defaults strictly to 'v2').
     """
     if not req:
-        return "v1"
+        return "v2"
     try:
-        # 1. Header
         hdr = req.headers.get("X-LoanIQ-Version")
-        if hdr and hdr.lower().strip() in ("v2", "2"):
-            return "v2"
-        # 2. Query parameter
+        if hdr and hdr.lower().strip() in ("v1", "1"):
+            return "v1"
         q = req.args.get("version")
-        if q and q.lower().strip() in ("v2", "2"):
-            return "v2"
-        # 3. JSON payload
-        if req.is_json:
-            data = req.get_json(silent=True) or {}
-            b = data.get("version")
-            if b and str(b).lower().strip() in ("v2", "2"):
-                return "v2"
+        if q and q.lower().strip() in ("v1", "1"):
+            return "v1"
     except Exception:
         pass
-    return "v1"
+    return "v2"
 
 
-def get_db_path(version: str = "v1") -> Path:
+def get_db_path(version: str = "v2") -> Path:
     DB_DIR.mkdir(parents=True, exist_ok=True)
-    v = (version or "v1").lower().strip()
-    if v in ("v2", "2"):
-        return DB_PATH_V2
-    if DB_PATH_V1.exists():
+    v = (version or "v2").lower().strip()
+    if v in ("v1", "1") and DB_PATH_V1.exists():
         return DB_PATH_V1
+    if DB_PATH_V2.exists():
+        return DB_PATH_V2
     return LEGACY_DB_PATH
 
 
-def get_db_connection(version: str = "v1") -> sqlite3.Connection:
+def get_db_connection(version: str = "v2") -> sqlite3.Connection:
     path = get_db_path(version)
     conn = sqlite3.connect(str(path))
     conn.row_factory = sqlite3.Row

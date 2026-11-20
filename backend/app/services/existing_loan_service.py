@@ -19,7 +19,7 @@ def calculate_monthly_emi(principal: float, annual_rate_pct: float, tenure_month
     return round(emi, 2)
 
 
-def get_loans_for_applicant(applicant_id: str, version: str = "v1") -> List[Dict[str, Any]]:
+def get_loans_for_applicant(applicant_id: str, version: str = "v2") -> List[Dict[str, Any]]:
     conn = get_db_connection(version)
     rows = conn.execute("""
         SELECT * FROM existing_loans
@@ -30,7 +30,7 @@ def get_loans_for_applicant(applicant_id: str, version: str = "v1") -> List[Dict
     return [dict(r) for r in rows]
 
 
-def recalculate_applicant_aggregates(applicant_id: str, version: str = "v1"):
+def recalculate_applicant_aggregates(applicant_id: str, version: str = "v2"):
     """
     Recalculates total EMI and active loan count from active loans
     and updates the applicant record in SQLite.
@@ -54,7 +54,7 @@ def recalculate_applicant_aggregates(applicant_id: str, version: str = "v1"):
     conn.close()
 
 
-def add_existing_loan(applicant_id: str, data: Dict[str, Any], version: str = "v1") -> Dict[str, Any]:
+def add_existing_loan(applicant_id: str, data: Dict[str, Any], version: str = "v2") -> Dict[str, Any]:
     conn = get_db_connection(version)
     app_row = conn.execute("SELECT * FROM applicants WHERE applicant_id = ?", (applicant_id,)).fetchone()
     if not app_row:
@@ -156,7 +156,7 @@ def add_existing_loan(applicant_id: str, data: Dict[str, Any], version: str = "v
     return dict(created)
 
 
-def get_loan_by_account_id(loan_account_id: str, version: str = "v1") -> Optional[Dict[str, Any]]:
+def get_loan_by_account_id(loan_account_id: str, version: str = "v2") -> Optional[Dict[str, Any]]:
     conn = get_db_connection(version)
     row = conn.execute("SELECT * FROM existing_loans WHERE loan_account_id = ?", (loan_account_id,)).fetchone()
     conn.close()
