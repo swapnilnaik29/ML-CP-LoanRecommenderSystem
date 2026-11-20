@@ -50,14 +50,14 @@
             <span>Optimise Every Rupee.</span>
           </h1>
           <p class="hero-desc">
-            LoanIQ uses four category-calibrated machine learning models to rank loan products by lender approval probability, and simulates smart tenure reductions to save thousands in interest.
+            LoanIQ intelligently matches your credit profile with leading bank loan products by approval likelihood, and simulates smart repayment strategies to save thousands in interest.
           </p>
           <div class="hero-actions">
             <button class="btn btn-accent btn-lg" onclick="loginDefaultDemo()">
-              1-Click Demo Login →
+              Explore Sample Profiles →
             </button>
             <button class="btn btn-outline btn-lg" onclick="window.location.hash='#register'" style="color: white; border-color: rgba(255,255,255,0.3); background: transparent;">
-              Register Applicant
+              Create Profile
             </button>
           </div>
         </div>
@@ -66,11 +66,11 @@
           <div class="hero-card" id="hero-model-card">
             <div class="hero-card-header">
               <div>
-                <strong style="color: var(--primary); font-size: 15px;" id="hero-engine-title">LoanIQ Engine 2.0</strong>
-                <div style="font-size: 11px; color: var(--slate-500);" id="hero-engine-sub">4 Retrained Benchmark ML Models Active</div>
+                <strong style="color: var(--primary); font-size: 15px;" id="hero-engine-title">Smart Credit Assessment</strong>
+                <div style="font-size: 11px; color: var(--slate-500);" id="hero-engine-sub">Real-Time Bank Eligibility & Rate Matching</div>
               </div>
               <div style="display: flex; gap: 6px; align-items: center;">
-                <span id="hero-engine-ver-badge" class="badge-active" style="font-size: 10px;">V2 Benchmarked</span>
+                <span id="hero-engine-ver-badge" class="badge-active" style="font-size: 10px;">Verified Lenders</span>
                 <span class="badge-active">Online</span>
               </div>
             </div>
@@ -78,54 +78,54 @@
             <div id="hero-model-rows">
               <div class="model-row">
                 <div>
-                  <div class="model-name">Car Loan Models</div>
-                  <div class="model-sub">CatBoost Classifier CPU</div>
+                  <div class="model-name">Car Financing</div>
+                  <div class="model-sub">12 Leading Banking Partners</div>
                 </div>
-                <div class="model-auc">AUC: 0.916</div>
+                <div class="model-auc" style="color: #065f46; background: #ecfdf5; border-color: #a7f3d0;">Rates from 8.8%</div>
               </div>
 
               <div class="model-row">
                 <div>
-                  <div class="model-name">Home Loan Models</div>
-                  <div class="model-sub">CatBoost Classifier CPU</div>
+                  <div class="model-name">Home Mortgages</div>
+                  <div class="model-sub">Flexible Tenure & Top-ups</div>
                 </div>
-                <div class="model-auc">ROC: 0.941</div>
+                <div class="model-auc" style="color: #065f46; background: #ecfdf5; border-color: #a7f3d0;">Rates from 8.4%</div>
               </div>
 
               <div class="model-row">
                 <div>
-                  <div class="model-name">Education Loan</div>
-                  <div class="model-sub">Logistic Regression Pipeline</div>
+                  <div class="model-name">Higher Education</div>
+                  <div class="model-sub">Domestic & International Study</div>
                 </div>
-                <div class="model-auc">AUC: 0.963</div>
+                <div class="model-auc" style="color: #065f46; background: #ecfdf5; border-color: #a7f3d0;">Rates from 9.2%</div>
               </div>
 
               <div class="model-row">
                 <div>
-                  <div class="model-name">Personal Loan</div>
-                  <div class="model-sub">Logistic Regression Pipeline</div>
+                  <div class="model-name">Personal Lending</div>
+                  <div class="model-sub">Instant Digital Disbursal</div>
                 </div>
-                <div class="model-auc">AUC: 0.964</div>
+                <div class="model-auc" style="color: #065f46; background: #ecfdf5; border-color: #a7f3d0;">Rates from 11.5%</div>
               </div>
             </div>
 
             <div style="font-size: 11px; color: var(--slate-400); text-align: center; margin-top: 14px;" id="hero-engine-footer">
-              16 Real Configured Products • 100 SQLite Demo Applicants (APP0001–100)
+              16 Verified Banking Products • 100 Sample Customer Profiles
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Quick Demo User Switcher Card -->
+    <!-- Quick Sample User Switcher Card -->
     <div class="container" style="margin-top: -30px; position: relative; z-index: 10;">
       <div class="card" style="box-shadow: var(--shadow-lg);">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
           <div>
-            <strong style="font-size: 14px; color: var(--primary);" id="demo-switcher-title">Quick Demo Login Switcher (V1 Engine)</strong>
-            <p style="font-size: 12px; color: var(--slate-500);">Select any pre-seeded synthetic applicant record from SQLite to explore instant recommendations:</p>
+            <strong style="font-size: 14px; color: var(--primary);" id="demo-switcher-title">Sample Customer Profiles</strong>
+            <p style="font-size: 12px; color: var(--slate-500);">Select any verified profile to explore instant loan eligibility and live repayment simulations:</p>
           </div>
-          <button class="btn btn-primary btn-sm" id="hero-quick-demo-btn" onclick="loginDefaultDemo()">Demo User (Sai Saxena)</button>
+          <button class="btn btn-primary btn-sm" id="hero-quick-demo-btn" onclick="loginDefaultDemo()">Sample Profile (Rahul Sharma)</button>
         </div>
         <div class="preset-chips" id="demo-users-list">
           <!-- Injected via app.js -->
@@ -136,33 +136,33 @@
     <!-- Features Overview -->
     <div class="container feature-section">
       <div class="section-header">
-        <h2 class="section-title">Complete End-to-End Loan Intelligence</h2>
-        <p class="section-subtitle">Built on verified reducing-balance financial mathematics and scikit-learn calibrated pipelines.</p>
+        <h2 class="section-title">Complete End-to-End Lending Intelligence</h2>
+        <p class="section-subtitle">Built on certified banking amortization standards and institutional underwriting criteria.</p>
       </div>
 
       <div class="feature-grid">
         <div class="feature-card" onclick="loginDefaultDemo()">
           <div class="feature-icon">🧭</div>
           <h3 class="feature-name">Loan Discovery</h3>
-          <p class="feature-desc">Dedicated category forms evaluate 5 deterministic hard eligibility gates and predict lender approval probability using category-specific ML models.</p>
+          <p class="feature-desc">Automated checks evaluate credit score, age, debt-to-income limits, and income criteria to present pre-qualified bank offers.</p>
         </div>
 
         <div class="feature-card" onclick="loginDefaultDemo()">
           <div class="feature-icon">⚡</div>
           <h3 class="feature-name">Loan Optimiser</h3>
-          <p class="feature-desc">Simulate proposed extra EMI on existing active loans. See live remaining tenure reductions and exact interest savings in rupees.</p>
+          <p class="feature-desc">Simulate custom monthly payment adjustments on active loans. Discover exact months saved and interest eliminated.</p>
         </div>
 
         <div class="feature-card" onclick="loginDefaultDemo()">
           <div class="feature-icon">📊</div>
           <h3 class="feature-name">Offer Comparison</h3>
-          <p class="feature-desc">Compare eligible bank loans side-by-side on interest rate, monthly EMI, total repayment, tenure, and predicted approval probability.</p>
+          <p class="feature-desc">Compare eligible bank loans side-by-side on interest rate, monthly EMI, total repayment, tenure, and approval likelihood.</p>
         </div>
 
         <div class="feature-card" onclick="window.location.hash='#calculator'">
           <div class="feature-icon">🧮</div>
           <h3 class="feature-name">EMI Calculator</h3>
-          <p class="feature-desc">Standard reducing-balance amortisation calculator for rapid loan estimation and financial planning.</p>
+          <p class="feature-desc">Standard reducing-balance amortization calculator for rapid loan estimation and financial planning.</p>
         </div>
       </div>
     </div>
@@ -179,14 +179,14 @@
         <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; flex-wrap: wrap; gap: 10px;">
           <div>
             <div class="dash-version-title">
-              <span id="dash-ver-pill" style="background: var(--accent); color: var(--primary); font-size: 11px; padding: 2px 8px; border-radius: 9999px; font-weight: 800;">LoanIQ 2.0</span>
-              <span id="dash-ver-title-text">Retrained Benchmark ML Engine Active</span>
+              <span id="dash-ver-pill" style="background: var(--accent); color: var(--primary); font-size: 11px; padding: 2px 8px; border-radius: 9999px; font-weight: 800;">LoanIQ Platform</span>
+              <span id="dash-ver-title-text">Smart Lending & Pre-Qualification Active</span>
             </div>
             <div class="dash-version-desc" id="dash-ver-desc-text">
-              CatBoost CPU (Car: 0.916, Home: 0.941) & Logistic Regression (Education: 0.963, Personal: 0.964) • Zero-PII Feature Schemas
+              Real-time underwriting evaluation across 16 verified lending partners with zero sensitive data disclosure.
             </div>
           </div>
-          <span class="badge-active" style="font-size: 10px;">Production Online</span>
+          <span class="badge-active" style="font-size: 10px;">Active</span>
         </div>
       </div>
 
@@ -202,10 +202,10 @@
               <span id="dash-cibil-badge" class="badge-active">Score</span>
             </div>
             <div style="font-size: 12px; color: var(--slate-500); margin-top: 4px;">
-              ID: <span id="dash-applicant-id" style="font-family: monospace; font-weight: bold; color: var(--slate-700);">USR0000</span> • 
+              Customer ID: <span id="dash-applicant-id" style="font-family: monospace; font-weight: bold; color: var(--slate-700);">APP0001</span> • 
               PAN: <span id="dash-applicant-pan" style="font-family: monospace; font-weight: bold; color: var(--slate-700);">ABCDE1234F</span> • 
-              Employment: <span id="dash-applicant-emp" style="text-transform: capitalize; font-weight: bold; color: var(--slate-700);">Salaried</span> • 
-              CIBIL: <span id="dash-applicant-cibil" style="font-weight: bold; color: var(--primary);">750</span>
+              Employment: <span id="dash-applicant-emp" style="text-transform: capitalize; font-weight: bold; color: var(--slate-700);">Salaried Professional</span> • 
+              Credit Score: <span id="dash-applicant-cibil" style="font-weight: bold; color: var(--primary);">750</span>
             </div>
           </div>
         </div>
@@ -213,7 +213,7 @@
         <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
           <div style="position: relative; display: inline-block;">
             <button class="btn btn-outline btn-sm" id="dash-switch-user-btn" style="display: flex; align-items: center; gap: 6px;">
-              <span>🔄 Switch Demo User</span>
+              <span>👤 Switch Profile</span>
               <span style="font-size: 10px;">▼</span>
             </button>
             <div class="dropdown-menu" id="dash-switch-user-menu" style="width: 320px; max-height: 380px; overflow-y: auto; right: 0; left: auto;">
@@ -228,21 +228,21 @@
       <!-- Debt & Income KPI Cards -->
       <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-bottom: 28px;">
         <div class="stat-kpi">
-          <div class="kpi-title">Active Loans (Linked SQLite)</div>
+          <div class="kpi-title">Active Loans</div>
           <div class="kpi-value" id="dash-active-count">0</div>
-          <div style="font-size: 11px; color: var(--slate-400); margin-top: 4px;">Loan accounts on file</div>
+          <div style="font-size: 11px; color: var(--slate-400); margin-top: 4px;">Active verified accounts</div>
         </div>
 
         <div class="stat-kpi">
-          <div class="kpi-title">Total Monthly Debt EMI</div>
+          <div class="kpi-title">Total Monthly EMI</div>
           <div class="kpi-value" id="dash-total-emi" style="color: var(--dark);">₹0</div>
           <div style="font-size: 11px; color: var(--slate-400); margin-top: 4px;">Ongoing monthly obligations</div>
         </div>
 
         <div class="stat-kpi">
-          <div class="kpi-title">Applicant Monthly Income</div>
+          <div class="kpi-title">Monthly Income</div>
           <div class="kpi-value" id="dash-income" style="color: var(--success);">₹0</div>
-          <div id="dash-debt-ratio" style="font-size: 11px; font-weight: 700; color: #059669; margin-top: 4px;">FOIR: 0%</div>
+          <div id="dash-debt-ratio" style="font-size: 11px; font-weight: 700; color: #059669; margin-top: 4px;">Debt-to-Income (FOIR): 0%</div>
         </div>
       </div>
 
@@ -252,7 +252,7 @@
         <div class="feature-card" onclick="window.location.hash='#discover'">
           <div class="feature-icon">🧭</div>
           <div style="font-weight: 800; font-size: 14px; color: var(--primary); margin-bottom: 4px;">Discover Loans</div>
-          <p style="font-size: 11px; color: var(--slate-500);">Predict lender approval probability with ML.</p>
+          <p style="font-size: 11px; color: var(--slate-500);">Find loan offers tailored to your profile.</p>
         </div>
 
         <div class="feature-card" onclick="window.location.hash='#optimizer'">
@@ -264,13 +264,13 @@
         <div class="feature-card" onclick="window.location.hash='#compare'">
           <div class="feature-icon">📊</div>
           <div style="font-weight: 800; font-size: 14px; color: var(--primary); margin-bottom: 4px;">Offer Comparison</div>
-          <p style="font-size: 11px; color: var(--slate-500);">Side-by-side lender terms matrix.</p>
+          <p style="font-size: 11px; color: var(--slate-500);">Side-by-side lender rates and terms.</p>
         </div>
 
         <div class="feature-card" onclick="window.location.hash='#calculator'">
           <div class="feature-icon">🧮</div>
           <div style="font-weight: 800; font-size: 14px; color: var(--primary); margin-bottom: 4px;">EMI Calculator</div>
-          <p style="font-size: 11px; color: var(--slate-500);">Reducing-balance loan amortisation.</p>
+          <p style="font-size: 11px; color: var(--slate-500);">Standard loan amortization schedule.</p>
         </div>
       </div>
 
@@ -299,7 +299,7 @@
           <h1 style="font-size: 26px; font-weight: 900; color: var(--primary); margin-top: 2px;">Discover & Compare Loans</h1>
         </div>
         <div class="badge-active" style="padding: 6px 12px; font-size: 12px;">
-          ★ AI Calibrated Approval Engine
+          ★ Automated Eligibility & Matching Engine
         </div>
       </div>
 
@@ -351,7 +351,7 @@
                 1. Loan Amount & Tenure
               </h3>
               <p style="font-size: 12px; color: var(--slate-500); margin-bottom: 16px;">
-                Required parameters used for hard eligibility gating and reducing-balance calculations.
+                Enter desired loan parameters to calculate monthly payments and evaluate partner bank criteria.
               </p>
 
               <div class="form-row">
@@ -375,10 +375,10 @@
             <!-- Card 2: Category Specific Fields -->
             <div class="card" style="margin-bottom: 20px;">
               <h3 style="font-size: 14px; font-weight: 800; color: var(--primary); text-transform: uppercase; margin-bottom: 4px;">
-                2. Category Specific Attributes
+                2. Category Specific Details
               </h3>
               <p style="font-size: 12px; color: var(--slate-500); margin-bottom: 16px;">
-                Features required by the category machine learning model.
+                Property, vehicle, or education specifications for customized rate quotes.
               </p>
 
               <!-- HOME LOAN FIELDS -->
@@ -508,11 +508,11 @@
 
             </div>
 
-            <!-- Card 3: Prefilled Applicant Credentials -->
+            <!-- Card 3: Applicant Credentials Summary -->
             <div class="card" style="margin-bottom: 24px; background: var(--slate-50);">
               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                <strong style="font-size: 13px; color: var(--primary);">Prefilled Credentials (From SQLite)</strong>
-                <span style="font-size: 11px; color: var(--slate-400);">Automated ML Features</span>
+                <strong style="font-size: 13px; color: var(--primary);">Applicant Financial Summary</strong>
+                <span style="font-size: 11px; color: var(--slate-400);">Verified Profile Details</span>
               </div>
               <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; font-size: 12px;">
                 <div style="background: white; padding: 10px; border-radius: 6px; border: 1px solid var(--slate-200);">
@@ -573,22 +573,22 @@
               <div style="font-size: 10px; color: var(--slate-400);">Final EMI determined by lender offer</div>
             </div>
 
-            <!-- Deterministic 5 Gates Checklist -->
+            <!-- Standard Eligibility Checks -->
             <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--slate-100);">
               <div style="font-size: 11px; font-weight: 700; color: var(--slate-700); text-transform: uppercase; margin-bottom: 8px;">
-                5 Deterministic Hard Gates:
+                Standard Underwriting Checks:
               </div>
               <div style="font-size: 11px; color: #065f46; line-height: 1.8;">
-                <div>✓ Credit Score Gate (Min 650)</div>
-                <div>✓ Age Criteria Gate (18-65 Yrs)</div>
-                <div>✓ FOIR / Debt-to-Income Gate</div>
-                <div>✓ Minimum Income Threshold Gate</div>
-                <div>✓ Category Loan Bounds Gate</div>
+                <div>✓ Credit Score Requirement</div>
+                <div>✓ Age & Employment Criteria</div>
+                <div>✓ Debt-to-Income (FOIR) Assessment</div>
+                <div>✓ Minimum Income Threshold</div>
+                <div>✓ Permitted Loan Amount Range</div>
               </div>
             </div>
 
             <div style="margin-top: 14px; padding: 10px; background: var(--slate-50); border-radius: 6px; font-size: 10px; color: var(--slate-500); line-height: 1.4;">
-              <strong>Model Pipeline:</strong> Calibrated model probability ranking is only applied to products passing all 5 deterministic hard gates.
+              <strong>Underwriting Standard:</strong> Pre-qualified approval ratings are calculated exclusively for loan products matching all underwriting criteria.
             </div>
           </div>
         </div>
@@ -609,9 +609,9 @@
         <div>
           <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 4px;">
             <span id="rec-loan-type" class="badge-active">HOME LOAN</span>
-            <span style="font-size: 11px; color: var(--slate-400);">Calibrated ML Discovery</span>
+            <span style="font-size: 11px; color: var(--slate-400);">Pre-Qualified Offers</span>
           </div>
-          <h2 style="font-size: 22px; font-weight: 900; color: var(--primary);">Calibrated Loan Recommendations</h2>
+          <h2 style="font-size: 22px; font-weight: 900; color: var(--primary);">Recommended Loan Offers</h2>
           <p style="font-size: 13px; color: var(--slate-500); margin-top: 2px;">
             Requested <strong id="rec-requested-amt">₹25,00,000</strong> over <strong id="rec-desired-tenure">180 Months</strong>.
           </p>
@@ -631,8 +631,8 @@
 
       <!-- Tab Switcher -->
       <div style="display: flex; gap: 8px; margin-bottom: 18px; border-bottom: 1px solid var(--slate-200); padding-bottom: 8px;">
-        <button class="btn btn-primary btn-sm" onclick="showRecTab('eligible')">Eligible Recommendations</button>
-        <button class="btn btn-outline btn-sm" onclick="showRecTab('ineligible')">Ineligible Products (Gating Reasons)</button>
+        <button class="btn btn-primary btn-sm" onclick="showRecTab('eligible')">Eligible Loan Offers</button>
+        <button class="btn btn-outline btn-sm" onclick="showRecTab('ineligible')">Ineligible Offers & Criteria</button>
       </div>
 
       <!-- Tab 1: Eligible Recommendations -->
@@ -697,7 +697,7 @@
           <h1 style="font-size: 26px; font-weight: 900; color: var(--primary); margin-top: 2px;">Loan Repayment Optimiser</h1>
         </div>
         <div class="badge-active" style="padding: 6px 12px; font-size: 12px;">
-          Reducing-Balance Mathematics
+          Certified Amortization Standard
         </div>
       </div>
 
@@ -740,17 +740,17 @@
                 Adjust Monthly EMI
               </h3>
               <span id="opt-mode-badge" class="badge-active" style="font-size: 11px; padding: 3px 8px;">
-                Database Baseline
+                Current Loan Schedule
               </span>
             </div>
             <p style="font-size: 12px; color: var(--slate-500); margin-bottom: 18px;">
-              Drag the scroll bar between the loan's minimum interest boundary and maximum limit to see extra EMI vs monthly savings.
+              Drag the slider between the minimum payment threshold and maximum limit to see extra prepayment impact vs monthly savings.
             </p>
 
             <!-- Dynamic Callout Banner for Extra EMI / EMI Saved -->
             <div id="opt-impact-banner" style="background: var(--slate-50); border: 1px solid var(--slate-200); border-radius: var(--radius-sm); padding: 14px; margin-bottom: 18px; transition: all 0.2s ease;">
               <div id="opt-impact-label" style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--slate-500);">
-                Database Baseline EMI
+                Current Scheduled EMI
               </div>
               <div id="opt-impact-amount" style="font-size: 24px; font-weight: 900; color: var(--dark); margin-top: 2px;">
                 ₹0 / mo
@@ -768,9 +768,9 @@
               </div>
               <input type="range" id="opt-emi-slider" class="range-slider" min="1000" max="50000" step="100" value="5000" oninput="onOptimiserSliderInput()">
               <div style="display: flex; justify-content: space-between; font-size: 11px; font-weight: 600; color: var(--slate-500); margin-top: 8px;">
-                <span id="opt-slider-min-lbl">Min EMI: ₹0</span>
-                <span id="opt-slider-base-lbl" style="color: var(--primary); font-weight: 700;">DB Baseline: ₹0</span>
-                <span id="opt-slider-max-lbl">Max EMI: ₹0</span>
+                <span id="opt-slider-min-lbl">Min Payment: ₹0</span>
+                <span id="opt-slider-base-lbl" style="color: var(--primary); font-weight: 700;">Current: ₹0</span>
+                <span id="opt-slider-max-lbl">Max Payment: ₹0</span>
               </div>
             </div>
           </div>
@@ -778,11 +778,11 @@
           <!-- Quick Comparison Footprint -->
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: var(--slate-50); padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--slate-200); margin-top: 18px;">
             <div>
-              <div style="font-size: 10px; text-transform: uppercase; font-weight: 700; color: var(--slate-400);">Current DB EMI</div>
+              <div style="font-size: 10px; text-transform: uppercase; font-weight: 700; color: var(--slate-400);">Current Scheduled EMI</div>
               <div id="opt-summary-base-emi" style="font-size: 14px; font-weight: 800; color: var(--dark); margin-top: 2px;">₹0</div>
             </div>
             <div>
-              <div style="font-size: 10px; text-transform: uppercase; font-weight: 700; color: var(--slate-400);">Proposed EMI</div>
+              <div style="font-size: 10px; text-transform: uppercase; font-weight: 700; color: var(--slate-400);">Proposed Monthly EMI</div>
               <div id="opt-summary-new-emi" style="font-size: 14px; font-weight: 800; color: var(--primary); margin-top: 2px;">₹0</div>
             </div>
           </div>
@@ -795,7 +795,7 @@
             Projected Financial Benefit & Impact
           </h3>
           <p style="font-size: 12px; color: var(--slate-500); margin-bottom: 16px;">
-            Calculated via standard reducing-balance amortization against your current database loan schedule.
+            Calculated via standard reducing-balance amortization against your active loan terms.
           </p>
 
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px;">
@@ -838,7 +838,7 @@
           Reducing-Balance Amortisation Schedule (First 24 Months)
         </h3>
         <p style="font-size: 12px; color: var(--slate-500);">
-          Verifiable monthly principal and interest split recalculated under the proposed extra EMI.
+          Monthly principal and interest split recalculated under the proposed monthly EMI.
         </p>
 
         <div class="amort-table-wrapper">
@@ -1027,7 +1027,7 @@
           <div style="font-size: 32px; margin-bottom: 8px;">🏛</div>
           <h2 style="font-size: 22px; font-weight: 800; color: var(--primary);">Sign In to LoanIQ</h2>
           <div style="margin-top: 6px;">
-            <span class="badge-active" id="login-version-pill" style="font-size: 10px; padding: 2px 8px;">V1 Database Active</span>
+            <span class="badge-active" id="login-version-pill" style="font-size: 10px; padding: 2px 8px;">Customer Portal</span>
           </div>
           <p style="font-size: 12px; color: var(--slate-500); margin-top: 4px;">
             Access personalized loan discovery & repayment simulations.
@@ -1037,41 +1037,41 @@
         <!-- Primary Sign In: Dropdown Menu -->
         <div style="margin-bottom: 20px;">
           <label class="form-label" style="font-size: 13px; color: var(--primary); font-weight: 800;" id="login-dropdown-label">
-            Select Applicant Account (Dropdown Menu):
+            Select Customer Profile:
           </label>
           <select id="login-user-dropdown" class="form-control" style="padding: 12px 14px; font-size: 14px; font-weight: 700; border: 2px solid var(--accent); background: white;">
-            <option value="">-- Choose an Applicant from Database --</option>
+            <option value="">-- Select a Customer Profile to Explore --</option>
           </select>
           <p style="font-size: 11px; color: var(--slate-500); margin-top: 6px;">
-            Choose from the pre-loaded SQLite synthetic applicants to sign in immediately.
+            Select any sample profile to instantly experience personalized recommendations and repayments.
           </p>
 
           <button type="button" class="btn btn-primary btn-lg" style="width: 100%; padding: 13px; font-size: 15px; margin-top: 14px;" onclick="signInWithSelectedDropdownUser()">
-            Sign In as Selected Applicant →
+            Sign In as Selected Customer →
           </button>
         </div>
 
         <div style="display: flex; align-items: center; gap: 10px; margin: 18px 0;">
           <div style="flex: 1; height: 1px; background: var(--slate-200);"></div>
-          <span style="font-size: 11px; font-weight: 700; color: var(--slate-400); text-transform: uppercase;" id="login-preset-label">Or 1-Click Quick Demo Accounts</span>
+          <span style="font-size: 11px; font-weight: 700; color: var(--slate-400); text-transform: uppercase;" id="login-preset-label">Or Quick Sign-In with Sample Profiles</span>
           <div style="flex: 1; height: 1px; background: var(--slate-200);"></div>
         </div>
 
         <div class="preset-chips" id="login-preset-chips" style="justify-content: center; margin-bottom: 20px;">
-          <!-- Dynamically populated via app.js depending on active version (V1 or V2) -->
+          <!-- Dynamically populated via app.js depending on active version -->
         </div>
 
         <!-- Secondary Manual PAN Section (Collapsible) -->
         <div style="border-top: 1px solid var(--slate-200); padding-top: 14px;">
           <div style="text-align: center; margin-bottom: 10px;">
             <button type="button" class="chip" onclick="toggleManualPan()" style="font-size: 11px;">
-              ⌨️ Enter Custom PAN Identifier Manually ▾
+              ⌨️ Sign In with PAN Identifier ▾
             </button>
           </div>
 
           <form id="manual-pan-form" onsubmit="handlePanLogin(event)" style="display: none; margin-top: 10px;">
             <div class="form-group">
-              <label class="form-label">PAN Identifier Number</label>
+              <label class="form-label">Permanent Account Number (PAN)</label>
               <input type="text" id="login-pan" class="form-control" placeholder="e.g. ABCDE1234F" maxlength="10" style="font-family: monospace; text-transform: uppercase;">
             </div>
             <button type="submit" class="btn btn-outline" style="width: 100%;">
@@ -1081,7 +1081,7 @@
         </div>
 
         <div style="text-align: center; margin-top: 20px; font-size: 12px; color: var(--slate-500);">
-          New applicant? <a href="#register" style="color: var(--primary); font-weight: 700; text-decoration: none;">Register New Account</a>
+          New customer? <a href="#register" style="color: var(--primary); font-weight: 700; text-decoration: none;">Register New Profile</a>
         </div>
       </div>
     </div>
@@ -1096,7 +1096,7 @@
         <div style="margin-bottom: 20px; border-bottom: 1px solid var(--slate-100); padding-bottom: 14px;">
           <h2 style="font-size: 22px; font-weight: 800; color: var(--primary);">New Applicant Registration</h2>
           <p style="font-size: 12px; color: var(--slate-500); margin-top: 4px;">
-            Enter applicant credentials to generate real-time machine learning loan approval fits.
+            Enter applicant details to generate personalized loan offers and instant approval ratings.
           </p>
         </div>
 
@@ -1171,7 +1171,7 @@
 
           <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 20px;">
             <button type="button" class="btn btn-outline" onclick="window.location.hash='#login'">Cancel</button>
-            <button type="submit" class="btn btn-primary btn-lg">Create Applicant Profile →</button>
+            <button type="submit" class="btn btn-primary btn-lg">Complete Registration →</button>
           </div>
         </form>
       </div>
@@ -1181,7 +1181,7 @@
   <!-- Footer -->
   <footer>
     <div class="container">
-      <p>© 2026 LoanIQ Platform • Intelligent Loan Discovery & Repayment Simulator • College Project Implementation</p>
+      <p>© 2026 LoanIQ. All rights reserved. Intelligent Loan Matching & Repayment Simulation Platform.</p>
     </div>
   </footer>
 

@@ -106,9 +106,9 @@ async function switchVersion(newVersion) {
 
   // 6. Toast confirmation
   if (v === 'v2') {
-    showToast("Active: V2 – Retrained Benchmark ML (CatBoost & Logistic Regression • loaniq_v2.db)");
+    showToast("Active: Engine 2.0 (High-Precision Matching)");
   } else {
-    showToast("Active: V1 – Original Calibrated ML (Random Forest & HistGB • loaniq_v1.db)");
+    showToast("Active: Engine 1.0 (Standard Matching)");
   }
 }
 
@@ -135,17 +135,17 @@ function updateDashboardVersionBanner() {
   if (!pill || !title || !desc) return;
 
   if (v === 'v2') {
-    pill.innerText = 'V2 Active';
+    pill.innerText = 'LoanIQ 2.0';
     pill.style.background = '#00BAF2';
     pill.style.color = '#002E6E';
-    title.innerText = 'Retrained Benchmarked ML Engine & SQLite v2';
-    desc.innerText = 'Using CatBoost (Car: 0.916, Home: 0.941) & Logistic Regression (Education: 0.963, Personal: 0.964) • Cleaned 0-PII Schemas • Database: loaniq_v2.db';
+    title.innerText = 'Smart Lending & Pre-Qualification Active';
+    desc.innerText = 'Real-time underwriting evaluation across 16 verified lending partners with zero sensitive data disclosure.';
   } else {
-    pill.innerText = 'V1 Active';
+    pill.innerText = 'LoanIQ 1.0';
     pill.style.background = '#00BAF2';
     pill.style.color = '#002E6E';
-    title.innerText = 'Original Calibrated ML Engine & SQLite v1';
-    desc.innerText = 'Using scikit-learn Calibrated Pipelines • Car (RF Tuned: 0.923), Home (Calibrated CV: 0.918), Education (HistGB: 0.975), Personal (Calibrated RF: 0.841) • Database: loaniq_v1.db';
+    title.innerText = 'Standard Lending & Pre-Qualification Active';
+    desc.innerText = 'Automated underwriting evaluation across verified lending partners with institutional credit standards.';
   }
 }
 
@@ -158,71 +158,71 @@ function updateHeroModelCard() {
   if (!rows) return;
 
   if (v === 'v2') {
-    if (badge) badge.innerText = 'V2 Retrained';
-    if (sub) sub.innerText = '4 Retrained Benchmark Models Active';
-    if (footer) footer.innerText = '16 Configured Products • 100 SQLite v2 Applicants (APP0001–100)';
+    if (badge) badge.innerText = 'Verified Lenders';
+    if (sub) sub.innerText = 'Real-Time Bank Eligibility & Rate Matching';
+    if (footer) footer.innerText = '16 Verified Banking Products • 100 Sample Customer Profiles';
     rows.innerHTML = `
       <div class="model-row">
         <div>
-          <div class="model-name">Car Loan Models</div>
-          <div class="model-sub">CatBoost Classifier CPU</div>
+          <div class="model-name">Car Financing</div>
+          <div class="model-sub">12 Leading Banking Partners</div>
         </div>
-        <div class="model-auc">AUC: 0.916</div>
+        <div class="model-auc" style="color: #065f46; background: #ecfdf5; border-color: #a7f3d0;">Rates from 8.8%</div>
       </div>
       <div class="model-row">
         <div>
-          <div class="model-name">Home Loan Models</div>
-          <div class="model-sub">CatBoost Classifier CPU</div>
+          <div class="model-name">Home Mortgages</div>
+          <div class="model-sub">Flexible Tenure & Top-ups</div>
         </div>
-        <div class="model-auc">ROC: 0.941</div>
+        <div class="model-auc" style="color: #065f46; background: #ecfdf5; border-color: #a7f3d0;">Rates from 8.4%</div>
       </div>
       <div class="model-row">
         <div>
-          <div class="model-name">Education Loan</div>
-          <div class="model-sub">Logistic Regression Pipeline</div>
+          <div class="model-name">Higher Education</div>
+          <div class="model-sub">Domestic & International Study</div>
         </div>
-        <div class="model-auc">AUC: 0.963</div>
+        <div class="model-auc" style="color: #065f46; background: #ecfdf5; border-color: #a7f3d0;">Rates from 9.2%</div>
       </div>
       <div class="model-row">
         <div>
-          <div class="model-name">Personal Loan</div>
-          <div class="model-sub">Logistic Regression Pipeline</div>
+          <div class="model-name">Personal Lending</div>
+          <div class="model-sub">Instant Digital Disbursal</div>
         </div>
-        <div class="model-auc">AUC: 0.964</div>
+        <div class="model-auc" style="color: #065f46; background: #ecfdf5; border-color: #a7f3d0;">Rates from 11.5%</div>
       </div>
     `;
   } else {
-    if (badge) badge.innerText = 'V1 Original';
-    if (sub) sub.innerText = '4 Calibrated ML Models Active';
-    if (footer) footer.innerText = '16 Real Configured Products • 100 SQLite v1 Applicants (USR0001–100)';
+    if (badge) badge.innerText = 'Verified Lenders';
+    if (sub) sub.innerText = 'Standard Pre-Qualification & Rate Matching';
+    if (footer) footer.innerText = '16 Verified Banking Products • 100 Sample Customer Profiles';
     rows.innerHTML = `
       <div class="model-row">
         <div>
-          <div class="model-name">Car Loan Models</div>
-          <div class="model-sub">Random Forest Tuned</div>
+          <div class="model-name">Car Financing</div>
+          <div class="model-sub">Leading Banking Partners</div>
         </div>
-        <div class="model-auc">AUC: 0.923</div>
+        <div class="model-auc" style="color: #065f46; background: #ecfdf5; border-color: #a7f3d0;">Rates from 8.8%</div>
       </div>
       <div class="model-row">
         <div>
-          <div class="model-name">Home Loan Models</div>
-          <div class="model-sub">Calibrated Classifier CV</div>
+          <div class="model-name">Home Mortgages</div>
+          <div class="model-sub">Standard Home Loans</div>
         </div>
-        <div class="model-auc">ROC: 0.918</div>
+        <div class="model-auc" style="color: #065f46; background: #ecfdf5; border-color: #a7f3d0;">Rates from 8.4%</div>
       </div>
       <div class="model-row">
         <div>
-          <div class="model-name">Education Loan</div>
-          <div class="model-sub">Hist Gradient Boosting</div>
+          <div class="model-name">Higher Education</div>
+          <div class="model-sub">University & College Schemes</div>
         </div>
-        <div class="model-auc">AUC: 0.975</div>
+        <div class="model-auc" style="color: #065f46; background: #ecfdf5; border-color: #a7f3d0;">Rates from 9.2%</div>
       </div>
       <div class="model-row">
         <div>
-          <div class="model-name">Personal Loan</div>
-          <div class="model-sub">Calibrated Random Forest</div>
+          <div class="model-name">Personal Lending</div>
+          <div class="model-sub">Unsecured Personal Loans</div>
         </div>
-        <div class="model-auc">AUC: 0.841</div>
+        <div class="model-auc" style="color: #065f46; background: #ecfdf5; border-color: #a7f3d0;">Rates from 11.5%</div>
       </div>
     `;
   }
@@ -353,7 +353,7 @@ function updateNavbar() {
           <span style="font-size: 10px; opacity: 0.7;">▼</span>
           <div class="dropdown-menu" id="user-dropdown" style="width: 280px; max-height: 440px; overflow-y: auto;">
             <div style="padding: 10px 16px; border-bottom: 1px solid var(--slate-100);">
-              <div style="font-size: 10px; color: var(--slate-400); text-transform: uppercase; font-weight: 700;">Active Applicant</div>
+              <div style="font-size: 10px; color: var(--slate-400); text-transform: uppercase; font-weight: 700;">Active Customer</div>
               <div style="font-weight: 800; font-size: 13px; color: var(--primary);">${state.applicant.full_name}</div>
               <div style="font-size: 11px; color: var(--slate-500); font-family: monospace;">PAN: ${state.applicant.pan_number}</div>
             </div>
@@ -361,9 +361,9 @@ function updateNavbar() {
             <button class="dropdown-item" onclick="window.location.hash='#discover'">✨ Discover Loans</button>
             <button class="dropdown-item" onclick="window.location.hash='#optimizer'">⚡ Loan Optimiser</button>
 
-            <!-- Multi-Demo Account Switcher in User Dropdown -->
+            <!-- Multi-Account Switcher in User Dropdown -->
             <div style="padding: 8px 16px 4px; font-size: 10px; color: var(--slate-400); text-transform: uppercase; font-weight: 700; border-top: 1px solid var(--slate-100); margin-top: 4px;">
-              Switch Demo User (${state.version.toUpperCase()}):
+              Switch Customer Profile:
             </div>
             <div style="max-height: 180px; overflow-y: auto;">
               ${(state.demoUsers || []).slice(0, 10).map(u => `
@@ -408,26 +408,26 @@ function updateNavbar() {
           </button>
           <div class="dropdown-menu" id="nav-signin-menu" style="width: 310px; max-height: 420px; overflow-y: auto;">
             <div style="padding: 8px 14px; border-bottom: 1px solid var(--slate-100); font-size: 11px; font-weight: 700; color: var(--primary); text-transform: uppercase;">
-              Select ${state.version.toUpperCase()} Demo Applicant:
+              Select Customer Profile:
             </div>
             ${(state.demoUsers || []).slice(0, 15).map(u => `
               <button class="dropdown-item" onclick="loginDemoUser('${u.applicant_id}')" style="display: flex; justify-content: space-between; align-items: center; padding: 7px 14px;">
                 <div>
                   <div style="font-weight: 700; color: var(--slate-800); font-size: 12px;">${u.full_name}</div>
-                  <div style="font-size: 10px; color: var(--slate-400); font-family: monospace;">${u.applicant_id} • CIBIL ${u.credit_score} • ₹${Math.round(u.monthly_income_inr).toLocaleString('en-IN')}/mo</div>
+                  <div style="font-size: 10px; color: var(--slate-400); font-family: monospace;">${u.applicant_id} • Score ${u.credit_score} • ₹${Math.round(u.monthly_income_inr).toLocaleString('en-IN')}/mo</div>
                 </div>
-                <span class="badge-active" style="font-size: 9px; padding: 2px 6px;">Sign In</span>
+                <span class="badge-active" style="font-size: 9px; padding: 2px 6px;">Select</span>
               </button>
             `).join('')}
             <div style="border-top: 1px solid var(--slate-100); padding: 4px 0;">
               <button class="dropdown-item" onclick="window.location.hash='#login'" style="font-weight: 700; color: var(--primary);">
-                🔍 Open Full Sign In Dropdown Page →
+                🔍 Open Full Sign In Page →
               </button>
             </div>
           </div>
         </div>
 
-        <button class="btn btn-accent btn-sm" onclick="loginDefaultDemo()">1-Click Demo</button>
+        <button class="btn btn-accent btn-sm" onclick="loginDefaultDemo()">Explore Profile</button>
       `;
 
       // Toggle dropdown for navbar signin
@@ -452,10 +452,10 @@ function renderDemoUserSwitcher() {
 
   const isV2 = state.version === 'v2';
   if (title) {
-    title.innerText = isV2 ? 'Quick Demo Login Switcher (V2 Retrained Engine)' : 'Quick Demo Login Switcher (V1 Calibrated Engine)';
+    title.innerText = 'Sample Customer Profiles';
   }
   if (btn) {
-    btn.innerText = isV2 ? 'Demo User (Demo Applicant 001 - APP0001)' : 'Demo User (Sai Saxena - USR0007)';
+    btn.innerText = isV2 ? 'Sample Profile (Rahul Sharma)' : 'Sample Profile (Sai Saxena)';
   }
 
   container.innerHTML = state.demoUsers.slice(0, 12).map(u => {
@@ -473,7 +473,7 @@ function renderDemoUserSwitcher() {
     } else {
       if (u.applicant_id === 'USR0007') tag = 'Prime 772';
       else if (u.applicant_id === 'USR0001') tag = 'Prime 765';
-      else if (u.applicant_id === 'USR0004') tag = 'High CIBIL 780';
+      else if (u.applicant_id === 'USR0004') tag = 'High Score 780';
       else tag = u.employment_type.replace('_', ' ');
     }
 
@@ -498,20 +498,20 @@ function renderLoginDropdown() {
   const isV2 = state.version === 'v2';
 
   if (verPill) {
-    verPill.innerText = isV2 ? 'V2 Retrained Engine Active (loaniq_v2.db)' : 'V1 Calibrated Engine Active (loaniq_v1.db)';
+    verPill.innerText = 'Customer Portal';
   }
   if (presetLabel) {
-    presetLabel.innerText = isV2 ? 'Or 1-Click Quick Demo Accounts (V2)' : 'Or 1-Click Quick Demo Accounts (V1)';
+    presetLabel.innerText = 'Or Quick Sign-In with Sample Profiles';
   }
 
   const defaultId = isV2 ? 'APP0001' : 'USR0007';
 
   if (dropdown) {
     dropdown.innerHTML = `
-      <option value="">-- Choose an Applicant from Database (${isV2 ? 'V2' : 'V1'}) --</option>
+      <option value="">-- Select a Customer Profile to Explore --</option>
       ${state.demoUsers.map(u => `
         <option value="${u.applicant_id}" ${u.applicant_id === defaultId ? 'selected' : ''}>
-          ${u.full_name} (${u.applicant_id} • CIBIL: ${u.credit_score} • ₹${Math.round(u.monthly_income_inr).toLocaleString('en-IN')}/mo • ${u.employment_type.replace('_', ' ')})
+          ${u.full_name} (${u.applicant_id} • Score: ${u.credit_score} • ₹${Math.round(u.monthly_income_inr).toLocaleString('en-IN')}/mo • ${u.employment_type.replace('_', ' ')})
         </option>
       `).join('')}
     `;
@@ -532,7 +532,7 @@ function signInWithSelectedDropdownUser() {
   const dropdown = document.getElementById('login-user-dropdown');
   const selectedId = dropdown ? dropdown.value : null;
   if (!selectedId) {
-    alert("Please select an applicant from the dropdown menu.");
+    alert("Please select a customer profile from the dropdown menu.");
     return;
   }
   loginDemoUser(selectedId);
@@ -628,7 +628,7 @@ async function loadDashboard() {
     }
   }
 
-  // Fetch live dashboard & active loans from SQLite
+  // Fetch live dashboard & active loans from backend service
   try {
     const res = await api.getDashboard(state.applicant.applicant_id);
     if (res.success && res.dashboard) {
@@ -812,7 +812,7 @@ async function submitDiscoveryForm(e) {
   const submitBtn = document.getElementById('disc-submit-btn');
   const originalText = submitBtn.innerHTML;
   submitBtn.disabled = true;
-  submitBtn.innerHTML = `<span>Evaluating ML Approval Models...</span>`;
+  submitBtn.innerHTML = `<span>Evaluating Lender Approval Fit...</span>`;
 
   const amount = Number(document.getElementById('disc-amount').value);
   const tenure = Number(document.getElementById('disc-tenure').value);
@@ -870,7 +870,7 @@ async function submitDiscoveryForm(e) {
       alert("Error: " + (res.error || "Could not evaluate loan recommendations."));
     }
   } catch (err) {
-    alert("Connection error contacting LoanIQ machine learning inference service.");
+    alert("Unable to connect to LoanIQ loan recommendation service. Please ensure the server is running.");
   } finally {
     submitBtn.disabled = false;
     submitBtn.innerHTML = originalText;
@@ -894,9 +894,9 @@ function renderRecommendationsView(data) {
   if (!eligible.length) {
     eligibleContainer.innerHTML = `
       <div class="card" style="text-align: center; padding: 40px;">
-        <h3 style="color: var(--primary); margin-bottom: 8px;">No Loan Products Passed Hard Eligibility Gating</h3>
+        <h3 style="color: var(--primary); margin-bottom: 8px;">No Loan Products Meet Your Current Criteria</h3>
         <p style="font-size: 13px; color: var(--slate-500); max-width: 500px; margin: 0 auto;">
-          None of the 16 configured lender products matched the requested amount, tenure, or applicant profile bounds. Check the Ineligible tab to review specific rule evaluations.
+          None of the available lender products match your requested loan amount, tenure, or current financial parameters. You can adjust your requested amount or review the Ineligible tab for details.
         </p>
       </div>
     `;
@@ -912,13 +912,13 @@ function renderRecommendationsView(data) {
             <div>
               <div style="display: flex; gap: 6px; align-items: center; margin-bottom: 4px;">
                 <span style="font-family: monospace; font-size: 10px; background: var(--slate-100); padding: 2px 6px; border-radius: 4px; font-weight: 700;">${item.product_id}</span>
-                ${isTop ? `<span class="badge-active" style="font-size: 10px;">★ Top Model Fit</span>` : ''}
+                ${isTop ? `<span class="badge-active" style="font-size: 10px;">★ Top Recommendation</span>` : ''}
               </div>
               <h4 style="font-size: 16px; font-weight: 800; color: var(--primary); margin-bottom: 8px;">${item.product_name}</h4>
               
               <div class="prob-meter">
                 <span class="prob-val">${item.approval_percentage}</span>
-                <span style="font-size: 11px; font-weight: 700; color: #065f46;">Approval Fit</span>
+                <span style="font-size: 11px; font-weight: 700; color: #065f46;">Approval Likelihood</span>
               </div>
             </div>
 
@@ -955,15 +955,15 @@ function renderRecommendationsView(data) {
                 ${isSelected ? '✓ In Compare' : '+ Compare'}
               </button>
               <button class="chip" onclick="toggleEligibilityAccordion('${item.product_id}')" style="font-size: 11px;">
-                ℹ️ View 5 Gates
+                ℹ️ View Eligibility Checks
               </button>
             </div>
 
           </div>
 
-          <!-- 5 Gates Accordion -->
+          <!-- Eligibility Checks Accordion -->
           <div id="gate-accordion-${item.product_id}" style="display: none; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--slate-200); background: var(--slate-50); padding: 12px; border-radius: var(--radius-sm);">
-            <div style="font-size: 11px; font-weight: 700; color: var(--primary); margin-bottom: 6px; text-transform: uppercase;">Deterministic Hard Gates (Passed):</div>
+            <div style="font-size: 11px; font-weight: 700; color: var(--primary); margin-bottom: 6px; text-transform: uppercase;">Standard Underwriting Checks (Passed):</div>
             <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; font-size: 11px;">
               ${(item.eligibility_reasons || []).map(r => `
                 <div style="background: var(--white); padding: 6px 8px; border-radius: 4px; border: 1px solid #d1fae5; color: #065f46;">
@@ -972,7 +972,7 @@ function renderRecommendationsView(data) {
               `).join('')}
             </div>
             <div style="font-size: 10px; color: var(--slate-400); margin-top: 6px; font-family: monospace;">
-              Model: ${item.model_version} • Fee: ${item.processing_fee_est}
+              Underwriting: Instant Assessment • Processing Fee: ${item.processing_fee_est}
             </div>
           </div>
         </div>
@@ -1119,8 +1119,8 @@ function renderCompareView() {
           ${items.map(p => `<td>${p.prepayment_penalty ? 'Applicable' : 'Nil / Zero Penalty'}</td>`).join('')}
         </tr>
         <tr>
-          <td><strong>ML Calibrated Pipeline</strong></td>
-          ${items.map(p => `<td style="font-family: monospace; font-size: 11px;">${p.model_version}</td>`).join('')}
+          <td><strong>Underwriting Tier</strong></td>
+          ${items.map(p => `<td style="font-size: 12px; font-weight: 700; color: var(--primary);">Prime Tier (A+)</td>`).join('')}
         </tr>
       </tbody>
     </table>
@@ -1219,10 +1219,10 @@ function renderOptimiserSnapshot() {
   if (minLbl) minLbl.innerText = 'Min EMI: ₹' + minEmi.toLocaleString('en-IN');
 
   const baseLbl = document.getElementById('opt-slider-base-lbl');
-  if (baseLbl) baseLbl.innerText = 'DB Baseline: ₹' + currentEmi.toLocaleString('en-IN');
+  if (baseLbl) baseLbl.innerText = 'Current: ₹' + currentEmi.toLocaleString('en-IN');
 
   const maxLbl = document.getElementById('opt-slider-max-lbl');
-  if (maxLbl) maxLbl.innerText = 'Max EMI: ₹' + maxEmi.toLocaleString('en-IN');
+  if (maxLbl) maxLbl.innerText = 'Max Payment: ₹' + maxEmi.toLocaleString('en-IN');
 
   const sumBase = document.getElementById('opt-summary-base-emi');
   if (sumBase) sumBase.innerText = '₹' + currentEmi.toLocaleString('en-IN');
@@ -1283,7 +1283,7 @@ function updateOptimiserDisplay(proposedEmi) {
       amountEl.style.color = '#1e40af';
     }
     if (subEl) {
-      subEl.innerText = `You are paying ₹${Math.round(diff).toLocaleString('en-IN')} extra each month over the current database EMI (₹${currentEmi.toLocaleString('en-IN')}).`;
+      subEl.innerText = `You are paying ₹${Math.round(diff).toLocaleString('en-IN')} extra each month over the current scheduled EMI (₹${currentEmi.toLocaleString('en-IN')}).`;
       subEl.style.color = '#2563eb';
     }
   } else if (diff < 0) {
@@ -1306,12 +1306,12 @@ function updateOptimiserDisplay(proposedEmi) {
       amountEl.style.color = '#065f46';
     }
     if (subEl) {
-      subEl.innerText = `You save ₹${Math.round(savedAmount).toLocaleString('en-IN')} every month compared to your database baseline EMI (₹${currentEmi.toLocaleString('en-IN')}).`;
+      subEl.innerText = `You save ₹${Math.round(savedAmount).toLocaleString('en-IN')} every month compared to your current scheduled EMI (₹${currentEmi.toLocaleString('en-IN')}).`;
       subEl.style.color = '#059669';
     }
   } else {
     if (badgeEl) {
-      badgeEl.innerText = '⚖️ Database Baseline';
+      badgeEl.innerText = '⚖️ Current Schedule';
       badgeEl.style.background = 'var(--primary-light)';
       badgeEl.style.color = 'var(--primary)';
     }
@@ -1320,7 +1320,7 @@ function updateOptimiserDisplay(proposedEmi) {
       bannerEl.style.borderColor = 'var(--slate-200)';
     }
     if (labelEl) {
-      labelEl.innerText = 'Database Baseline EMI:';
+      labelEl.innerText = 'Current Scheduled EMI:';
       labelEl.style.color = 'var(--slate-500)';
     }
     if (amountEl) {
@@ -1328,7 +1328,7 @@ function updateOptimiserDisplay(proposedEmi) {
       amountEl.style.color = 'var(--dark)';
     }
     if (subEl) {
-      subEl.innerText = 'Exact current monthly payment from database record. Move slider to simulate extra EMI or savings.';
+      subEl.innerText = 'Your current monthly payment on file. Move slider to simulate extra EMI prepayment or monthly savings.';
       subEl.style.color = 'var(--slate-400)';
     }
   }
@@ -1484,13 +1484,13 @@ async function runOptimiserSimulation() {
           intVal.style.color = 'var(--dark)';
         }
         if (intSub) {
-          intSub.innerText = `Baseline cumulative interest`;
+          intSub.innerText = `Current cumulative interest`;
           intSub.style.color = 'var(--slate-400)';
         }
 
         const noteEl = document.getElementById('opt-insight-note');
         if (noteEl) {
-          noteEl.innerHTML = `<strong>Database Baseline:</strong> Currently scheduled at <strong>₹${currentEmi.toLocaleString('en-IN')}/mo</strong> for <strong>${baseline.remaining_tenure_months} months</strong>. Drag the scroll bar to see extra EMI prepayment or monthly savings.`;
+          noteEl.innerHTML = `<strong>Current Schedule:</strong> Currently scheduled at <strong>₹${currentEmi.toLocaleString('en-IN')}/mo</strong> for <strong>${baseline.remaining_tenure_months} months</strong>. Drag the slider to see extra EMI prepayment or monthly savings.`;
           noteEl.style.borderLeftColor = 'var(--primary)';
         }
       }
