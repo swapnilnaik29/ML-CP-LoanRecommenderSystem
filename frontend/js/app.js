@@ -330,6 +330,12 @@ function handleRouting() {
   updateNavbar();
 }
 
+function loginDefaultDemo() {
+  const v = api.getVersion();
+  const defaultId = v === 'v2' ? 'APP0001' : 'USR0007';
+  loginDemoUser(defaultId);
+}
+
 // NAVBAR & AUTH
 function updateNavbar() {
   const navAuth = document.getElementById('nav-auth');
@@ -346,7 +352,7 @@ function updateNavbar() {
             <div class="user-id">${state.applicant.applicant_id}</div>
           </div>
           <span style="font-size: 10px; opacity: 0.7;">▼</span>
-          <div class="dropdown-menu" id="user-dropdown">
+          <div class="dropdown-menu" id="user-dropdown" style="width: 280px; max-height: 440px; overflow-y: auto;">
             <div style="padding: 10px 16px; border-bottom: 1px solid var(--slate-100);">
               <div style="font-size: 10px; color: var(--slate-400); text-transform: uppercase; font-weight: 700;">Active Applicant</div>
               <div style="font-weight: 800; font-size: 13px; color: var(--primary);">${state.applicant.full_name}</div>
@@ -355,7 +361,28 @@ function updateNavbar() {
             <button class="dropdown-item" onclick="window.location.hash='#profile'">👤 View Full Profile</button>
             <button class="dropdown-item" onclick="window.location.hash='#discover'">✨ Discover Loans</button>
             <button class="dropdown-item" onclick="window.location.hash='#optimizer'">⚡ Loan Optimiser</button>
-            <button class="dropdown-item danger" onclick="logoutUser()">🚪 Sign Out</button>
+
+            <!-- Multi-Demo Account Switcher in User Dropdown -->
+            <div style="padding: 8px 16px 4px; font-size: 10px; color: var(--slate-400); text-transform: uppercase; font-weight: 700; border-top: 1px solid var(--slate-100); margin-top: 4px;">
+              Switch Demo User (${state.version.toUpperCase()}):
+            </div>
+            <div style="max-height: 180px; overflow-y: auto;">
+              ${(state.demoUsers || []).slice(0, 10).map(u => `
+                <button class="dropdown-item ${u.applicant_id === state.applicant.applicant_id ? 'active' : ''}" 
+                        onclick="loginDemoUser('${u.applicant_id}')"
+                        style="font-size: 11px; padding: 6px 16px; display: flex; justify-content: space-between; align-items: center;">
+                  <div>
+                    <span style="font-weight: 700;">${u.full_name}</span>
+                    <span style="font-size: 10px; color: var(--slate-400); font-family: monospace;"> (${u.applicant_id})</span>
+                  </div>
+                  <span class="badge-active" style="font-size: 9px; padding: 1px 4px;">★ ${u.credit_score}</span>
+                </button>
+              `).join('')}
+            </div>
+
+            <div style="border-top: 1px solid var(--slate-100); margin-top: 4px;">
+              <button class="dropdown-item danger" onclick="logoutUser()">🚪 Sign Out</button>
+            </div>
           </div>
         </div>
       `;
@@ -380,15 +407,15 @@ function updateNavbar() {
             <span>Sign In</span>
             <span style="font-size: 10px; opacity: 0.8;">▼</span>
           </button>
-          <div class="dropdown-menu" id="nav-signin-menu" style="width: 290px; max-height: 380px; overflow-y: auto;">
+          <div class="dropdown-menu" id="nav-signin-menu" style="width: 310px; max-height: 420px; overflow-y: auto;">
             <div style="padding: 8px 14px; border-bottom: 1px solid var(--slate-100); font-size: 11px; font-weight: 700; color: var(--primary); text-transform: uppercase;">
-              Select Demo Applicant:
+              Select ${state.version.toUpperCase()} Demo Applicant:
             </div>
-            ${(state.demoUsers || []).slice(0, 10).map(u => `
+            ${(state.demoUsers || []).slice(0, 15).map(u => `
               <button class="dropdown-item" onclick="loginDemoUser('${u.applicant_id}')" style="display: flex; justify-content: space-between; align-items: center; padding: 7px 14px;">
                 <div>
                   <div style="font-weight: 700; color: var(--slate-800); font-size: 12px;">${u.full_name}</div>
-                  <div style="font-size: 10px; color: var(--slate-400); font-family: monospace;">${u.applicant_id} • CIBIL ${u.credit_score}</div>
+                  <div style="font-size: 10px; color: var(--slate-400); font-family: monospace;">${u.applicant_id} • CIBIL ${u.credit_score} • ₹${Math.round(u.monthly_income_inr).toLocaleString('en-IN')}/mo</div>
                 </div>
                 <span class="badge-active" style="font-size: 9px; padding: 2px 6px;">Sign In</span>
               </button>
@@ -401,7 +428,7 @@ function updateNavbar() {
           </div>
         </div>
 
-        <button class="btn btn-accent btn-sm" onclick="loginDemoUser('USR0007')">1-Click Demo</button>
+        <button class="btn btn-accent btn-sm" onclick="loginDefaultDemo()">1-Click Demo</button>
       `;
 
       // Toggle dropdown for navbar signin
@@ -420,28 +447,86 @@ function updateNavbar() {
 
 function renderDemoUserSwitcher() {
   const container = document.getElementById('demo-users-list');
+  const title = document.getElementById('demo-switcher-title');
+  const btn = document.getElementById('hero-quick-demo-btn');
   if (!container || !state.demoUsers.length) return;
 
-  container.innerHTML = state.demoUsers.slice(0, 8).map(u => `
-    <button class="chip" onclick="loginDemoUser('${u.applicant_id}')" style="display: flex; gap: 4px; align-items: center;">
-      <strong>${u.full_name}</strong>
-      <span style="opacity: 0.7;">(CIBIL ${u.credit_score})</span>
-    </button>
-  `).join('');
+  const isV2 = state.version === 'v2';
+  if (title) {
+    title.innerText = isV2 ? 'Quick Demo Login Switcher (V2 Retrained Engine)' : 'Quick Demo Login Switcher (V1 Calibrated Engine)';
+  }
+  if (btn) {
+    btn.innerText = isV2 ? 'Demo User (Demo Applicant 001 - APP0001)' : 'Demo User (Sai Saxena - USR0007)';
+  }
+
+  container.innerHTML = state.demoUsers.slice(0, 12).map(u => {
+    let tag = '';
+    if (isV2) {
+      if (u.applicant_id === 'APP0001') tag = 'Prime Salaried';
+      else if (u.applicant_id === 'APP0009') tag = 'Super-Prime 801';
+      else if (u.applicant_id === 'APP0004') tag = 'High Income ₹80k';
+      else if (u.applicant_id === 'APP0003') tag = 'Business';
+      else if (u.applicant_id === 'APP0008') tag = 'Student';
+      else if (u.applicant_id === 'APP0007') tag = 'Self-Employed (24)';
+      else if (u.applicant_id === 'APP0013') tag = 'Top Earner ₹88k';
+      else if (u.applicant_id === 'APP0006') tag = 'Salaried 717';
+      else tag = u.employment_type;
+    } else {
+      if (u.applicant_id === 'USR0007') tag = 'Prime 772';
+      else if (u.applicant_id === 'USR0001') tag = 'Prime 765';
+      else if (u.applicant_id === 'USR0004') tag = 'High CIBIL 780';
+      else tag = u.employment_type.replace('_', ' ');
+    }
+
+    return `
+      <button class="chip" onclick="loginDemoUser('${u.applicant_id}')" style="display: flex; gap: 4px; align-items: center; padding: 4px 10px;">
+        <strong>${u.full_name}</strong>
+        <span style="font-family: monospace; font-size: 10px; opacity: 0.8;">[${u.applicant_id}]</span>
+        <span class="badge-active" style="font-size: 9px; padding: 1px 5px;">★ ${u.credit_score}</span>
+        ${tag ? `<span style="font-size: 10px; color: var(--slate-500);">• ${tag}</span>` : ''}
+      </button>
+    `;
+  }).join('');
 }
 
 function renderLoginDropdown() {
   const dropdown = document.getElementById('login-user-dropdown');
-  if (!dropdown || !state.demoUsers.length) return;
+  const chipsContainer = document.getElementById('login-preset-chips');
+  const verPill = document.getElementById('login-version-pill');
+  const presetLabel = document.getElementById('login-preset-label');
 
-  dropdown.innerHTML = `
-    <option value="">-- Choose an Applicant from Database --</option>
-    ${state.demoUsers.map(u => `
-      <option value="${u.applicant_id}" ${u.applicant_id === 'USR0007' ? 'selected' : ''}>
-        ${u.full_name} (${u.applicant_id} • CIBIL: ${u.credit_score} • ₹${Math.round(u.monthly_income_inr).toLocaleString('en-IN')}/mo • ${u.employment_type.replace('_', ' ')})
-      </option>
-    `).join('')}
-  `;
+  if (!state.demoUsers.length) return;
+  const isV2 = state.version === 'v2';
+
+  if (verPill) {
+    verPill.innerText = isV2 ? 'V2 Retrained Engine Active (loaniq_v2.db)' : 'V1 Calibrated Engine Active (loaniq_v1.db)';
+  }
+  if (presetLabel) {
+    presetLabel.innerText = isV2 ? 'Or 1-Click Quick Demo Accounts (V2)' : 'Or 1-Click Quick Demo Accounts (V1)';
+  }
+
+  const defaultId = isV2 ? 'APP0001' : 'USR0007';
+
+  if (dropdown) {
+    dropdown.innerHTML = `
+      <option value="">-- Choose an Applicant from Database (${isV2 ? 'V2' : 'V1'}) --</option>
+      ${state.demoUsers.map(u => `
+        <option value="${u.applicant_id}" ${u.applicant_id === defaultId ? 'selected' : ''}>
+          ${u.full_name} (${u.applicant_id} • CIBIL: ${u.credit_score} • ₹${Math.round(u.monthly_income_inr).toLocaleString('en-IN')}/mo • ${u.employment_type.replace('_', ' ')})
+        </option>
+      `).join('')}
+    `;
+  }
+
+  if (chipsContainer) {
+    chipsContainer.innerHTML = state.demoUsers.slice(0, 8).map(u => `
+      <button type="button" class="chip" onclick="loginDemoUser('${u.applicant_id}')" style="font-weight: 700; display: flex; gap: 4px; align-items: center; padding: 4px 10px;">
+        <span>${u.full_name}</span>
+        <span style="font-family: monospace; font-size: 10px; opacity: 0.8;">(${u.applicant_id})</span>
+        <span class="badge-active" style="font-size: 9px; padding: 1px 4px;">★ ${u.credit_score}</span>
+      </button>
+    `).join('');
+  }
 }
 
 function signInWithSelectedDropdownUser() {
@@ -517,6 +602,36 @@ async function loadDashboard() {
     const s = state.applicant.credit_score;
     cibilBadge.innerText = s >= 750 ? `Excellent (${s})` : s >= 700 ? `Good (${s})` : `Fair (${s})`;
     cibilBadge.className = s >= 700 ? 'badge-active' : 'chip';
+  }
+
+  // Populate Dashboard Switch User Menu
+  const switchMenu = document.getElementById('dash-switch-user-menu');
+  const switchBtn = document.getElementById('dash-switch-user-btn');
+  if (switchMenu && state.demoUsers.length) {
+    switchMenu.innerHTML = `
+      <div style="padding: 8px 14px; border-bottom: 1px solid var(--slate-100); font-size: 11px; font-weight: 700; color: var(--primary); text-transform: uppercase;">
+        Select ${state.version.toUpperCase()} Demo Applicant:
+      </div>
+      ${state.demoUsers.slice(0, 20).map(u => `
+        <button class="dropdown-item ${u.applicant_id === state.applicant.applicant_id ? 'active' : ''}" 
+                onclick="loginDemoUser('${u.applicant_id}')" 
+                style="display: flex; justify-content: space-between; align-items: center; padding: 7px 14px;">
+          <div>
+            <div style="font-weight: 700; color: var(--slate-800); font-size: 12px;">${u.full_name}</div>
+            <div style="font-size: 10px; color: var(--slate-400); font-family: monospace;">${u.applicant_id} • CIBIL ${u.credit_score} • ₹${Math.round(u.monthly_income_inr).toLocaleString('en-IN')}/mo</div>
+          </div>
+          <span class="badge-active" style="font-size: 9px; padding: 2px 6px;">${u.applicant_id === state.applicant.applicant_id ? 'Active' : 'Switch'}</span>
+        </button>
+      `).join('')}
+    `;
+
+    if (switchBtn) {
+      switchBtn.onclick = (e) => {
+        e.stopPropagation();
+        switchMenu.classList.toggle('show');
+      };
+      document.addEventListener('click', () => switchMenu.classList.remove('show'));
+    }
   }
 
   // Fetch live dashboard & active loans from SQLite
