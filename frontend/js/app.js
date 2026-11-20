@@ -1260,8 +1260,8 @@ async function submitRegistration(e) {
   e.preventDefault();
 
   const data = {
-    full_name: document.getElementById('reg-name').value,
-    pan_number: document.getElementById('reg-pan').value.toUpperCase(),
+    full_name: document.getElementById('reg-name').value.trim(),
+    pan_number: document.getElementById('reg-pan').value.trim().toUpperCase(),
     age: Number(document.getElementById('reg-age').value),
     monthly_income_inr: Number(document.getElementById('reg-income').value),
     credit_score: Number(document.getElementById('reg-cibil').value),
@@ -1271,15 +1271,17 @@ async function submitRegistration(e) {
     existing_active_loans: Number(document.getElementById('reg-loans').value || 0),
     monthly_household_expenses_inr: Number(document.getElementById('reg-expenses').value || 0),
     average_bank_balance_inr: Number(document.getElementById('reg-bank').value || 0),
+    dependents: Number(document.getElementById('reg-dep').value || 0),
     number_of_dependents: Number(document.getElementById('reg-dep').value || 0)
   };
 
   try {
     const res = await api.register(data);
-    if (res.success && res.data) {
-      state.applicant = res.data;
-      api.setApplicant(res.data);
-      alert("Registration successful! Welcome to LoanIQ.");
+    const applicant = res.applicant || res.data;
+    if (res.success && applicant) {
+      state.applicant = applicant;
+      api.setApplicant(applicant);
+      alert(`Registration successful! Welcome to LoanIQ, ${applicant.full_name} (${applicant.applicant_id}).`);
       updateNavbar();
       window.location.hash = '#dashboard';
     } else {

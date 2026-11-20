@@ -32,7 +32,13 @@ const api = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ identifier: panNumber, password: '' })
     });
-    return await res.json();
+    const data = await res.json();
+    return {
+      success: data.success,
+      applicant: data.applicant || data.data || null,
+      data: data.applicant || data.data || null,
+      error: data.error
+    };
   },
 
   async register(applicantData) {
@@ -41,7 +47,13 @@ const api = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(applicantData)
     });
-    return await res.json();
+    const data = await res.json();
+    return {
+      success: data.success,
+      applicant: data.applicant || data.data || null,
+      data: data.applicant || data.data || null,
+      error: data.error
+    };
   },
 
   async getDemoUsers() {

@@ -1239,9 +1239,10 @@
       const pan = document.getElementById('login-pan').value.trim().toUpperCase();
       try {
         const res = await api.login(pan);
-        if (res.success && res.applicant) {
-          state.applicant = res.applicant;
-          api.setApplicant(res.applicant);
+        const applicant = res.applicant || res.data;
+        if (res.success && applicant) {
+          state.applicant = applicant;
+          api.setApplicant(applicant);
           updateNavbar();
           window.location.hash = '#dashboard';
         } else {

@@ -18,7 +18,8 @@ def register():
         return jsonify({
             "success": True,
             "message": "Applicant registered successfully.",
-            "applicant": applicant
+            "applicant": applicant,
+            "data": applicant
         }), 201
     except ValueError as e:
         return jsonify({"success": False, "error": str(e)}), 400
@@ -40,7 +41,8 @@ def login():
         return jsonify({
             "success": True,
             "message": "Login successful.",
-            "applicant": applicant
+            "applicant": applicant,
+            "data": applicant
         }), 200
     else:
         return jsonify({"success": False, "error": "Invalid identifier or password."}), 401
