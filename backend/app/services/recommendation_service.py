@@ -225,6 +225,12 @@ def discover_recommendations(
             total_payment = round(monthly_emi * desired_tenure_months, 2)
             total_interest = round(total_payment - requested_amount, 2)
 
+            is_predicted_rejected = bool(prob < 0.5)
+            approval_prob = round(prob, 4)
+            rejection_prob = round(1.0 - prob, 4)
+            approval_pct = f"{approval_prob * 100:.1f}%"
+            rejection_pct = f"{rejection_prob * 100:.1f}%"
+
             rec_item = {
                 "product_id": product_id,
                 "product_name": product_name,
@@ -237,8 +243,15 @@ def discover_recommendations(
                 "estimated_monthly_emi": monthly_emi,
                 "estimated_total_interest": total_interest,
                 "estimated_total_payment": total_payment,
-                "predicted_approval_probability": round(prob, 4),
-                "approval_percentage": f"{prob * 100:.1f}%",
+                "predicted_approval_probability": approval_prob,
+                "approval_percentage": approval_pct,
+                "predicted_rejection_probability": rejection_prob,
+                "rejection_percentage": rejection_pct,
+                "is_predicted_rejected": is_predicted_rejected,
+                "predicted_outcome": "Rejected" if is_predicted_rejected else "Approved",
+                "display_probability": rejection_prob if is_predicted_rejected else approval_prob,
+                "display_percentage": rejection_pct if is_predicted_rejected else approval_pct,
+                "display_label": "Rejection Probability" if is_predicted_rejected else "Approval Likelihood",
                 "is_eligible": True,
                 "eligibility_reasons": eligibility["rules"],
                 "model_version": model_version,
@@ -263,6 +276,15 @@ def discover_recommendations(
                 "min_loan_amount": product["min_loan_amount"],
                 "max_loan_amount": product["max_loan_amount"],
                 "is_eligible": False,
+                "is_predicted_rejected": True,
+                "predicted_outcome": "Rejected",
+                "predicted_approval_probability": 0.0,
+                "approval_percentage": "0.0%",
+                "predicted_rejection_probability": 1.0,
+                "rejection_percentage": "100.0%",
+                "display_probability": 1.0,
+                "display_percentage": "100.0%",
+                "display_label": "Rejection Probability",
                 "failed_reasons": eligibility["failed_reasons"],
                 "eligibility_reasons": eligibility["rules"]
             }

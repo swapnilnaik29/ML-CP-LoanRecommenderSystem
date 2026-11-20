@@ -178,6 +178,45 @@ class TestV2Integration(unittest.TestCase):
         self.assertGreater(sim["savings"]["tenure_months_saved"], 0)
         self.assertIn("amortization_schedule", sim)
 
+    def test_08_rejection_probability_fields(self):
+        """Verifies that predicted rejection probability and display labels are computed correctly."""
+        res = discover_recommendations(
+            applicant_id="APP0001",
+            loan_type="car",
+            requested_amount=300000.0,
+            desired_tenure_months=36,
+            category_details={
+                "vehicle_price": 500000.0,
+                "down_payment": 200000.0,
+                "vehicle_condition": "New",
+                "vehicle_type": "Sedan"
+            },
+            version="v2"
+        )
+
+        for rec in res["eligible_recommendations"]:
+            self.assertIn("is_predicted_rejected", rec)
+            self.assertIn("predicted_rejection_probability", rec)
+            self.assertIn("display_label", rec)
+            self.assertIn("display_probability", rec)
+            self.assertIn("display_percentage", rec)
+            prob = rec["predicted_approval_probability"]
+            if prob < 0.5:
+                self.assertTrue(rec["is_predicted_rejected"])
+                self.assertEqual(rec["display_label"], "Rejection Probability")
+                self.assertEqual(rec["predicted_outcome"], "Rejected")
+                self.assertAlmostEqual(rec["display_probability"], 1.0 - prob, places=3)
+            else:
+                self.assertFalse(rec["is_predicted_rejected"])
+                self.assertEqual(rec["display_label"], "Approval Likelihood")
+                self.assertEqual(rec["predicted_outcome"], "Approved")
+                self.assertEqual(rec["display_probability"], prob)
+
+        for inelig in res["ineligible_products"]:
+            self.assertTrue(inelig["is_predicted_rejected"])
+            self.assertEqual(inelig["display_label"], "Rejection Probability")
+            self.assertEqual(inelig["rejection_percentage"], "100.0%")
+
 
 if __name__ == "__main__":
     unittest.main()

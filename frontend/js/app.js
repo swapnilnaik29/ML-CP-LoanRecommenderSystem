@@ -909,6 +909,12 @@ function renderRecommendationsView(data) {
     eligibleContainer.innerHTML = eligible.map((item, idx) => {
       const isTop = idx === 0;
       const isSelected = state.selectedForCompare.some(p => p.product_id === item.product_id);
+      const isRejected = item.is_predicted_rejected || (item.predicted_approval_probability < 0.5);
+      const probVal = isRejected
+        ? (item.rejection_percentage || item.display_percentage || ((1 - item.predicted_approval_probability) * 100).toFixed(1) + '%')
+        : (item.approval_percentage || item.display_percentage);
+      const probLabel = isRejected ? 'Rejection Probability' : 'Approval Likelihood';
+
       return `
         <div class="rec-card ${isTop ? 'top-fit' : ''}">
           <div class="rec-card-body">
@@ -921,9 +927,9 @@ function renderRecommendationsView(data) {
               </div>
               <h4 style="font-size: 16px; font-weight: 800; color: var(--primary); margin-bottom: 8px;">${item.product_name}</h4>
               
-              <div class="prob-meter">
-                <span class="prob-val">${item.approval_percentage}</span>
-                <span style="font-size: 11px; font-weight: 700; color: #065f46;">Approval Likelihood</span>
+              <div class="prob-meter ${isRejected ? 'rejected' : ''}">
+                <span class="prob-val">${probVal}</span>
+                <span class="prob-label">${probLabel}</span>
               </div>
             </div>
 
@@ -1000,7 +1006,12 @@ function renderRecommendationsView(data) {
       <div class="ineligible-card">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
           <strong style="font-size: 14px; color: var(--dark);">${p.product_name}</strong>
-          <span style="font-size: 11px; font-family: monospace; color: var(--slate-500);">${p.product_id}</span>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <span style="font-size: 11px; font-weight: 700; color: #b91c1c; background: #fef2f2; border: 1px solid #fecaca; padding: 2px 8px; border-radius: 4px;">
+              ${p.rejection_percentage || '100.0%'} Rejection
+            </span>
+            <span style="font-size: 11px; font-family: monospace; color: var(--slate-500);">${p.product_id}</span>
+          </div>
         </div>
         <div>
           <span style="font-size: 11px; font-weight: 700; color: var(--danger);">Failed Criteria:</span>
@@ -1090,10 +1101,26 @@ function renderCompareView() {
       </thead>
       <tbody>
         <tr>
-          <td><strong>Approval Probability</strong></td>
-          ${items.map(p => `
-            <td><span class="prob-val" style="font-size: 16px;">${p.approval_percentage}</span></td>
-          `).join('')}
+          <td><strong>Prediction / Likelihood</strong></td>
+          ${items.map(p => {
+            const isRej = p.is_predicted_rejected || (p.predicted_approval_probability < 0.5);
+            const val = isRej
+              ? (p.rejection_percentage || p.display_percentage || ((1 - p.predicted_approval_probability) * 100).toFixed(1) + '%')
+              : (p.approval_percentage || p.display_percentage);
+            const label = isRej ? 'Rejection Probability' : 'Approval Likelihood';
+            const valColor = isRej ? '#dc2626' : '#065f46';
+            const labelColor = isRej ? '#b91c1c' : '#065f46';
+            const bg = isRej ? '#fef2f2' : '#ecfdf5';
+            const border = isRej ? '#fecaca' : '#a7f3d0';
+            return `
+              <td>
+                <div style="display: inline-block; background: ${bg}; border: 1px solid ${border}; padding: 4px 10px; border-radius: 6px;">
+                  <span class="prob-val" style="font-size: 16px; color: ${valColor};">${val}</span>
+                  <div style="font-size: 10px; font-weight: 700; color: ${labelColor}; margin-top: 2px;">${label}</div>
+                </div>
+              </td>
+            `;
+          }).join('')}
         </tr>
         <tr>
           <td><strong>Interest Rate Range</strong></td>
