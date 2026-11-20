@@ -6,6 +6,7 @@ Handles applicant registration, profile retrieval, updates, and demo user listin
 import re
 import uuid
 import hashlib
+import sqlite3
 from datetime import datetime
 from typing import Dict, Any, Optional, List
 from backend.app.database import get_db_connection
@@ -84,7 +85,7 @@ def register_applicant(data: Dict[str, Any], version: str = "v2") -> Dict[str, A
         active_loans = int(data.get("existing_active_loans", 0))
         household_expenses = float(data.get("monthly_household_expenses_inr", 0))
         bank_balance = float(data.get("average_bank_balance_inr", 0))
-        dependents = int(data.get("dependents", 0))
+        dependents = int(data.get("dependents", data.get("number_of_dependents", 0)))
     except (ValueError, TypeError) as e:
         raise ValueError(f"Invalid numeric input: {str(e)}")
 
@@ -104,11 +105,17 @@ def register_applicant(data: Dict[str, Any], version: str = "v2") -> Dict[str, A
     if emp_type not in valid_emp_types:
         emp_type = "salaried"
 
-    # Generate applicant ID
+    # Generate applicant ID safely without ID collisions
     conn = get_db_connection(version)
-    count_row = conn.execute("SELECT COUNT(*) FROM applicants").fetchone()
-    next_num = count_row[0] + 1
     prefix = "APP" if (version or "").lower() in ("v2", "2") else "USR"
+    rows = conn.execute("SELECT applicant_id FROM applicants WHERE applicant_id LIKE ?", (f"{prefix}%",)).fetchall()
+    max_id = 0
+    for r in rows:
+        val = r["applicant_id"] if isinstance(r, sqlite3.Row) else r[0]
+        digits = "".join(filter(str.isdigit, str(val)))
+        if digits:
+            max_id = max(max_id, int(digits))
+    next_num = max(max_id + 1, len(rows) + 1)
     applicant_id = f"{prefix}{next_num:04d}"
 
     email = data.get("email")
@@ -202,7 +209,13 @@ def authenticate_user(identifier: str, password: str, version: str = "v2") -> Op
     if not row:
         return None
 
-    # Check password hash
+    # Direct PAN/identifier sign-in if password is not provided
+    if not password:
+        d = dict(row)
+        d.pop("password_hash", None)
+        return d
+
+    # Check password hash if password is provided
     stored_hash = row["password_hash"]
     given_hash = hash_password(password)
     # Also allow standard demo passwords for easy college evaluation
