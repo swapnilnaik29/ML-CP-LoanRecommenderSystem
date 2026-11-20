@@ -1195,7 +1195,7 @@ function renderOptimiserSnapshot() {
   document.getElementById('opt-rem-tenure').innerText = `${remainingTenure} Months`;
   document.getElementById('opt-int-rate').innerText = `${rate}% p.a.`;
 
-  // Dynamic min and max EMI derived strictly from database record
+  // Dynamic min and max EMI derived from active loan profile
   const dbMin = Number(loan.min_emi_allowed_inr) || 1000;
   const dbMax = Number(loan.max_emi_allowed_inr) || 30000;
 
