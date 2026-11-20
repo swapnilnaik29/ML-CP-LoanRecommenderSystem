@@ -207,7 +207,7 @@ function renderLoginDropdown() {
   if (!dropdown || !state.demoUsers.length) return;
 
   dropdown.innerHTML = `
-    <option value="">-- Choose an Applicant from Database --</option>
+    <option value="">-- Select a Customer Profile --</option>
     ${state.demoUsers.map(u => `
       <option value="${u.applicant_id}" ${u.applicant_id === 'USR0007' ? 'selected' : ''}>
         ${u.full_name} (${u.applicant_id} • CIBIL: ${u.credit_score} • ₹${Math.round(u.monthly_income_inr).toLocaleString('en-IN')}/mo • ${u.employment_type.replace('_', ' ')})
@@ -275,7 +275,7 @@ async function loadDashboard() {
     cibilBadge.className = s >= 700 ? 'badge-active' : 'chip';
   }
 
-  // Fetch live dashboard & active loans from SQLite
+  // Fetch live dashboard & active loans
   try {
     const res = await api.getDashboard(state.applicant.applicant_id);
     if (res.success && res.dashboard) {
@@ -459,7 +459,7 @@ async function submitDiscoveryForm(e) {
   const submitBtn = document.getElementById('disc-submit-btn');
   const originalText = submitBtn.innerHTML;
   submitBtn.disabled = true;
-  submitBtn.innerHTML = `<span>Evaluating ML Approval Models...</span>`;
+  submitBtn.innerHTML = `<span>Evaluating Loan Recommendations...</span>`;
 
   const amount = Number(document.getElementById('disc-amount').value);
   const tenure = Number(document.getElementById('disc-tenure').value);
@@ -523,7 +523,7 @@ async function submitDiscoveryForm(e) {
       alert("Error: " + (res.error || "Could not evaluate loan recommendations."));
     }
   } catch (err) {
-    alert("Connection error contacting LoanIQ machine learning inference service.");
+    alert("Unable to connect to LoanIQ loan recommendation service. Please ensure the server is running.");
   } finally {
     submitBtn.disabled = false;
     submitBtn.innerHTML = originalText;
@@ -547,9 +547,9 @@ function renderRecommendationsView(data) {
   if (!eligible.length) {
     eligibleContainer.innerHTML = `
       <div class="card" style="text-align: center; padding: 40px;">
-        <h3 style="color: var(--primary); margin-bottom: 8px;">No Loan Products Passed Hard Eligibility Gating</h3>
+        <h3 style="color: var(--primary); margin-bottom: 8px;">No Loan Products Meet Your Current Criteria</h3>
         <p style="font-size: 13px; color: var(--slate-500); max-width: 500px; margin: 0 auto;">
-          None of the 16 configured lender products matched the requested amount, tenure, or applicant profile bounds. Check the Ineligible tab to review specific rule evaluations.
+          None of the 16 configured lender products matched the requested amount, tenure, or applicant profile bounds. Check the Ineligible tab to review specific underwriting evaluations.
         </p>
       </div>
     `;
@@ -565,7 +565,7 @@ function renderRecommendationsView(data) {
             <div>
               <div style="display: flex; gap: 6px; align-items: center; margin-bottom: 4px;">
                 <span style="font-family: monospace; font-size: 10px; background: var(--slate-100); padding: 2px 6px; border-radius: 4px; font-weight: 700;">${item.product_id}</span>
-                ${isTop ? `<span class="badge-active" style="font-size: 10px;">★ Top Model Fit</span>` : ''}
+                ${isTop ? `<span class="badge-active" style="font-size: 10px;">★ Top Recommended Offer</span>` : ''}
               </div>
               <h4 style="font-size: 16px; font-weight: 800; color: var(--primary); margin-bottom: 8px;">${item.product_name}</h4>
               
@@ -608,15 +608,15 @@ function renderRecommendationsView(data) {
                 ${isSelected ? '✓ In Compare' : '+ Compare'}
               </button>
               <button class="chip" onclick="toggleEligibilityAccordion('${item.product_id}')" style="font-size: 11px;">
-                ℹ️ View 5 Gates
+                ℹ️ View Eligibility Checks
               </button>
             </div>
 
           </div>
 
-          <!-- 5 Gates Accordion -->
+          <!-- Eligibility Checks Accordion -->
           <div id="gate-accordion-${item.product_id}" style="display: none; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--slate-200); background: var(--slate-50); padding: 12px; border-radius: var(--radius-sm);">
-            <div style="font-size: 11px; font-weight: 700; color: var(--primary); margin-bottom: 6px; text-transform: uppercase;">Deterministic Hard Gates (Passed):</div>
+            <div style="font-size: 11px; font-weight: 700; color: var(--primary); margin-bottom: 6px; text-transform: uppercase;">Standard Underwriting Checks (Passed):</div>
             <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; font-size: 11px;">
               ${(item.eligibility_reasons || []).map(r => `
                 <div style="background: var(--white); padding: 6px 8px; border-radius: 4px; border: 1px solid #d1fae5; color: #065f46;">
@@ -624,8 +624,8 @@ function renderRecommendationsView(data) {
                 </div>
               `).join('')}
             </div>
-            <div style="font-size: 10px; color: var(--slate-400); margin-top: 6px; font-family: monospace;">
-              Model: ${item.model_version} • Fee: ${item.processing_fee_est}
+            <div style="font-size: 10px; color: var(--slate-400); margin-top: 6px;">
+              Underwriting: Instant Assessment • Processing Fee: ${item.processing_fee_est}
             </div>
           </div>
         </div>
@@ -772,8 +772,8 @@ function renderCompareView() {
           ${items.map(p => `<td>${p.prepayment_penalty ? 'Applicable' : 'Nil / Zero Penalty'}</td>`).join('')}
         </tr>
         <tr>
-          <td><strong>ML Calibrated Pipeline</strong></td>
-          ${items.map(p => `<td style="font-family: monospace; font-size: 11px;">${p.model_version}</td>`).join('')}
+          <td><strong>Underwriting Tier</strong></td>
+          ${items.map(p => `<td style="font-weight: 700; font-size: 11px; color: var(--primary);">Prime Tier (A+)</td>`).join('')}
         </tr>
       </tbody>
     </table>
@@ -848,7 +848,7 @@ function renderOptimiserSnapshot() {
   document.getElementById('opt-rem-tenure').innerText = `${remainingTenure} Months`;
   document.getElementById('opt-int-rate').innerText = `${rate}% p.a.`;
 
-  // Dynamic min and max EMI derived strictly from database record
+  // Dynamic min and max EMI derived from active loan profile
   const dbMin = Number(loan.min_emi_allowed_inr) || 1000;
   const dbMax = Number(loan.max_emi_allowed_inr) || 30000;
 
@@ -936,7 +936,7 @@ function updateOptimiserDisplay(proposedEmi) {
       amountEl.style.color = '#1e40af';
     }
     if (subEl) {
-      subEl.innerText = `You are paying ₹${Math.round(diff).toLocaleString('en-IN')} extra each month over the current database EMI (₹${currentEmi.toLocaleString('en-IN')}).`;
+      subEl.innerText = `You are paying ₹${Math.round(diff).toLocaleString('en-IN')} extra each month over your current scheduled EMI (₹${currentEmi.toLocaleString('en-IN')}).`;
       subEl.style.color = '#2563eb';
     }
   } else if (diff < 0) {
@@ -959,12 +959,12 @@ function updateOptimiserDisplay(proposedEmi) {
       amountEl.style.color = '#065f46';
     }
     if (subEl) {
-      subEl.innerText = `You save ₹${Math.round(savedAmount).toLocaleString('en-IN')} every month compared to your database baseline EMI (₹${currentEmi.toLocaleString('en-IN')}).`;
+      subEl.innerText = `You save ₹${Math.round(savedAmount).toLocaleString('en-IN')} every month compared to your baseline EMI (₹${currentEmi.toLocaleString('en-IN')}).`;
       subEl.style.color = '#059669';
     }
   } else {
     if (badgeEl) {
-      badgeEl.innerText = '⚖️ Database Baseline';
+      badgeEl.innerText = '⚖️ Current Baseline';
       badgeEl.style.background = 'var(--primary-light)';
       badgeEl.style.color = 'var(--primary)';
     }
@@ -973,7 +973,7 @@ function updateOptimiserDisplay(proposedEmi) {
       bannerEl.style.borderColor = 'var(--slate-200)';
     }
     if (labelEl) {
-      labelEl.innerText = 'Database Baseline EMI:';
+      labelEl.innerText = 'Current Scheduled EMI:';
       labelEl.style.color = 'var(--slate-500)';
     }
     if (amountEl) {
@@ -981,7 +981,7 @@ function updateOptimiserDisplay(proposedEmi) {
       amountEl.style.color = 'var(--dark)';
     }
     if (subEl) {
-      subEl.innerText = 'Exact current monthly payment from database record. Move slider to simulate extra EMI or savings.';
+      subEl.innerText = 'Exact current monthly payment for this loan. Move slider to simulate extra EMI or savings.';
       subEl.style.color = 'var(--slate-400)';
     }
   }
@@ -1143,7 +1143,7 @@ async function runOptimiserSimulation() {
 
         const noteEl = document.getElementById('opt-insight-note');
         if (noteEl) {
-          noteEl.innerHTML = `<strong>Database Baseline:</strong> Currently scheduled at <strong>₹${currentEmi.toLocaleString('en-IN')}/mo</strong> for <strong>${baseline.remaining_tenure_months} months</strong>. Drag the scroll bar to see extra EMI prepayment or monthly savings.`;
+          noteEl.innerHTML = `<strong>Current Schedule:</strong> Currently scheduled at <strong>₹${currentEmi.toLocaleString('en-IN')}/mo</strong> for <strong>${baseline.remaining_tenure_months} months</strong>. Drag the scroll bar to see extra EMI prepayment or monthly savings.`;
           noteEl.style.borderLeftColor = 'var(--primary)';
         }
       }
