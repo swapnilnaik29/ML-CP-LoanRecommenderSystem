@@ -437,16 +437,20 @@ The platform is fully pre-configured for one-click deployment on [Render](https:
 2. **Build and Start Commands**:
    - **Build Command**:
      ```bash
-     pip install -r backend/requirements.txt && python backend/seed.py
+     pip install -r requirements.txt && python scripts/seed_v2.py
      ```
    - **Start Command**:
      ```bash
-     gunicorn --bind 0.0.0.0:$PORT backend.run:app
+     gunicorn backend.run:app --bind 0.0.0.0:$PORT --workers 1 --threads 4 --timeout 120
      ```
 
-3. **Environment Variables**:
-   - `FLASK_ENV`: `production`
-   - `PYTHONUNBUFFERED`: `true`
+3. **Advanced Settings on Render**:
+   - **Health Check Path**: `/api/health`
+   - **Port**: Leave blank (Render automatically binds to `$PORT` = `10000`)
+   - **Environment Variables**:
+     - `PYTHON_VERSION`: `3.11.9`
+     - `FLASK_ENV`: `production`
+     - `PYTHONUNBUFFERED`: `true`
 
 ---
 
