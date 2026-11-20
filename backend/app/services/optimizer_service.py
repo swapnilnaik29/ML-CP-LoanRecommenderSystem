@@ -83,17 +83,17 @@ def calculate_amortisation_schedule(principal: float, annual_rate_pct: float, mo
     }
 
 
-def simulate_loan_repayment(loan_account_id: str, proposed_emi: float) -> Dict[str, Any]:
+def simulate_loan_repayment(loan_account_id: str, proposed_emi: float, version: str = "v1") -> Dict[str, Any]:
     """
     Simulates repayment scenario on an existing loan for a proposed EMI.
     Compares against current baseline loan conditions without modifying the database.
     """
-    conn = get_db_connection()
+    conn = get_db_connection(version)
     loan_row = conn.execute("SELECT * FROM existing_loans WHERE loan_account_id = ?", (loan_account_id,)).fetchone()
     conn.close()
 
     if not loan_row:
-        raise ValueError(f"Loan account {loan_account_id} not found.")
+        raise ValueError(f"Loan account {loan_account_id} not found in database {version}.")
 
     loan = dict(loan_row)
     principal = float(loan["remaining_loan_amount_inr"])

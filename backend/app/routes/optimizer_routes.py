@@ -3,6 +3,7 @@ Loan Optimizer Routes
 """
 
 from flask import Blueprint, request, jsonify
+from backend.app.database import resolve_version_from_request
 from backend.app.services.optimizer_service import simulate_loan_repayment
 
 optimizer_bp = Blueprint("optimizer", __name__, url_prefix="/api/optimizer")
@@ -11,6 +12,7 @@ optimizer_bp = Blueprint("optimizer", __name__, url_prefix="/api/optimizer")
 @optimizer_bp.route("/simulate", methods=["POST"])
 def simulate():
     data = request.get_json() or {}
+    version = resolve_version_from_request(request)
     loan_account_id = data.get("loan_account_id")
     proposed_emi = data.get("proposed_emi")
 
@@ -21,9 +23,10 @@ def simulate():
 
     try:
         proposed_emi_float = float(proposed_emi)
-        result = simulate_loan_repayment(loan_account_id, proposed_emi_float)
+        result = simulate_loan_repayment(loan_account_id, proposed_emi_float, version=version)
         return jsonify({
             "success": True,
+            "version": version,
             "simulation": result
         }), 200
     except ValueError as e:

@@ -3,6 +3,7 @@ Recommendation & Discovery Routes
 """
 
 from flask import Blueprint, request, jsonify
+from backend.app.database import resolve_version_from_request
 from backend.app.services.recommendation_service import discover_recommendations
 
 rec_bp = Blueprint("recommendations", __name__, url_prefix="/api/recommendations")
@@ -11,6 +12,7 @@ rec_bp = Blueprint("recommendations", __name__, url_prefix="/api/recommendations
 @rec_bp.route("/discover", methods=["POST"])
 def discover():
     data = request.get_json() or {}
+    version = resolve_version_from_request(request)
     applicant_id = data.get("applicant_id")
     loan_type = data.get("loan_type")
 
@@ -33,10 +35,12 @@ def discover():
             loan_type=loan_type,
             requested_amount=requested_amount,
             desired_tenure_months=desired_tenure,
-            category_details=category_details
+            category_details=category_details,
+            version=version
         )
         return jsonify({
             "success": True,
+            "version": version,
             "data": results
         }), 200
     except ValueError as e:

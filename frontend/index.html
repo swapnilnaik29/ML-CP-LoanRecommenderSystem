@@ -20,6 +20,12 @@
         <span class="brand-badge">Fintech</span>
       </a>
 
+      <!-- Version Selector Pill -->
+      <div class="version-switcher" title="Toggle between Original Calibrated ML (V1) and Retrained Benchmarked Models (V2)">
+        <button id="nav-ver-v1" class="version-btn active" onclick="switchVersion('v1')">V1 – Original</button>
+        <button id="nav-ver-v2" class="version-btn" onclick="switchVersion('v2')">V2 – Retrained</button>
+      </div>
+
       <nav class="nav-links" id="nav-links">
         <a class="nav-link" href="#dashboard">Dashboard</a>
         <a class="nav-link" href="#discover">Discover Loans</a>
@@ -63,48 +69,53 @@
         </div>
 
         <div>
-          <div class="hero-card">
+          <div class="hero-card" id="hero-model-card">
             <div class="hero-card-header">
               <div>
-                <strong style="color: var(--primary); font-size: 15px;">LoanIQ Engine</strong>
-                <div style="font-size: 11px; color: var(--slate-500);">4 Calibrated ML Models Active</div>
+                <strong style="color: var(--primary); font-size: 15px;" id="hero-engine-title">LoanIQ Engine</strong>
+                <div style="font-size: 11px; color: var(--slate-500);" id="hero-engine-sub">4 Calibrated ML Models Active</div>
               </div>
-              <span class="badge-active">Online</span>
+              <div style="display: flex; gap: 6px; align-items: center;">
+                <span id="hero-engine-ver-badge" class="badge-active" style="font-size: 10px;">V1 Engine</span>
+                <span class="badge-active">Online</span>
+              </div>
             </div>
 
-            <div class="model-row">
-              <div>
-                <div class="model-name">Car Loan Models</div>
-                <div class="model-sub">Random Forest Tuned</div>
+            <div id="hero-model-rows">
+              <div class="model-row">
+                <div>
+                  <div class="model-name">Car Loan Models</div>
+                  <div class="model-sub">Random Forest Tuned</div>
+                </div>
+                <div class="model-auc">AUC: 0.923</div>
               </div>
-              <div class="model-auc">AUC: 0.923</div>
+
+              <div class="model-row">
+                <div>
+                  <div class="model-name">Home Loan Models</div>
+                  <div class="model-sub">Calibrated Classifier CV</div>
+                </div>
+                <div class="model-auc">ROC: 0.918</div>
+              </div>
+
+              <div class="model-row">
+                <div>
+                  <div class="model-name">Education Loan</div>
+                  <div class="model-sub">Hist Gradient Boosting</div>
+                </div>
+                <div class="model-auc">AUC: 0.975</div>
+              </div>
+
+              <div class="model-row">
+                <div>
+                  <div class="model-name">Personal Loan</div>
+                  <div class="model-sub">Calibrated Random Forest</div>
+                </div>
+                <div class="model-auc">AUC: 0.841</div>
+              </div>
             </div>
 
-            <div class="model-row">
-              <div>
-                <div class="model-name">Home Loan Models</div>
-                <div class="model-sub">Calibrated Classifier CV</div>
-              </div>
-              <div class="model-auc">ROC: 0.918</div>
-            </div>
-
-            <div class="model-row">
-              <div>
-                <div class="model-name">Education Loan</div>
-                <div class="model-sub">Hist Gradient Boosting</div>
-              </div>
-              <div class="model-auc">AUC: 0.975</div>
-            </div>
-
-            <div class="model-row">
-              <div>
-                <div class="model-name">Personal Loan</div>
-                <div class="model-sub">Calibrated Random Forest</div>
-              </div>
-              <div class="model-auc">AUC: 0.841</div>
-            </div>
-
-            <div style="font-size: 11px; color: var(--slate-400); text-align: center; margin-top: 14px;">
+            <div style="font-size: 11px; color: var(--slate-400); text-align: center; margin-top: 14px;" id="hero-engine-footer">
               16 Real Configured Products • 100 SQLite Demo Applicants
             </div>
           </div>
@@ -169,6 +180,23 @@
   <section id="dashboard-view" class="view-section" style="display: none; padding: 36px 0;">
     <div class="container">
       
+      <!-- Active ML Engine & Database Version Banner -->
+      <div class="dash-version-card" id="dash-version-card">
+        <div>
+          <div class="dash-version-title">
+            <span id="dash-ver-pill" style="background: var(--accent); color: var(--primary); font-size: 11px; padding: 2px 8px; border-radius: 9999px; font-weight: 800;">V1 Active</span>
+            <span id="dash-ver-title-text">Original Calibrated ML Engine & SQLite v1</span>
+          </div>
+          <div class="dash-version-desc" id="dash-ver-desc-text">
+            Using scikit-learn Calibrated Pipelines • Car (RF Tuned: 0.923), Home (Calibrated CV: 0.918), Education (HistGB: 0.975), Personal (Calibrated RF: 0.841) • Database: loaniq_v1.db
+          </div>
+        </div>
+        <div class="version-switcher" style="background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2);">
+          <button id="dash-ver-v1" class="version-btn active" onclick="switchVersion('v1')">V1 – Original</button>
+          <button id="dash-ver-v2" class="version-btn" onclick="switchVersion('v2')">V2 – Retrained</button>
+        </div>
+      </div>
+
       <!-- Applicant Welcome Banner -->
       <div class="card" style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
         <div style="display: flex; gap: 16px; align-items: center;">
@@ -1247,6 +1275,9 @@
       }
     }
   </script>
+
+  <!-- Toast Notification Container -->
+  <div id="loaniq-toast-container"></div>
 
 </body>
 </html>

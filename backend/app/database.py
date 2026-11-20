@@ -9,16 +9,54 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 DB_DIR = BASE_DIR / "instance"
-DB_PATH = DB_DIR / "loaniq.db"
+DB_PATH_V1 = DB_DIR / "loaniq_v1.db"
+DB_PATH_V2 = DB_DIR / "loaniq_v2.db"
+LEGACY_DB_PATH = DB_DIR / "loaniq.db"
 
 
-def get_db_path() -> Path:
+def resolve_version_from_request(req=None) -> str:
+    """
+    Request-scoped version resolution.
+    Inspects:
+    1. Header: X-LoanIQ-Version
+    2. Query param: ?version=v1|v2
+    3. JSON body: {"version": "v1"|"v2"}
+    Defaults to 'v1'. Does not use shared mutable globals.
+    """
+    if not req:
+        return "v1"
+    try:
+        # 1. Header
+        hdr = req.headers.get("X-LoanIQ-Version")
+        if hdr and hdr.lower().strip() in ("v2", "2"):
+            return "v2"
+        # 2. Query parameter
+        q = req.args.get("version")
+        if q and q.lower().strip() in ("v2", "2"):
+            return "v2"
+        # 3. JSON payload
+        if req.is_json:
+            data = req.get_json(silent=True) or {}
+            b = data.get("version")
+            if b and str(b).lower().strip() in ("v2", "2"):
+                return "v2"
+    except Exception:
+        pass
+    return "v1"
+
+
+def get_db_path(version: str = "v1") -> Path:
     DB_DIR.mkdir(parents=True, exist_ok=True)
-    return DB_PATH
+    v = (version or "v1").lower().strip()
+    if v in ("v2", "2"):
+        return DB_PATH_V2
+    if DB_PATH_V1.exists():
+        return DB_PATH_V1
+    return LEGACY_DB_PATH
 
 
-def get_db_connection() -> sqlite3.Connection:
-    path = get_db_path()
+def get_db_connection(version: str = "v1") -> sqlite3.Connection:
+    path = get_db_path(version)
     conn = sqlite3.connect(str(path))
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA foreign_keys = ON;")
@@ -61,6 +99,10 @@ CREATE TABLE IF NOT EXISTS loan_products (
     interest_rate_max REAL NOT NULL,
     min_tenure_months INTEGER NOT NULL,
     max_tenure_months INTEGER NOT NULL,
+    annual_interest_rate_pct REAL,
+    min_emi_inr REAL,
+    max_emi_inr REAL,
+    design_approval_rate REAL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -122,8 +164,8 @@ CREATE INDEX IF NOT EXISTS idx_recs_app ON loan_recommendations(application_id);
 """
 
 
-def init_db():
-    conn = get_db_connection()
+def init_db(version: str = "v1"):
+    conn = get_db_connection(version)
     with conn:
         conn.executescript(SCHEMA_SQL)
     conn.close()

@@ -1,0 +1,17 @@
+product_id,loan_type,applications,approval_rate,hard_eligible_rate
+CAR01,Car,300,0.903,0.563
+CAR02,Car,300,0.78,0.32
+CAR03,Car,300,0.49,0.153
+CAR04,Car,300,0.767,0.457
+EDU01,Education,300,0.937,0.66
+EDU02,Education,300,0.743,0.367
+EDU03,Education,300,0.457,0.267
+EDU04,Education,300,0.837,0.573
+HOM01,Home,300,0.787,0.563
+HOM02,Home,300,0.593,0.34
+HOM03,Home,300,0.147,0.087
+HOM04,Home,300,0.68,0.413
+PER01,Personal,300,0.89,0.62
+PER02,Personal,300,0.803,0.453
+PER03,Personal,300,0.55,0.143
+PER04,Personal,300,0.757,0.457

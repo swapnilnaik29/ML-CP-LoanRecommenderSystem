@@ -1,0 +1,17 @@
+product_id,loan_type,product_name,min_amount_inr,max_amount_inr,min_credit_score,min_age,max_age,annual_interest_rate_pct,max_tenure_months,design_approval_rate,min_emi_inr,max_emi_inr
+CAR01,Car,Starter Vehicle Loan,50000,800000,650,21,60,10.5,84,0.72,1000,30000
+CAR02,Car,Standard New Car Loan,100000,1800000,690,21,65,9.4,96,0.58,1500,50000
+CAR03,Car,Premium Vehicle Loan,500000,3500000,740,25,60,8.9,84,0.39,5000,90000
+CAR04,Car,Pre-owned Vehicle Loan,50000,1200000,675,21,65,12.2,72,0.49,1000,35000
+HOM01,Home,Affordable Home Loan,300000,2500000,650,21,65,8.6,240,0.76,1500,50000
+HOM02,Home,Standard Home Loan,800000,7500000,700,23,65,8.3,300,0.59,3000,100000
+HOM03,Home,Premium Home Loan,2500000,20000000,760,25,65,8.0,300,0.36,8000,200000
+HOM04,Home,First-time Buyer Home Loan,500000,5000000,680,21,65,8.5,240,0.66,2000,75000
+EDU01,Education,Domestic Undergraduate Loan,50000,1500000,620,18,35,10.2,120,0.73,500,25000
+EDU02,Education,Postgraduate Loan,100000,3000000,660,21,40,9.8,144,0.57,1000,40000
+EDU03,Education,Overseas Education Loan,500000,8000000,710,18,40,11.0,180,0.35,3000,80000
+EDU04,Education,Secured Education Loan,100000,5000000,640,18,40,9.2,180,0.64,1000,60000
+PER01,Personal,Small Ticket Personal Loan,10000,300000,630,21,60,15.5,48,0.7,500,20000
+PER02,Personal,Standard Personal Loan,50000,1000000,680,23,58,14.0,60,0.54,1000,40000
+PER03,Personal,Premium Personal Loan,200000,2500000,740,25,55,12.5,60,0.34,3000,80000
+PER04,Personal,Debt Consolidation Loan,50000,1500000,660,23,60,16.0,72,0.47,1000,50000

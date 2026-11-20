@@ -1,0 +1,47 @@
+{
+  "project": "LoanIQ synthetic ML dataset and trained models package",
+  "generated_on": "2026-11-20",
+  "random_seed": 20261120,
+  "synthetic_data_notice": "All applicants, PAN-like identifiers, applications, product terms, interest rates, and outcomes are fictional and for educational demonstration only. Do not use for real lending or credit decisions.",
+  "datasets": {
+    "car": "data/acceptance/car_loan_acceptance.csv",
+    "home": "data/acceptance/home_loan_acceptance.csv",
+    "education": "data/acceptance/education_loan_acceptance.csv",
+    "personal": "data/acceptance/personal_loan_acceptance.csv",
+    "applicants": "data/users/loan_applicant_users_100.csv",
+    "existing_loans": "data/users/existing_loans_100_users.csv",
+    "products": "data/products/loan_products.csv",
+    "products_config": "data/products/loan_products_config.json"
+  },
+  "models": {
+    "car": "models/car_loan_approval_model.joblib",
+    "home": "models/home_loan_approval_model.joblib",
+    "education": "models/education_loan_approval_model.joblib",
+    "personal": "models/personal_loan_approval_model.joblib"
+  },
+  "feature_schemas": {
+    "car": "reports/car_feature_schema.json",
+    "home": "reports/home_feature_schema.json",
+    "education": "reports/education_feature_schema.json",
+    "personal": "reports/personal_feature_schema.json"
+  },
+  "notebooks": {
+    "car": "notebooks/car_loan_model.ipynb",
+    "home": "notebooks/home_loan_model.ipynb",
+    "education": "notebooks/education_loan_model.ipynb",
+    "personal": "notebooks/personal_loan_model.ipynb"
+  },
+  "inference_target": "loan_approved=1",
+  "integration_note": "Models are sklearn Pipelines; pass a pandas DataFrame with exactly the feature columns in the category's feature_schema JSON. Do not pass application_id or PAN/name identifiers.",
+  "student_training_workflow": {
+    "notebook_order": [
+      "notebooks/car_loan_model.ipynb",
+      "notebooks/home_loan_model.ipynb",
+      "notebooks/education_loan_model.ipynb",
+      "notebooks/personal_loan_model.ipynb",
+      "notebooks/final_model_comparison_and_conclusion.ipynb"
+    ],
+    "comparison_output": "reports/final_four_model_comparison.csv",
+    "notes": "Run category notebooks in order, then run the final comparison notebook."
+  }
+}

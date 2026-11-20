@@ -25,8 +25,8 @@ def validate_pan(pan: str) -> bool:
     return bool(re.match(r"^[A-Z]{5}[0-9]{4}[A-Z]{1}$", pan_clean))
 
 
-def get_applicant_by_id(applicant_id: str) -> Optional[Dict[str, Any]]:
-    conn = get_db_connection()
+def get_applicant_by_id(applicant_id: str, version: str = "v1") -> Optional[Dict[str, Any]]:
+    conn = get_db_connection(version)
     row = conn.execute("SELECT * FROM applicants WHERE applicant_id = ?", (applicant_id,)).fetchone()
     conn.close()
     if row:
@@ -36,8 +36,8 @@ def get_applicant_by_id(applicant_id: str) -> Optional[Dict[str, Any]]:
     return None
 
 
-def get_applicant_by_pan(pan_number: str) -> Optional[Dict[str, Any]]:
-    conn = get_db_connection()
+def get_applicant_by_pan(pan_number: str, version: str = "v1") -> Optional[Dict[str, Any]]:
+    conn = get_db_connection(version)
     row = conn.execute("SELECT * FROM applicants WHERE pan_number = ?", (pan_number.strip().upper(),)).fetchone()
     conn.close()
     if row:
@@ -47,8 +47,8 @@ def get_applicant_by_pan(pan_number: str) -> Optional[Dict[str, Any]]:
     return None
 
 
-def list_sample_applicants(limit: int = 20) -> List[Dict[str, Any]]:
-    conn = get_db_connection()
+def list_sample_applicants(limit: int = 20, version: str = "v1") -> List[Dict[str, Any]]:
+    conn = get_db_connection(version)
     rows = conn.execute("""
         SELECT applicant_id, pan_number, full_name, age, monthly_income_inr,
                employment_type, credit_score, existing_active_loans, existing_emi_inr
@@ -60,7 +60,7 @@ def list_sample_applicants(limit: int = 20) -> List[Dict[str, Any]]:
     return [dict(r) for r in rows]
 
 
-def register_applicant(data: Dict[str, Any]) -> Dict[str, Any]:
+def register_applicant(data: Dict[str, Any], version: str = "v1") -> Dict[str, Any]:
     full_name = str(data.get("full_name", "")).strip()
     pan_number = str(data.get("pan_number", "")).strip().upper()
     password = str(data.get("password", "demo1234")).strip()
@@ -71,7 +71,7 @@ def register_applicant(data: Dict[str, Any]) -> Dict[str, Any]:
         raise ValueError("Invalid PAN format. Must be 10 characters (e.g., ZZZP0099A or ABCDE1234F).")
 
     # Check duplicate PAN
-    existing = get_applicant_by_pan(pan_number)
+    existing = get_applicant_by_pan(pan_number, version=version)
     if existing:
         raise ValueError(f"An applicant with PAN {pan_number} already exists in the system.")
 
@@ -105,10 +105,11 @@ def register_applicant(data: Dict[str, Any]) -> Dict[str, Any]:
         emp_type = "salaried"
 
     # Generate applicant ID
-    conn = get_db_connection()
+    conn = get_db_connection(version)
     count_row = conn.execute("SELECT COUNT(*) FROM applicants").fetchone()
     next_num = count_row[0] + 1
-    applicant_id = f"USR{next_num:04d}"
+    prefix = "APP" if (version or "").lower() in ("v2", "2") else "USR"
+    applicant_id = f"{prefix}{next_num:04d}"
 
     email = data.get("email")
     if not email:
@@ -136,14 +137,14 @@ def register_applicant(data: Dict[str, Any]) -> Dict[str, Any]:
         ))
     conn.close()
 
-    created = get_applicant_by_id(applicant_id)
+    created = get_applicant_by_id(applicant_id, version=version)
     return created
 
 
-def update_applicant(applicant_id: str, data: Dict[str, Any]) -> Dict[str, Any]:
-    current = get_applicant_by_id(applicant_id)
+def update_applicant(applicant_id: str, data: Dict[str, Any], version: str = "v1") -> Dict[str, Any]:
+    current = get_applicant_by_id(applicant_id, version=version)
     if not current:
-        raise ValueError(f"Applicant {applicant_id} not found.")
+        raise ValueError(f"Applicant {applicant_id} not found in database {version}.")
 
     age = int(data.get("age", current["age"]))
     monthly_income = float(data.get("monthly_income_inr", current["monthly_income_inr"]))
@@ -162,7 +163,7 @@ def update_applicant(applicant_id: str, data: Dict[str, Any]) -> Dict[str, Any]:
     if monthly_income < 0:
         raise ValueError("Monthly income cannot be negative.")
 
-    conn = get_db_connection()
+    conn = get_db_connection(version)
     with conn:
         conn.execute("""
             UPDATE applicants SET
@@ -183,15 +184,15 @@ def update_applicant(applicant_id: str, data: Dict[str, Any]) -> Dict[str, Any]:
             bank_balance, dependents, applicant_id
         ))
     conn.close()
-    return get_applicant_by_id(applicant_id)
+    return get_applicant_by_id(applicant_id, version=version)
 
 
-def authenticate_user(identifier: str, password: str) -> Optional[Dict[str, Any]]:
+def authenticate_user(identifier: str, password: str, version: str = "v1") -> Optional[Dict[str, Any]]:
     """Authenticate using PAN, applicant_id, or email."""
     if not identifier:
         return None
     ident = identifier.strip()
-    conn = get_db_connection()
+    conn = get_db_connection(version)
     row = conn.execute("""
         SELECT * FROM applicants
         WHERE pan_number = ? OR applicant_id = ? OR LOWER(email) = LOWER(?)

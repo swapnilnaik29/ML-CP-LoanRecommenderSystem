@@ -6,6 +6,7 @@
 
 // Global App State
 const state = {
+  version: api.getVersion(),
   applicant: null,
   activeCategory: 'home',
   discoveryData: null,
@@ -15,12 +16,229 @@ const state = {
   demoUsers: []
 };
 
+// Toast Notification
+function showToast(message, duration = 3500) {
+  const container = document.getElementById('loaniq-toast-container');
+  if (!container) return;
+  const toast = document.createElement('div');
+  toast.className = 'loaniq-toast';
+  toast.innerHTML = `<span>✨</span><span>${message}</span>`;
+  container.appendChild(toast);
+  setTimeout(() => {
+    toast.classList.add('hide');
+    setTimeout(() => toast.remove(), 350);
+  }, duration);
+}
+
+// Version Switcher Controller
+async function switchVersion(newVersion) {
+  const v = (newVersion || 'v1').toLowerCase().trim();
+  api.setVersion(v);
+  state.version = v;
+
+  // Clear transient state from previous version to avoid cross-contamination
+  state.activeLoans = [];
+  state.currentLoanForOptimiser = null;
+  state.discoveryData = null;
+  state.selectedForCompare = [];
+
+  // 1. Update UI buttons and badges immediately
+  updateVersionButtonsUI();
+  updateHeroModelCard();
+  updateDashboardVersionBanner();
+
+  // 2. Refresh demo users list for new version
+  try {
+    const res = await api.getDemoUsers();
+    if (res.success && res.data) {
+      state.demoUsers = res.data;
+      renderDemoUserSwitcher();
+      renderLoginDropdown();
+    }
+  } catch (err) {
+    console.warn("Could not fetch demo users on version switch:", err);
+  }
+
+  // 3. Resolve active applicant for target version
+  let currentApp = api.getApplicant();
+  let validProfile = null;
+  if (currentApp && currentApp.applicant_id) {
+    try {
+      const pRes = await api.getApplicantProfile(currentApp.applicant_id);
+      if (pRes.success && pRes.data) {
+        validProfile = pRes.data;
+      }
+    } catch (e) {}
+  }
+
+  if (!validProfile) {
+    const defaultId = v === 'v2' ? 'APP0001' : 'USR0007';
+    try {
+      const pRes = await api.getApplicantProfile(defaultId);
+      if (pRes.success && pRes.data) {
+        validProfile = pRes.data;
+      }
+    } catch (e) {}
+  }
+
+  if (validProfile) {
+    state.applicant = validProfile;
+    api.setApplicant(validProfile);
+  }
+
+  // 4. Update Navbar
+  updateNavbar();
+
+  // 5. Refresh current view
+  const hash = window.location.hash || '#landing';
+  const cleanHash = hash.split('?')[0];
+  if (cleanHash === '#dashboard') {
+    loadDashboard();
+  } else if (cleanHash === '#discover') {
+    initDiscoveryForm();
+  } else if (cleanHash === '#optimizer') {
+    loadOptimiserView();
+  } else if (cleanHash === '#compare') {
+    renderCompareView();
+  } else if (cleanHash === '#profile') {
+    loadProfileView();
+  }
+
+  // 6. Toast confirmation
+  if (v === 'v2') {
+    showToast("Active: V2 – Retrained Benchmark ML (CatBoost & Logistic Regression • loaniq_v2.db)");
+  } else {
+    showToast("Active: V1 – Original Calibrated ML (Random Forest & HistGB • loaniq_v1.db)");
+  }
+}
+
+function updateVersionButtonsUI() {
+  const v = api.getVersion();
+  const isV1 = v === 'v1';
+
+  const navV1 = document.getElementById('nav-ver-v1');
+  const navV2 = document.getElementById('nav-ver-v2');
+  if (navV1) navV1.classList.toggle('active', isV1);
+  if (navV2) navV2.classList.toggle('active', !isV1);
+
+  const dashV1 = document.getElementById('dash-ver-v1');
+  const dashV2 = document.getElementById('dash-ver-v2');
+  if (dashV1) dashV1.classList.toggle('active', isV1);
+  if (dashV2) dashV2.classList.toggle('active', !isV1);
+}
+
+function updateDashboardVersionBanner() {
+  const v = api.getVersion();
+  const pill = document.getElementById('dash-ver-pill');
+  const title = document.getElementById('dash-ver-title-text');
+  const desc = document.getElementById('dash-ver-desc-text');
+  if (!pill || !title || !desc) return;
+
+  if (v === 'v2') {
+    pill.innerText = 'V2 Active';
+    pill.style.background = '#00BAF2';
+    pill.style.color = '#002E6E';
+    title.innerText = 'Retrained Benchmarked ML Engine & SQLite v2';
+    desc.innerText = 'Using CatBoost (Car: 0.916, Home: 0.941) & Logistic Regression (Education: 0.963, Personal: 0.964) • Cleaned 0-PII Schemas • Database: loaniq_v2.db';
+  } else {
+    pill.innerText = 'V1 Active';
+    pill.style.background = '#00BAF2';
+    pill.style.color = '#002E6E';
+    title.innerText = 'Original Calibrated ML Engine & SQLite v1';
+    desc.innerText = 'Using scikit-learn Calibrated Pipelines • Car (RF Tuned: 0.923), Home (Calibrated CV: 0.918), Education (HistGB: 0.975), Personal (Calibrated RF: 0.841) • Database: loaniq_v1.db';
+  }
+}
+
+function updateHeroModelCard() {
+  const v = api.getVersion();
+  const badge = document.getElementById('hero-engine-ver-badge');
+  const sub = document.getElementById('hero-engine-sub');
+  const rows = document.getElementById('hero-model-rows');
+  const footer = document.getElementById('hero-engine-footer');
+  if (!rows) return;
+
+  if (v === 'v2') {
+    if (badge) badge.innerText = 'V2 Retrained';
+    if (sub) sub.innerText = '4 Retrained Benchmark Models Active';
+    if (footer) footer.innerText = '16 Configured Products • 100 SQLite v2 Applicants (APP0001–100)';
+    rows.innerHTML = `
+      <div class="model-row">
+        <div>
+          <div class="model-name">Car Loan Models</div>
+          <div class="model-sub">CatBoost Classifier CPU</div>
+        </div>
+        <div class="model-auc">AUC: 0.916</div>
+      </div>
+      <div class="model-row">
+        <div>
+          <div class="model-name">Home Loan Models</div>
+          <div class="model-sub">CatBoost Classifier CPU</div>
+        </div>
+        <div class="model-auc">ROC: 0.941</div>
+      </div>
+      <div class="model-row">
+        <div>
+          <div class="model-name">Education Loan</div>
+          <div class="model-sub">Logistic Regression Pipeline</div>
+        </div>
+        <div class="model-auc">AUC: 0.963</div>
+      </div>
+      <div class="model-row">
+        <div>
+          <div class="model-name">Personal Loan</div>
+          <div class="model-sub">Logistic Regression Pipeline</div>
+        </div>
+        <div class="model-auc">AUC: 0.964</div>
+      </div>
+    `;
+  } else {
+    if (badge) badge.innerText = 'V1 Original';
+    if (sub) sub.innerText = '4 Calibrated ML Models Active';
+    if (footer) footer.innerText = '16 Real Configured Products • 100 SQLite v1 Applicants (USR0001–100)';
+    rows.innerHTML = `
+      <div class="model-row">
+        <div>
+          <div class="model-name">Car Loan Models</div>
+          <div class="model-sub">Random Forest Tuned</div>
+        </div>
+        <div class="model-auc">AUC: 0.923</div>
+      </div>
+      <div class="model-row">
+        <div>
+          <div class="model-name">Home Loan Models</div>
+          <div class="model-sub">Calibrated Classifier CV</div>
+        </div>
+        <div class="model-auc">ROC: 0.918</div>
+      </div>
+      <div class="model-row">
+        <div>
+          <div class="model-name">Education Loan</div>
+          <div class="model-sub">Hist Gradient Boosting</div>
+        </div>
+        <div class="model-auc">AUC: 0.975</div>
+      </div>
+      <div class="model-row">
+        <div>
+          <div class="model-name">Personal Loan</div>
+          <div class="model-sub">Calibrated Random Forest</div>
+        </div>
+        <div class="model-auc">AUC: 0.841</div>
+      </div>
+    `;
+  }
+}
+
 // Document Ready
 document.addEventListener('DOMContentLoaded', async () => {
-  // 1. Check for logged in user in localStorage
+  // 1. Sync version UI
+  updateVersionButtonsUI();
+  updateHeroModelCard();
+  updateDashboardVersionBanner();
+
+  // 2. Check for logged in user in localStorage
   state.applicant = api.getApplicant();
   
-  // 2. Fetch demo users for the switcher
+  // 3. Fetch demo users for the switcher
   try {
     const res = await api.getDemoUsers();
     if (res.success && res.data) {
@@ -32,20 +250,30 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.warn("Could not pre-fetch demo users:", err);
   }
 
-  // 3. Listen for hash changes
+  // 4. If applicant not set, optionally auto-resolve default demo user
+  if (!state.applicant && state.demoUsers.length) {
+    const defaultId = state.version === 'v2' ? 'APP0001' : 'USR0007';
+    const found = state.demoUsers.find(u => u.applicant_id === defaultId) || state.demoUsers[0];
+    if (found) {
+      state.applicant = found;
+      api.setApplicant(found);
+    }
+  }
+
+  // 5. Listen for hash changes
   window.addEventListener('hashchange', handleRouting);
 
-  // 4. Set initial view
+  // 6. Set initial view
   if (!window.location.hash) {
     window.location.hash = state.applicant ? '#dashboard' : '#landing';
   } else {
     handleRouting();
   }
 
-  // 5. Update Navbar
+  // 7. Update Navbar
   updateNavbar();
 
-  // 6. Setup Event Listeners
+  // 8. Setup Event Listeners
   setupEventListeners();
 });
 
@@ -234,6 +462,16 @@ function toggleManualPan() {
 }
 
 async function loginDemoUser(applicantId) {
+  const v = api.getVersion();
+  // Graceful adaptation if a user ID from the other version was passed
+  if (!applicantId) {
+    applicantId = v === 'v2' ? 'APP0001' : 'USR0007';
+  } else if (applicantId.startsWith('USR') && v === 'v2') {
+    applicantId = 'APP0001';
+  } else if (applicantId.startsWith('APP') && v === 'v1') {
+    applicantId = 'USR0007';
+  }
+
   try {
     const res = await api.getApplicantProfile(applicantId);
     if (res.success && res.data) {
@@ -241,6 +479,7 @@ async function loginDemoUser(applicantId) {
       api.setApplicant(res.data);
       updateNavbar();
       window.location.hash = '#dashboard';
+      showToast(`Signed in as ${res.data.full_name} (${res.data.applicant_id})`);
     } else {
       alert("Could not load demo user: " + (res.error || "Unknown error"));
     }
@@ -254,11 +493,16 @@ function logoutUser() {
   api.clearApplicant();
   updateNavbar();
   window.location.hash = '#landing';
+  showToast("Signed out successfully");
 }
 
 // DASHBOARD
 async function loadDashboard() {
   if (!state.applicant) return;
+
+  // Sync version UI cards & badges
+  updateVersionButtonsUI();
+  updateDashboardVersionBanner();
 
   // Render static applicant header
   document.getElementById('dash-applicant-name').innerText = state.applicant.full_name;

@@ -19,8 +19,8 @@ def calculate_monthly_emi(principal: float, annual_rate_pct: float, tenure_month
     return round(emi, 2)
 
 
-def get_loans_for_applicant(applicant_id: str) -> List[Dict[str, Any]]:
-    conn = get_db_connection()
+def get_loans_for_applicant(applicant_id: str, version: str = "v1") -> List[Dict[str, Any]]:
+    conn = get_db_connection(version)
     rows = conn.execute("""
         SELECT * FROM existing_loans
         WHERE applicant_id = ?
@@ -30,12 +30,12 @@ def get_loans_for_applicant(applicant_id: str) -> List[Dict[str, Any]]:
     return [dict(r) for r in rows]
 
 
-def recalculate_applicant_aggregates(applicant_id: str):
+def recalculate_applicant_aggregates(applicant_id: str, version: str = "v1"):
     """
     Recalculates total EMI and active loan count from active loans
     and updates the applicant record in SQLite.
     """
-    conn = get_db_connection()
+    conn = get_db_connection(version)
     with conn:
         row = conn.execute("""
             SELECT COUNT(*) as active_count, COALESCE(SUM(emi_inr), 0) as total_emi
@@ -54,12 +54,12 @@ def recalculate_applicant_aggregates(applicant_id: str):
     conn.close()
 
 
-def add_existing_loan(applicant_id: str, data: Dict[str, Any]) -> Dict[str, Any]:
-    conn = get_db_connection()
+def add_existing_loan(applicant_id: str, data: Dict[str, Any], version: str = "v1") -> Dict[str, Any]:
+    conn = get_db_connection(version)
     app_row = conn.execute("SELECT * FROM applicants WHERE applicant_id = ?", (applicant_id,)).fetchone()
     if not app_row:
         conn.close()
-        raise ValueError(f"Applicant {applicant_id} does not exist.")
+        raise ValueError(f"Applicant {applicant_id} does not exist in database {version}.")
 
     pan_number = app_row["pan_number"]
 
@@ -147,10 +147,19 @@ def add_existing_loan(applicant_id: str, data: Dict[str, Any]) -> Dict[str, Any]
     conn.close()
 
     # Reconcile applicant totals
-    recalculate_applicant_aggregates(applicant_id)
+    recalculate_applicant_aggregates(applicant_id, version=version)
 
     # Return created loan
-    conn = get_db_connection()
+    conn = get_db_connection(version)
     created = conn.execute("SELECT * FROM existing_loans WHERE loan_account_id = ?", (loan_account_id,)).fetchone()
     conn.close()
     return dict(created)
+
+
+def get_loan_by_account_id(loan_account_id: str, version: str = "v1") -> Optional[Dict[str, Any]]:
+    conn = get_db_connection(version)
+    row = conn.execute("SELECT * FROM existing_loans WHERE loan_account_id = ?", (loan_account_id,)).fetchone()
+    conn.close()
+    if row:
+        return dict(row)
+    return None
