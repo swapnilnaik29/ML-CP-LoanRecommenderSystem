@@ -714,18 +714,22 @@
         <div class="stat-kpi">
           <div class="kpi-title">Remaining Principal</div>
           <div class="kpi-value" id="opt-bal-amount">₹0</div>
+          <div id="opt-bal-sub" style="font-size: 11px; color: var(--slate-400); margin-top: 3px;">Active Loan Balance</div>
         </div>
         <div class="stat-kpi">
-          <div class="kpi-title">Current Monthly EMI</div>
+          <div class="kpi-title">Monthly EMI</div>
           <div class="kpi-value" id="opt-cur-emi" style="color: var(--dark);">₹0</div>
+          <div id="opt-emi-sub" style="font-size: 11px; color: var(--slate-400); margin-top: 3px;">Current Scheduled EMI</div>
         </div>
         <div class="stat-kpi">
-          <div class="kpi-title">Remaining Tenure</div>
+          <div class="kpi-title">Remaining Tenure / EMIs</div>
           <div class="kpi-value" id="opt-rem-tenure">0 Mo</div>
+          <div id="opt-tenure-sub" style="font-size: 11px; color: var(--slate-400); margin-top: 3px;">0 EMIs remaining</div>
         </div>
         <div class="stat-kpi">
           <div class="kpi-title">Interest Rate</div>
           <div class="kpi-value" id="opt-int-rate">0%</div>
+          <div style="font-size: 11px; color: var(--slate-400); margin-top: 3px;">Annual Reducing Rate</div>
         </div>
       </div>
 
@@ -738,7 +742,6 @@
               <h3 style="font-size: 15px; font-weight: 800; color: var(--primary); text-transform: uppercase; margin: 0;">
                 One-Time Payment (Lump-Sum Prepayment)
               </h3>
-              <span class="badge" style="background: #e0e7ff; color: #3730a3; font-weight: 700; font-size: 10px; padding: 3px 8px;">Optional Feature</span>
             </div>
             <p style="font-size: 12px; color: var(--slate-500); margin: 4px 0 0 0;">
               Enter any lump-sum amount you wish to pay today (less than your remaining balance) to see how it cuts your remaining tenure or lowers your monthly EMI.
@@ -878,10 +881,12 @@
             <div>
               <div style="font-size: 10px; text-transform: uppercase; font-weight: 700; color: var(--slate-400);">Current Scheduled EMI</div>
               <div id="opt-summary-base-emi" style="font-size: 14px; font-weight: 800; color: var(--dark); margin-top: 2px;">₹0</div>
+              <div id="opt-summary-base-tenure" style="font-size: 11px; color: var(--slate-400); margin-top: 2px;">0 EMIs remaining</div>
             </div>
             <div>
               <div style="font-size: 10px; text-transform: uppercase; font-weight: 700; color: var(--slate-400);">Proposed Monthly EMI</div>
               <div id="opt-summary-new-emi" style="font-size: 14px; font-weight: 800; color: var(--primary); margin-top: 2px;">₹0</div>
+              <div id="opt-summary-new-tenure" style="font-size: 11px; font-weight: 700; color: var(--success); margin-top: 2px;">0 EMIs remaining</div>
             </div>
           </div>
 
@@ -916,7 +921,9 @@
           <div style="background: var(--slate-50); border: 1px solid var(--slate-200); border-radius: var(--radius-sm); padding: 14px; margin-bottom: 14px;">
             <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--slate-500); margin-bottom: 8px;">Detailed Comparison:</div>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 12px; color: var(--slate-600);">
-              <div>• Remaining Tenure: <strong id="opt-new-tenure">0 Mo</strong></div>
+              <div>• Remaining Principal: <strong id="opt-new-principal">₹0</strong></div>
+              <div>• Monthly EMI: <strong id="opt-new-emi-item">₹0</strong></div>
+              <div>• Remaining Tenure / EMIs: <strong id="opt-new-tenure">0 Mo</strong></div>
               <div>• Estimated Payoff: <strong id="opt-new-payoff">--</strong></div>
               <div>• Total Interest Payable: <strong id="opt-new-interest">₹0</strong></div>
               <div>• Total Repayment: <strong id="opt-new-total">₹0</strong></div>

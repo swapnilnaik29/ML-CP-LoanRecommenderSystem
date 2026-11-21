@@ -1719,10 +1719,148 @@ async function runOptimiserSimulation() {
       }
 
       // Comparison details
-      document.getElementById('opt-new-tenure').innerText = `${proposed.remaining_tenure_months} Mo (${(proposed.remaining_tenure_months / 12).toFixed(1)} Yrs)`;
       document.getElementById('opt-new-payoff').innerText = proposed.estimated_maturity_date || '--';
       document.getElementById('opt-new-interest').innerText = '₹' + Math.round(proposed.total_interest_payable).toLocaleString('en-IN');
       document.getElementById('opt-new-total').innerText = '₹' + Math.round(proposed.total_repayment_amount).toLocaleString('en-IN');
+
+      // 1. Reflect Remaining Principal
+      const balAmountEl = document.getElementById('opt-bal-amount');
+      const balSubEl = document.getElementById('opt-bal-sub');
+      const newPrincipalEl = document.getElementById('opt-new-principal');
+
+      if (state.lumpSumPayment > 0) {
+        if (balAmountEl) {
+          balAmountEl.innerText = '₹' + Math.round(sim.effective_principal).toLocaleString('en-IN');
+          balAmountEl.style.color = '#065f46';
+        }
+        if (balSubEl) {
+          balSubEl.innerHTML = `Reduced by <strong>₹${Number(state.lumpSumPayment).toLocaleString('en-IN')}</strong> (was ₹${balance.toLocaleString('en-IN')})`;
+          balSubEl.style.color = '#047857';
+        }
+        if (newPrincipalEl) {
+          newPrincipalEl.innerHTML = `₹${Math.round(sim.effective_principal).toLocaleString('en-IN')} <span style="font-size: 11px; color: #047857; font-weight: 700;">(-₹${Number(state.lumpSumPayment).toLocaleString('en-IN')} paid)</span>`;
+        }
+      } else {
+        if (balAmountEl) {
+          balAmountEl.innerText = '₹' + balance.toLocaleString('en-IN');
+          balAmountEl.style.color = 'var(--primary)';
+        }
+        if (balSubEl) {
+          balSubEl.innerText = 'Active Loan Balance';
+          balSubEl.style.color = 'var(--slate-400)';
+        }
+        if (newPrincipalEl) {
+          newPrincipalEl.innerText = '₹' + balance.toLocaleString('en-IN');
+        }
+      }
+
+      // 2. Reflect Monthly EMI
+      const curEmiEl = document.getElementById('opt-cur-emi');
+      const emiSubEl = document.getElementById('opt-emi-sub');
+      const newEmiItemEl = document.getElementById('opt-new-emi-item');
+
+      if (diff < 0) {
+        const savedEmi = Math.abs(diff);
+        if (curEmiEl) {
+          curEmiEl.innerText = '₹' + Math.round(proposedEmi).toLocaleString('en-IN');
+          curEmiEl.style.color = '#065f46';
+        }
+        if (emiSubEl) {
+          emiSubEl.innerHTML = `Saved <strong>₹${Math.round(savedEmi).toLocaleString('en-IN')}/mo</strong> (was ₹${currentEmi.toLocaleString('en-IN')})`;
+          emiSubEl.style.color = '#047857';
+        }
+        if (newEmiItemEl) {
+          newEmiItemEl.innerHTML = `₹${Math.round(proposedEmi).toLocaleString('en-IN')}/mo <span style="font-size: 11px; color: #047857; font-weight: 700;">(Save ₹${Math.round(savedEmi).toLocaleString('en-IN')}/mo)</span>`;
+        }
+      } else if (diff > 0) {
+        if (curEmiEl) {
+          curEmiEl.innerText = '₹' + Math.round(proposedEmi).toLocaleString('en-IN');
+          curEmiEl.style.color = '#1e40af';
+        }
+        if (emiSubEl) {
+          emiSubEl.innerHTML = `Paying <strong>+₹${Math.round(diff).toLocaleString('en-IN')}/mo extra</strong> (Scheduled: ₹${currentEmi.toLocaleString('en-IN')})`;
+          emiSubEl.style.color = '#1d4ed8';
+        }
+        if (newEmiItemEl) {
+          newEmiItemEl.innerHTML = `₹${Math.round(proposedEmi).toLocaleString('en-IN')}/mo <span style="font-size: 11px; color: #1e40af; font-weight: 700;">(+₹${Math.round(diff).toLocaleString('en-IN')}/mo)</span>`;
+        }
+      } else {
+        if (curEmiEl) {
+          curEmiEl.innerText = '₹' + currentEmi.toLocaleString('en-IN');
+          curEmiEl.style.color = 'var(--dark)';
+        }
+        if (emiSubEl) {
+          emiSubEl.innerText = 'Current Scheduled EMI';
+          emiSubEl.style.color = 'var(--slate-400)';
+        }
+        if (newEmiItemEl) {
+          newEmiItemEl.innerText = '₹' + currentEmi.toLocaleString('en-IN') + '/mo';
+        }
+      }
+
+      // 3. Reflect Remaining Tenure & Remaining EMIs
+      const remTenureEl = document.getElementById('opt-rem-tenure');
+      const tenureSubEl = document.getElementById('opt-tenure-sub');
+      const sumBaseTenureEl = document.getElementById('opt-summary-base-tenure');
+      const sumNewTenureEl = document.getElementById('opt-summary-new-tenure');
+      const newTenureEl = document.getElementById('opt-new-tenure');
+
+      const remainingEmis = proposed.remaining_tenure_months;
+      const baselineEmis = baseline.remaining_tenure_months;
+      const emisSaved = savings.tenure_months_saved;
+
+      if (sumBaseTenureEl) sumBaseTenureEl.innerText = `${baselineEmis} EMIs remaining`;
+
+      if (emisSaved > 0) {
+        if (remTenureEl) {
+          remTenureEl.innerText = `${remainingEmis} Months (${remainingEmis} EMIs)`;
+          remTenureEl.style.color = '#065f46';
+        }
+        if (tenureSubEl) {
+          tenureSubEl.innerHTML = `<strong>${emisSaved} EMIs saved</strong> (was ${baselineEmis} EMIs)`;
+          tenureSubEl.style.color = '#047857';
+        }
+        if (sumNewTenureEl) {
+          sumNewTenureEl.innerText = `${remainingEmis} EMIs (${emisSaved} EMIs saved)`;
+          sumNewTenureEl.style.color = '#065f46';
+        }
+        if (newTenureEl) {
+          newTenureEl.innerHTML = `${remainingEmis} Months (${remainingEmis} EMIs) <span style="font-size: 11px; color: #047857; font-weight: 700;">(${emisSaved} EMIs saved)</span>`;
+        }
+      } else if (emisSaved < 0) {
+        const emisExtended = Math.abs(emisSaved);
+        if (remTenureEl) {
+          remTenureEl.innerText = `${remainingEmis} Months (${remainingEmis} EMIs)`;
+          remTenureEl.style.color = '#b45309';
+        }
+        if (tenureSubEl) {
+          tenureSubEl.innerHTML = `<strong>+${emisExtended} EMIs extended</strong> (was ${baselineEmis} EMIs)`;
+          tenureSubEl.style.color = '#92400e';
+        }
+        if (sumNewTenureEl) {
+          sumNewTenureEl.innerText = `${remainingEmis} EMIs (+${emisExtended} EMIs)`;
+          sumNewTenureEl.style.color = '#b45309';
+        }
+        if (newTenureEl) {
+          newTenureEl.innerHTML = `${remainingEmis} Months (${remainingEmis} EMIs) <span style="font-size: 11px; color: #92400e; font-weight: 700;">(+${emisExtended} EMIs)</span>`;
+        }
+      } else {
+        if (remTenureEl) {
+          remTenureEl.innerText = `${remainingEmis} Months (${remainingEmis} EMIs)`;
+          remTenureEl.style.color = 'var(--dark)';
+        }
+        if (tenureSubEl) {
+          tenureSubEl.innerText = `${remainingEmis} EMIs remaining (scheduled)`;
+          tenureSubEl.style.color = 'var(--slate-400)';
+        }
+        if (sumNewTenureEl) {
+          sumNewTenureEl.innerText = `${remainingEmis} EMIs remaining`;
+          sumNewTenureEl.style.color = 'var(--slate-600)';
+        }
+        if (newTenureEl) {
+          newTenureEl.innerText = `${remainingEmis} Months (${remainingEmis} EMIs)`;
+        }
+      }
 
       // Amortisation Schedule Table
       renderAmortisationTable(sim.amortization_schedule || []);
