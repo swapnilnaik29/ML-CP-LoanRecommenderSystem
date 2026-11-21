@@ -729,6 +729,104 @@
         </div>
       </div>
 
+      <!-- One-Time Prepayment Card -->
+      <div class="card" style="margin-bottom: 24px; border: 1px solid #c7d2fe; background: linear-gradient(to right, #f8faff 0%, #ffffff 100%); padding: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+          <div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 18px;">💵</span>
+              <h3 style="font-size: 15px; font-weight: 800; color: var(--primary); text-transform: uppercase; margin: 0;">
+                One-Time Payment (Lump-Sum Prepayment)
+              </h3>
+              <span class="badge" style="background: #e0e7ff; color: #3730a3; font-weight: 700; font-size: 10px; padding: 3px 8px;">Optional Feature</span>
+            </div>
+            <p style="font-size: 12px; color: var(--slate-500); margin: 4px 0 0 0;">
+              Enter any lump-sum amount you wish to pay today (less than your remaining balance) to see how it cuts your remaining tenure or lowers your monthly EMI.
+            </p>
+          </div>
+          <div id="opt-effective-bal-pill" style="display: none; background: #ecfdf5; border: 1px solid #a7f3d0; padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 700; color: #065f46;">
+            New Balance After Prepayment: <span id="opt-effective-bal-val" style="font-size: 14px; font-weight: 900;">₹0</span>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: center;" class="opt-strat-grid">
+          <div style="position: relative;">
+            <div style="display: flex; align-items: center;">
+              <span style="position: absolute; left: 14px; font-size: 16px; font-weight: 800; color: var(--slate-400);">₹</span>
+              <input type="number" id="opt-lump-sum-input" class="form-control" style="padding-left: 32px; font-size: 16px; font-weight: 800; color: var(--primary);" placeholder="Enter lump sum payment amount today" min="0" oninput="onLumpSumInput()" />
+            </div>
+            <div id="opt-lump-sum-hint" style="font-size: 11px; color: var(--slate-400); margin-top: 4px;">
+              Must be less than remaining balance: <strong id="opt-max-lump-sum-hint">₹0</strong>
+            </div>
+            <div id="opt-lump-sum-error" style="display: none; font-size: 11px; font-weight: 700; color: var(--danger); margin-top: 4px;"></div>
+          </div>
+
+          <!-- Quick Select Preset Chips -->
+          <div style="display: flex; gap: 6px; flex-wrap: wrap; align-items: center;">
+            <span style="font-size: 11px; font-weight: 700; color: var(--slate-400); text-transform: uppercase; margin-right: 2px;">Quick Pick:</span>
+            <button type="button" class="chip" onclick="applyLumpSumPreset(25000)">₹25k</button>
+            <button type="button" class="chip" onclick="applyLumpSumPreset(50000)">₹50k</button>
+            <button type="button" class="chip" onclick="applyLumpSumPreset(100000)">₹1L</button>
+            <button type="button" class="chip" onclick="applyLumpSumPercent(10)">10%</button>
+            <button type="button" class="chip" onclick="applyLumpSumPercent(25)">25%</button>
+            <button type="button" class="chip chip-reset" onclick="applyLumpSumPreset(0)">Reset (₹0)</button>
+          </div>
+        </div>
+
+        <!-- Dynamic Prepayment Impact Box (Shows both Option A & Option B) -->
+        <div id="opt-lump-sum-strategies" style="display: none; margin-top: 18px; padding-top: 18px; border-top: 1px dashed #c7d2fe;">
+          <div style="font-size: 12px; font-weight: 800; color: var(--primary); text-transform: uppercase; margin-bottom: 12px;">
+            How This One-Time Payment Affects Your Loan (Choose Strategy):
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;" class="opt-strat-grid">
+            
+            <!-- Strategy 1: Reduce Tenure -->
+            <div id="strategy-tenure-card" class="strategy-card" onclick="selectStrategy('tenure')">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <span class="strategy-badge" style="background: #dbeafe; color: #1e40af;">Option A: Reduce Tenure</span>
+                <span id="strategy-tenure-applied" class="badge-active" style="display: none; font-size: 10px;">Active in Simulator</span>
+              </div>
+              <div style="font-size: 12px; color: var(--slate-600); margin-bottom: 8px;">
+                Keep current EMI at <strong id="strat-tenure-emi">₹0/mo</strong>
+              </div>
+              <div style="display: flex; gap: 10px; align-items: baseline; margin-bottom: 4px;">
+                <div style="font-size: 22px; font-weight: 900; color: #065f46;" id="strat-tenure-saved">0 Months Saved</div>
+                <div style="font-size: 12px; color: var(--slate-500);">(New Tenure: <strong id="strat-tenure-new">0 Mo</strong>)</div>
+              </div>
+              <div style="font-size: 11px; color: #047857; margin-bottom: 12px;">
+                💰 Total Interest Saved: <strong id="strat-tenure-int-saved">₹0</strong>
+              </div>
+              <button type="button" class="btn btn-outline btn-sm" style="width: 100%; font-size: 11px;" onclick="event.stopPropagation(); selectStrategy('tenure')">
+                Keep Same EMI & Shorten Tenure
+              </button>
+            </div>
+
+            <!-- Strategy 2: Reduce Monthly EMI -->
+            <div id="strategy-emi-card" class="strategy-card" onclick="selectStrategy('emi')">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <span class="strategy-badge" style="background: #d1fae5; color: #065f46;">Option B: Reduce Monthly EMI</span>
+                <span id="strategy-emi-applied" class="badge-active" style="display: none; font-size: 10px;">Active in Simulator</span>
+              </div>
+              <div style="font-size: 12px; color: var(--slate-600); margin-bottom: 8px;">
+                Keep original tenure at <strong id="strat-emi-tenure">0 Mo</strong>
+              </div>
+              <div style="display: flex; gap: 10px; align-items: baseline; margin-bottom: 4px;">
+                <div style="font-size: 22px; font-weight: 900; color: #0284c7;" id="strat-emi-new">₹0 / mo</div>
+                <div style="font-size: 12px; color: #0369a1; font-weight: 700;" id="strat-emi-saved">(Save ₹0/mo)</div>
+              </div>
+              <div style="font-size: 11px; color: #0284c7; margin-bottom: 12px;">
+                💰 Total Interest Saved: <strong id="strat-emi-int-saved">₹0</strong>
+              </div>
+              <button type="button" class="btn btn-outline btn-sm" style="width: 100%; font-size: 11px;" onclick="event.stopPropagation(); selectStrategy('emi')">
+                Lower Monthly EMI to <span id="strat-btn-emi-val">₹0</span>
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
       <!-- 2-Column Simulator -->
       <div class="optimiser-grid" style="grid-template-columns: 420px 1fr; gap: 24px;">
         

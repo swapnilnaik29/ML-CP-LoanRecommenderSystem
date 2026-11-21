@@ -15,6 +15,7 @@ def simulate():
     version = resolve_version_from_request(request)
     loan_account_id = data.get("loan_account_id")
     proposed_emi = data.get("proposed_emi")
+    lump_sum_payment = data.get("lump_sum_payment", 0.0)
 
     if not loan_account_id:
         return jsonify({"success": False, "error": "loan_account_id is required."}), 400
@@ -23,7 +24,13 @@ def simulate():
 
     try:
         proposed_emi_float = float(proposed_emi)
-        result = simulate_loan_repayment(loan_account_id, proposed_emi_float, version=version)
+        lump_sum_float = float(lump_sum_payment or 0.0)
+        result = simulate_loan_repayment(
+            loan_account_id, 
+            proposed_emi_float, 
+            lump_sum_payment=lump_sum_float, 
+            version=version
+        )
         return jsonify({
             "success": True,
             "version": version,

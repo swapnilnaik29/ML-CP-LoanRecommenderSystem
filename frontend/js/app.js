@@ -13,6 +13,8 @@ const state = {
   selectedForCompare: [],
   activeLoans: [],
   currentLoanForOptimiser: null,
+  lumpSumPayment: 0,
+  lastSimResult: null,
   demoUsers: []
 };
 
@@ -1206,6 +1208,15 @@ function onOptimiserLoanChanged() {
   const loan = state.activeLoans.find(l => l.loan_account_id === loanId);
   if (loan) {
     state.currentLoanForOptimiser = loan;
+    state.lumpSumPayment = 0;
+    const lumpInput = document.getElementById('opt-lump-sum-input');
+    if (lumpInput) lumpInput.value = '';
+    const errorEl = document.getElementById('opt-lump-sum-error');
+    if (errorEl) { errorEl.style.display = 'none'; errorEl.innerText = ''; }
+    const pill = document.getElementById('opt-effective-bal-pill');
+    if (pill) pill.style.display = 'none';
+    const stratBox = document.getElementById('opt-lump-sum-strategies');
+    if (stratBox) stratBox.style.display = 'none';
     renderOptimiserSnapshot();
   }
 }
@@ -1227,14 +1238,25 @@ function renderOptimiserSnapshot() {
   document.getElementById('opt-rem-tenure').innerText = `${remainingTenure} Months`;
   document.getElementById('opt-int-rate').innerText = `${rate}% p.a.`;
 
-  // Dynamic min and max EMI derived from active loan profile
+  // One-Time Payment Input Limit
+  const maxLump = Math.max(0, balance - 1);
+  const hintEl = document.getElementById('opt-max-lump-sum-hint');
+  if (hintEl) hintEl.innerText = '₹' + maxLump.toLocaleString('en-IN');
+  const lumpInput = document.getElementById('opt-lump-sum-input');
+  if (lumpInput) lumpInput.max = maxLump;
+
+  // Dynamic min and max EMI derived from active loan profile & effective balance
   const dbMin = Number(loan.min_emi_allowed_inr) || 1000;
   const dbMax = Number(loan.max_emi_allowed_inr) || 30000;
 
+  const effectiveBal = (state.lumpSumPayment > 0 && state.lumpSumPayment < balance)
+    ? (balance - state.lumpSumPayment)
+    : balance;
+
   // Accrued monthly interest boundary to ensure reducing-balance amortisation holds
-  const monthlyInterest = Math.ceil(balance * (rate / 100) / 12);
+  const monthlyInterest = Math.ceil(effectiveBal * (rate / 100) / 12);
   const minViable = monthlyInterest + 100;
-  const minEmi = Math.max(dbMin, Math.ceil(minViable / 100) * 100);
+  const minEmi = Math.max(500, Math.ceil(minViable / 100) * 100);
   const maxEmi = Math.max(dbMax, Math.round(currentEmi * 2.5));
 
   // Configure slider
@@ -1262,6 +1284,109 @@ function renderOptimiserSnapshot() {
   // Update display and trigger simulation
   updateOptimiserDisplay(currentEmi);
   runOptimiserSimulation();
+}
+
+function onLumpSumInput() {
+  const loan = state.currentLoanForOptimiser;
+  if (!loan) return;
+  const balance = Math.round(Number(loan.remaining_loan_amount_inr));
+  const input = document.getElementById('opt-lump-sum-input');
+  const errorEl = document.getElementById('opt-lump-sum-error');
+  const rawVal = input ? input.value.trim() : '';
+
+  if (!rawVal || Number(rawVal) === 0) {
+    state.lumpSumPayment = 0;
+    if (errorEl) { errorEl.style.display = 'none'; errorEl.innerText = ''; }
+    clearTimeout(optimiserDebounceTimer);
+    optimiserDebounceTimer = setTimeout(() => {
+      runOptimiserSimulation();
+    }, 100);
+    return;
+  }
+
+  const val = Number(rawVal);
+  if (isNaN(val) || val < 0) {
+    if (errorEl) {
+      errorEl.style.display = 'block';
+      errorEl.innerText = 'One-time payment amount cannot be negative.';
+    }
+    return;
+  }
+
+  if (val >= balance) {
+    if (errorEl) {
+      errorEl.style.display = 'block';
+      errorEl.innerText = `Payment must be strictly less than remaining balance of ₹${balance.toLocaleString('en-IN')}.`;
+    }
+    return;
+  }
+
+  if (errorEl) {
+    errorEl.style.display = 'none';
+    errorEl.innerText = '';
+  }
+  state.lumpSumPayment = val;
+  clearTimeout(optimiserDebounceTimer);
+  optimiserDebounceTimer = setTimeout(() => {
+    runOptimiserSimulation();
+  }, 120);
+}
+
+function applyLumpSumPreset(amount) {
+  const loan = state.currentLoanForOptimiser;
+  if (!loan) return;
+  const balance = Math.round(Number(loan.remaining_loan_amount_inr));
+  const input = document.getElementById('opt-lump-sum-input');
+  if (!input) return;
+
+  if (amount === 0) {
+    input.value = '';
+  } else if (amount >= balance) {
+    input.value = Math.max(1000, balance - 5000);
+  } else {
+    input.value = amount;
+  }
+  onLumpSumInput();
+}
+
+function applyLumpSumPercent(pct) {
+  const loan = state.currentLoanForOptimiser;
+  if (!loan) return;
+  const balance = Math.round(Number(loan.remaining_loan_amount_inr));
+  const input = document.getElementById('opt-lump-sum-input');
+  if (!input) return;
+
+  let amount = Math.round(balance * (pct / 100));
+  if (amount >= balance) {
+    amount = Math.max(1000, balance - 5000);
+  }
+  input.value = amount;
+  onLumpSumInput();
+}
+
+function selectStrategy(strategyType) {
+  const loan = state.currentLoanForOptimiser;
+  if (!loan) return;
+  const currentEmi = Math.round(Number(loan.emi_inr));
+  const slider = document.getElementById('opt-emi-slider');
+  if (!slider) return;
+
+  if (strategyType === 'tenure') {
+    slider.value = currentEmi;
+    onOptimiserSliderInput();
+  } else if (strategyType === 'emi') {
+    const reducedEmi = state.lastSimResult?.one_time_payment_impact?.emi_reduction_strategy?.new_monthly_emi;
+    if (reducedEmi) {
+      const roundedEmi = Math.round(reducedEmi);
+      if (Number(slider.min) > roundedEmi) {
+        slider.min = Math.max(500, roundedEmi - 200);
+        const minLbl = document.getElementById('opt-slider-min-lbl');
+        if (minLbl) minLbl.innerText = 'Min EMI: ₹' + slider.min.toLocaleString('en-IN');
+      }
+      slider.value = roundedEmi;
+      onOptimiserSliderInput();
+    }
+  }
 }
 
 function onOptimiserSliderInput() {
@@ -1307,7 +1432,7 @@ function updateOptimiserDisplay(proposedEmi) {
       bannerEl.style.borderColor = '#bfdbfe';
     }
     if (labelEl) {
-      labelEl.innerText = 'Extra EMI that needs to be paid:';
+      labelEl.innerText = 'Extra Monthly EMI that needs to be paid:';
       labelEl.style.color = '#1d4ed8';
     }
     if (amountEl) {
@@ -1343,7 +1468,7 @@ function updateOptimiserDisplay(proposedEmi) {
     }
   } else {
     if (badgeEl) {
-      badgeEl.innerText = '⚖️ Current Schedule';
+      badgeEl.innerText = '⚖️ Current Scheduled EMI';
       badgeEl.style.background = 'var(--primary-light)';
       badgeEl.style.color = 'var(--primary)';
     }
@@ -1373,22 +1498,87 @@ async function runOptimiserSimulation() {
   const slider = document.getElementById('opt-emi-slider');
   const proposedEmi = Number(slider?.value || loan.emi_inr);
   const currentEmi = Math.round(loan.emi_inr);
+  const balance = Math.round(loan.remaining_loan_amount_inr);
   const diff = proposedEmi - currentEmi;
 
   try {
     const res = await api.simulateOptimization({
       loan_account_id: loan.loan_account_id,
-      proposed_emi: proposedEmi
+      proposed_emi: proposedEmi,
+      lump_sum_payment: state.lumpSumPayment || 0
     });
 
     if (res.success && res.simulation) {
       const sim = res.simulation;
+      state.lastSimResult = sim;
       const baseline = sim.baseline;
       const proposed = sim.proposed;
       const savings = sim.savings;
+      const impact = sim.one_time_payment_impact;
+
+      // Handle One-Time Prepayment Strategy UI
+      const effPill = document.getElementById('opt-effective-bal-pill');
+      const effVal = document.getElementById('opt-effective-bal-val');
+      const stratBox = document.getElementById('opt-lump-sum-strategies');
+      const tenureCard = document.getElementById('strategy-tenure-card');
+      const emiCard = document.getElementById('strategy-emi-card');
+
+      if (state.lumpSumPayment > 0 && impact && impact.has_lump_sum) {
+        if (effPill) effPill.style.display = 'block';
+        if (effVal) effVal.innerText = '₹' + Math.round(sim.effective_principal).toLocaleString('en-IN');
+        if (stratBox) stratBox.style.display = 'block';
+
+        const tenStrat = impact.tenure_reduction_strategy;
+        const emiStrat = impact.emi_reduction_strategy;
+
+        const elStratTenEmi = document.getElementById('strat-tenure-emi');
+        if (elStratTenEmi) elStratTenEmi.innerText = '₹' + Math.round(tenStrat.monthly_emi).toLocaleString('en-IN') + '/mo';
+
+        const elStratTenSaved = document.getElementById('strat-tenure-saved');
+        if (elStratTenSaved) elStratTenSaved.innerText = `${tenStrat.months_saved} Months Saved`;
+
+        const elStratTenNew = document.getElementById('strat-tenure-new');
+        if (elStratTenNew) elStratTenNew.innerText = `${tenStrat.new_tenure_months} Mo`;
+
+        const elStratTenInt = document.getElementById('strat-tenure-int-saved');
+        if (elStratTenInt) elStratTenInt.innerText = '₹' + Math.round(tenStrat.interest_saved).toLocaleString('en-IN');
+
+        const elStratEmiTen = document.getElementById('strat-emi-tenure');
+        if (elStratEmiTen) elStratEmiTen.innerText = `${emiStrat.tenure_months} Mo`;
+
+        const elStratEmiNew = document.getElementById('strat-emi-new');
+        if (elStratEmiNew) elStratEmiNew.innerText = '₹' + Math.round(emiStrat.new_monthly_emi).toLocaleString('en-IN') + ' / mo';
+
+        const elStratEmiSaved = document.getElementById('strat-emi-saved');
+        if (elStratEmiSaved) elStratEmiSaved.innerText = `(Save ₹${Math.round(emiStrat.monthly_emi_saved).toLocaleString('en-IN')}/mo)`;
+
+        const elStratEmiInt = document.getElementById('strat-emi-int-saved');
+        if (elStratEmiInt) elStratEmiInt.innerText = '₹' + Math.round(emiStrat.interest_saved).toLocaleString('en-IN');
+
+        const elStratBtnVal = document.getElementById('strat-btn-emi-val');
+        if (elStratBtnVal) elStratBtnVal.innerText = '₹' + Math.round(emiStrat.new_monthly_emi).toLocaleString('en-IN');
+
+        // Check if slider is currently set to Option A (current EMI) or Option B (reduced EMI)
+        const isTenureActive = Math.abs(proposedEmi - currentEmi) <= 50;
+        const isEmiActive = Math.abs(proposedEmi - emiStrat.new_monthly_emi) <= 50;
+
+        if (tenureCard) tenureCard.classList.toggle('active-strategy', isTenureActive);
+        const badgeTenApplied = document.getElementById('strategy-tenure-applied');
+        if (badgeTenApplied) badgeTenApplied.style.display = isTenureActive ? 'inline-block' : 'none';
+
+        if (emiCard) emiCard.classList.toggle('active-strategy', isEmiActive);
+        const badgeEmiApplied = document.getElementById('strategy-emi-applied');
+        if (badgeEmiApplied) badgeEmiApplied.style.display = isEmiActive ? 'inline-block' : 'none';
+
+      } else {
+        if (effPill) effPill.style.display = 'none';
+        if (stratBox) stratBox.style.display = 'none';
+        if (tenureCard) tenureCard.classList.remove('active-strategy');
+        if (emiCard) emiCard.classList.remove('active-strategy');
+      }
 
       // Tenure KPI Card
-      const tenureCard = document.getElementById('opt-kpi-tenure-card');
+      const tenureCardEl = document.getElementById('opt-kpi-tenure-card');
       const tenureTitle = document.getElementById('opt-kpi-tenure-title');
       const tenureVal = document.getElementById('opt-months-saved');
       const tenureSub = document.getElementById('opt-kpi-tenure-sub');
@@ -1399,10 +1589,10 @@ async function runOptimiserSimulation() {
       const intVal = document.getElementById('opt-int-saved');
       const intSub = document.getElementById('opt-kpi-interest-sub');
 
-      if (diff > 0) {
-        if (tenureCard) {
-          tenureCard.style.background = '#ecfdf5';
-          tenureCard.style.borderColor = '#a7f3d0';
+      if (savings.tenure_months_saved > 0 || (savings.interest_saved > 0 && diff >= 0)) {
+        if (tenureCardEl) {
+          tenureCardEl.style.background = '#ecfdf5';
+          tenureCardEl.style.borderColor = '#a7f3d0';
         }
         if (tenureTitle) {
           tenureTitle.innerText = 'Tenure Reduction';
@@ -1434,31 +1624,24 @@ async function runOptimiserSimulation() {
           intSub.style.color = '#1d4ed8';
         }
 
-        const noteEl = document.getElementById('opt-insight-note');
-        if (noteEl) {
-          noteEl.innerHTML = `<strong>Extra EMI Benefit:</strong> Paying <strong>+₹${diff.toLocaleString('en-IN')}/mo</strong> extra repays your loan <strong>${savings.tenure_months_saved} months sooner</strong>, saving <strong>₹${Math.round(savings.interest_saved).toLocaleString('en-IN')}</strong> in total interest.`;
-          noteEl.style.borderLeftColor = 'var(--primary)';
-        }
-
-      } else if (diff < 0) {
+      } else if (diff < 0 && savings.tenure_months_saved <= 0) {
         const savedPerMonth = Math.abs(diff);
         const monthsExtended = Math.abs(savings.tenure_months_saved);
-        const extraInterest = Math.abs(savings.interest_saved);
 
-        if (tenureCard) {
-          tenureCard.style.background = '#fffbeb';
-          tenureCard.style.borderColor = '#fde68a';
+        if (tenureCardEl) {
+          tenureCardEl.style.background = '#fffbeb';
+          tenureCardEl.style.borderColor = '#fde68a';
         }
         if (tenureTitle) {
-          tenureTitle.innerText = 'Tenure Extension';
+          tenureTitle.innerText = 'Tenure Adjustment';
           tenureTitle.style.color = '#92400e';
         }
         if (tenureVal) {
-          tenureVal.innerText = `+${monthsExtended} Months`;
+          tenureVal.innerText = monthsExtended === 0 ? 'Same Tenure' : `+${monthsExtended} Months`;
           tenureVal.style.color = '#b45309';
         }
         if (tenureSub) {
-          tenureSub.innerText = `Repayment duration extended`;
+          tenureSub.innerText = monthsExtended === 0 ? 'Duration unchanged' : `Repayment duration extended`;
           tenureSub.style.color = '#92400e';
         }
 
@@ -1479,16 +1662,10 @@ async function runOptimiserSimulation() {
           intSub.style.color = '#047857';
         }
 
-        const noteEl = document.getElementById('opt-insight-note');
-        if (noteEl) {
-          noteEl.innerHTML = `<strong>Cash Flow Relief:</strong> By lowering your EMI, you save <strong>₹${Math.round(savedPerMonth).toLocaleString('en-IN')} every month</strong>. Your repayment is extended by <strong>${monthsExtended} months</strong> with ₹${Math.round(extraInterest).toLocaleString('en-IN')} in total additional interest.`;
-          noteEl.style.borderLeftColor = '#10b981';
-        }
-
       } else {
-        if (tenureCard) {
-          tenureCard.style.background = '#f8fafc';
-          tenureCard.style.borderColor = '#e2e8f0';
+        if (tenureCardEl) {
+          tenureCardEl.style.background = '#f8fafc';
+          tenureCardEl.style.borderColor = '#e2e8f0';
         }
         if (tenureTitle) {
           tenureTitle.innerText = 'Remaining Tenure';
@@ -1519,10 +1696,24 @@ async function runOptimiserSimulation() {
           intSub.innerText = `Current cumulative interest`;
           intSub.style.color = 'var(--slate-400)';
         }
+      }
 
-        const noteEl = document.getElementById('opt-insight-note');
-        if (noteEl) {
-          noteEl.innerHTML = `<strong>Current Schedule:</strong> Currently scheduled at <strong>₹${currentEmi.toLocaleString('en-IN')}/mo</strong> for <strong>${baseline.remaining_tenure_months} months</strong>. Drag the slider to see extra EMI prepayment or monthly savings.`;
+      // Insight Note
+      const noteEl = document.getElementById('opt-insight-note');
+      if (noteEl) {
+        if (state.lumpSumPayment > 0 && impact && impact.has_lump_sum) {
+          const tenStrat = impact.tenure_reduction_strategy;
+          const emiStrat = impact.emi_reduction_strategy;
+          noteEl.innerHTML = `<strong>One-Time Prepayment Impact:</strong> Paying <strong>₹${Number(state.lumpSumPayment).toLocaleString('en-IN')} today</strong> reduces your balance from ₹${balance.toLocaleString('en-IN')} to <strong>₹${Math.round(sim.effective_principal).toLocaleString('en-IN')}</strong>.<br/>• <strong>Option A (Keep EMI ₹${currentEmi.toLocaleString('en-IN')}/mo):</strong> Clears loan <strong>${tenStrat.months_saved} months sooner</strong> and saves <strong>₹${Math.round(tenStrat.interest_saved).toLocaleString('en-IN')}</strong> interest.<br/>• <strong>Option B (Keep Tenure ${baseline.remaining_tenure_months} Mo):</strong> Lowers EMI to <strong>₹${Math.round(emiStrat.new_monthly_emi).toLocaleString('en-IN')}/mo</strong> (saves <strong>₹${Math.round(emiStrat.monthly_emi_saved).toLocaleString('en-IN')}/mo</strong>) and saves <strong>₹${Math.round(emiStrat.interest_saved).toLocaleString('en-IN')}</strong> interest!`;
+          noteEl.style.borderLeftColor = 'var(--accent)';
+        } else if (diff > 0) {
+          noteEl.innerHTML = `<strong>Extra EMI Benefit:</strong> Paying <strong>+₹${diff.toLocaleString('en-IN')}/mo</strong> extra repays your loan <strong>${savings.tenure_months_saved} months sooner</strong>, saving <strong>₹${Math.round(savings.interest_saved).toLocaleString('en-IN')}</strong> in total interest.`;
+          noteEl.style.borderLeftColor = 'var(--primary)';
+        } else if (diff < 0) {
+          noteEl.innerHTML = `<strong>Cash Flow Relief:</strong> By lowering your EMI, you save <strong>₹${Math.round(Math.abs(diff)).toLocaleString('en-IN')} every month</strong>. Your repayment is extended by <strong>${Math.abs(savings.tenure_months_saved)} months</strong> with ₹${Math.round(Math.abs(savings.interest_saved)).toLocaleString('en-IN')} in total additional interest.`;
+          noteEl.style.borderLeftColor = '#10b981';
+        } else {
+          noteEl.innerHTML = `<strong>Current Schedule:</strong> Currently scheduled at <strong>₹${currentEmi.toLocaleString('en-IN')}/mo</strong> for <strong>${baseline.remaining_tenure_months} months</strong>. Drag the slider or enter a one-time payment to simulate interest savings.`;
           noteEl.style.borderLeftColor = 'var(--primary)';
         }
       }
@@ -1545,18 +1736,35 @@ function renderAmortisationTable(schedule) {
   const container = document.getElementById('opt-amort-body');
   if (!container) return;
 
-  // Render first 24 months + final row
-  const rows = schedule.slice(0, 24);
-  container.innerHTML = rows.map(r => `
-    <tr>
-      <td>${r.month}</td>
-      <td>₹${Math.round(r.beginning_balance).toLocaleString('en-IN')}</td>
-      <td>₹${Math.round(r.emi).toLocaleString('en-IN')}</td>
-      <td>₹${Math.round(r.principal_paid).toLocaleString('en-IN')}</td>
-      <td>₹${Math.round(r.interest_paid).toLocaleString('en-IN')}</td>
-      <td><strong>₹${Math.round(r.ending_balance).toLocaleString('en-IN')}</strong></td>
-    </tr>
-  `).join('');
+  // Render first 25 rows (including Month 0 if present)
+  const rows = schedule.slice(0, 25);
+  container.innerHTML = rows.map(r => {
+    if (r.month === 0 || r.is_lump_sum) {
+      return `
+        <tr style="background: #eff6ff; font-weight: 700; color: #1e40af;">
+          <td>0 (Today)</td>
+          <td>₹${Math.round(r.beginning_balance).toLocaleString('en-IN')}</td>
+          <td>
+            ₹${Math.round(r.emi).toLocaleString('en-IN')}
+            <span class="badge" style="background: #dbeafe; color: #1e40af; font-size: 10px; margin-left: 6px; padding: 2px 6px;">One-Time Payment</span>
+          </td>
+          <td>₹${Math.round(r.principal_paid).toLocaleString('en-IN')}</td>
+          <td>₹0</td>
+          <td><strong>₹${Math.round(r.ending_balance).toLocaleString('en-IN')}</strong></td>
+        </tr>
+      `;
+    }
+    return `
+      <tr>
+        <td>${r.month}</td>
+        <td>₹${Math.round(r.beginning_balance).toLocaleString('en-IN')}</td>
+        <td>₹${Math.round(r.emi).toLocaleString('en-IN')}</td>
+        <td>₹${Math.round(r.principal_paid).toLocaleString('en-IN')}</td>
+        <td>₹${Math.round(r.interest_paid).toLocaleString('en-IN')}</td>
+        <td><strong>₹${Math.round(r.ending_balance).toLocaleString('en-IN')}</strong></td>
+      </tr>
+    `;
+  }).join('');
 }
 
 // STANDALONE EMI CALCULATOR

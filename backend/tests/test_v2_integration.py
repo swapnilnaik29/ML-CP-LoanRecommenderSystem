@@ -217,6 +217,57 @@ class TestV2Integration(unittest.TestCase):
             self.assertEqual(inelig["display_label"], "Rejection Probability")
             self.assertEqual(inelig["rejection_percentage"], "100.0%")
 
+    def test_09_v2_one_time_payment_simulation(self):
+        """Verifies one-time lump-sum payment impacts tenure and EMI correctly."""
+        loans = get_loans_for_applicant("APP0001", version="v2")
+        self.assertGreater(len(loans), 0)
+        loan = loans[0]
+        loan_id = loan["loan_account_id"]
+        principal = float(loan["remaining_loan_amount_inr"])
+        cur_emi = float(loan["emi_inr"])
+
+        lump_sum = 50000.0
+        self.assertLess(lump_sum, principal)
+
+        # Simulation with lump sum prepayment
+        sim = simulate_loan_repayment(
+            loan_id, 
+            proposed_emi=cur_emi, 
+            lump_sum_payment=lump_sum, 
+            version="v2"
+        )
+        self.assertEqual(sim["lump_sum_payment"], lump_sum)
+        self.assertAlmostEqual(sim["effective_principal"], principal - lump_sum, places=2)
+        self.assertIn("one_time_payment_impact", sim)
+
+        impact = sim["one_time_payment_impact"]
+        self.assertTrue(impact["has_lump_sum"])
+        
+        # Option A: Same EMI -> Tenure reduces
+        tenure_strat = impact["tenure_reduction_strategy"]
+        self.assertGreater(tenure_strat["months_saved"], 0)
+        self.assertGreater(tenure_strat["interest_saved"], 0)
+        self.assertLess(tenure_strat["new_tenure_months"], sim["baseline"]["remaining_tenure_months"])
+
+        # Option B: Same Tenure -> EMI reduces
+        emi_strat = impact["emi_reduction_strategy"]
+        self.assertGreater(emi_strat["monthly_emi_saved"], 0)
+        self.assertGreater(emi_strat["interest_saved"], 0)
+        self.assertLess(emi_strat["new_monthly_emi"], cur_emi)
+
+        # Month 0 lump sum row in schedule
+        schedule = sim["amortization_schedule"]
+        self.assertGreater(len(schedule), 1)
+        self.assertEqual(schedule[0]["month"], 0)
+        self.assertTrue(schedule[0].get("is_lump_sum"))
+        self.assertAlmostEqual(schedule[0]["ending_balance"], principal - lump_sum, places=2)
+
+        # Boundary checks
+        with self.assertRaises(ValueError):
+            simulate_loan_repayment(loan_id, cur_emi, lump_sum_payment=principal, version="v2")
+        with self.assertRaises(ValueError):
+            simulate_loan_repayment(loan_id, cur_emi, lump_sum_payment=-1000.0, version="v2")
+
 
 if __name__ == "__main__":
     unittest.main()
